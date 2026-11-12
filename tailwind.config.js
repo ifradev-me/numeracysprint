@@ -41,19 +41,19 @@ export default {
         'glow': '0 0 25px rgba(45, 180, 190, 0.3)',
       },
       animation: {
-        'float-slow': 'float 6s ease-in-out infinite',
-        'float-reverse': 'float-reverse 5s ease-in-out infinite',
+        'glow-breathe': 'glow-breathe 4s ease-in-out infinite',
+        'pink-breathe': 'pink-breathe 4s ease-in-out infinite',
         'pulse-subtle': 'pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'pop-in': 'pop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
       },
       keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-8px)' },
+        'glow-breathe': {
+          '0%, 100%': { boxShadow: '0 4px 14px 0 rgba(45, 180, 190, 0.12)', borderColor: 'rgba(45, 180, 190, 0.25)' },
+          '50%': { boxShadow: '0 6px 22px 2px rgba(45, 180, 190, 0.28)', borderColor: 'rgba(45, 180, 190, 0.55)' },
         },
-        'float-reverse': {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(8px)' },
+        'pink-breathe': {
+          '0%, 100%': { boxShadow: '0 4px 14px 0 rgba(255, 107, 154, 0.15)', borderColor: 'rgba(255, 107, 154, 0.25)' },
+          '50%': { boxShadow: '0 6px 22px 2px rgba(255, 107, 154, 0.32)', borderColor: 'rgba(255, 107, 154, 0.55)' },
         },
         'pulse-subtle': {
           '0%, 100%': { opacity: '1' },

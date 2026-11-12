@@ -49,24 +49,33 @@ export default function LoginPage() {
         ÷
       </div>
 
-      {/* Desktop-only fun floating badges with purposeful micro-copy */}
-      <div className="hidden lg:flex absolute top-20 left-12 bg-white shadow-card border border-turquoise/20 rounded-2xl p-3.5 items-center gap-3 animate-float-slow">
+      {/* Desktop-only stationary feature badges with subtle idle beacon/glow (No Float) */}
+      <div className="hidden lg:flex absolute top-20 left-12 bg-white/90 backdrop-blur-md shadow-card border-2 border-turquoise/25 rounded-2xl p-3.5 items-center gap-3 shimmer-card">
         <div className="w-10 h-10 rounded-xl bg-turquoise text-white flex items-center justify-center font-bold shadow-soft">
           <Lightning size={22} weight="fill" />
         </div>
         <div>
-          <p className="text-xs font-black text-gray-900">Sprint Diagnostik</p>
-          <p className="text-[10px] text-gray-400">Diagnosis 3 Menit</p>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-turquoise" />
+            <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Metode Kilat</p>
+          </div>
+          <p className="text-xs font-black text-gray-900">Sprint Diagnostik 3 Mnt</p>
         </div>
       </div>
 
-      <div className="hidden lg:flex absolute bottom-24 right-14 bg-white shadow-card border border-pink-soft/20 rounded-2xl p-3.5 items-center gap-3 animate-float-reverse">
-        <div className="w-10 h-10 rounded-xl bg-pink-soft text-white flex items-center justify-center font-bold shadow-pink">
+      <div className="hidden lg:flex absolute bottom-24 right-14 bg-white/90 backdrop-blur-md shadow-card border-2 border-pink-soft/25 rounded-2xl p-3.5 items-center gap-3 animate-pink-breathe">
+        <div className="w-10 h-10 rounded-2xl bg-pink-soft text-white flex items-center justify-center font-bold shadow-pink">
           <Sparkle size={22} weight="fill" />
         </div>
         <div>
-          <p className="text-xs font-black text-gray-900">Microlearning Adaptif</p>
-          <p className="text-[10px] text-gray-400">Bite-sized Praktis</p>
+          <div className="flex items-center gap-1.5">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-soft opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-hover"></span>
+            </span>
+            <p className="text-[10px] text-pink-hover font-black uppercase tracking-wider">Format Adaptif</p>
+          </div>
+          <p className="text-xs font-black text-gray-900">Microlearning Praktis</p>
         </div>
       </div>
 

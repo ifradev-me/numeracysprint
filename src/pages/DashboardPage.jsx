@@ -126,48 +126,54 @@ export default function DashboardPage() {
       <main className="max-w-5xl mx-auto px-4 pt-6 sm:pt-10">
 
         {/* ============================================================ */}
-        {/* DESKTOP-ONLY: Floating decoration widgets above hero          */}
+        {/* DESKTOP-ONLY: Grounded Sprint Status Ribbon (Solid / No Float) */}
         {/* ============================================================ */}
-        <div className="hidden lg:flex items-center justify-between mb-5 gap-4">
-          {/* Left: math formula floater */}
-          <div
-            className="flex items-center gap-3 px-5 py-3 rounded-3xl border-2 border-turquoise/30 shadow-soft animate-float-slow"
-            style={{ background: 'linear-gradient(135deg, #e8fafb 0%, #fff0f6 100%)' }}
-          >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft">
-              <Calculator size={18} weight="bold" />
+        <div className="hidden lg:grid grid-cols-3 gap-3.5 mb-6 p-2 rounded-3xl bg-white border-2 border-turquoise/25 shadow-soft">
+          {/* Tile 1: Rumus Cepat */}
+          <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-turquoise-surface/80 to-white border border-turquoise/15 hover:border-turquoise/40 transition-colors">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft shrink-0">
+              <Calculator size={20} weight="bold" />
             </div>
             <div>
-              <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Rumus Cepat</p>
-              <p className="text-sm font-black text-turquoise-deep font-mono">78 × 2 = <span className="text-pink-soft">156</span></p>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-turquoise" />
+                <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Rumus Cepat Saku</p>
+              </div>
+              <p className="text-xs font-black text-turquoise-deep font-mono">
+                78 × 2 = <span className="text-pink-soft font-bold">156</span>
+              </p>
             </div>
           </div>
 
-          {/* Center: XP/streak pill */}
-          <div
-            className="flex items-center gap-3 px-5 py-3 rounded-3xl border-2 border-pink-soft/30 shadow-pink animate-float-reverse"
-            style={{ background: 'linear-gradient(135deg, #fff0f5 0%, #fff8fa 100%)' }}
-          >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-pink-soft to-pink-hover text-white flex items-center justify-center shadow-pink">
-              <Fire size={18} weight="fill" />
+          {/* Tile 2: Streak Aktif with Live Beacon Ping */}
+          <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-pink-light/60 to-white border border-pink-soft/20 animate-pink-breathe transition-colors">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-pink-soft to-pink-hover text-white flex items-center justify-center shadow-pink shrink-0">
+              <Fire size={20} weight="fill" />
             </div>
             <div>
-              <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Streak Aktif</p>
-              <p className="text-sm font-black text-pink-hover">Level Up! 🔥</p>
+              <div className="flex items-center gap-1.5">
+                {/* Live radar beacon dot */}
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-soft opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-hover"></span>
+                </span>
+                <p className="text-[10px] text-pink-hover font-black uppercase tracking-wider">Sprint Aktif</p>
+              </div>
+              <p className="text-xs font-black text-gray-900">Level Up! 🔥</p>
             </div>
           </div>
 
-          {/* Right: trophy/score pill */}
-          <div
-            className="flex items-center gap-3 px-5 py-3 rounded-3xl border-2 border-turquoise/30 shadow-soft animate-float-slow"
-            style={{ background: 'linear-gradient(135deg, #e8fafb 0%, #f0fbff 100%)' }}
-          >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft">
-              <TrendUp size={18} weight="bold" />
+          {/* Tile 3: Progress with subtle gleam */}
+          <div className="shimmer-card flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-turquoise-surface/60 via-white to-turquoise-surface/40 border border-turquoise/15 hover:border-turquoise/40 transition-colors">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft shrink-0">
+              <TrendUp size={20} weight="bold" />
             </div>
             <div>
-              <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Progress</p>
-              <p className="text-sm font-black text-turquoise-deep tabular-nums">+12 XP hari ini</p>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Target Harian</p>
+              </div>
+              <p className="text-xs font-black text-turquoise-deep tabular-nums">+12 XP Terkumpul</p>
             </div>
           </div>
         </div>

@@ -76,43 +76,46 @@ export default function DiagnosticPage() {
 
         <main className="max-w-6xl mx-auto px-4 pt-6 sm:pt-10">
 
-          {/* Desktop-only floating widgets */}
-          <div className="hidden lg:flex items-center justify-between mb-6 gap-4">
-            <div
-              className="flex items-center gap-3 px-5 py-3 rounded-3xl border-2 border-turquoise/30 shadow-soft animate-float-slow"
-              style={{ background: 'linear-gradient(135deg, #e8fafb 0%, #ffffff 100%)' }}
-            >
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft">
+          {/* Desktop-only Grounded Status Ribbon (No Float) */}
+          <div className="hidden lg:grid grid-cols-3 gap-3.5 mb-6 p-2 rounded-3xl bg-white border-2 border-turquoise/25 shadow-soft">
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-turquoise-surface/80 to-white border border-turquoise/15 hover:border-turquoise/40 transition-colors">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft shrink-0">
                 <Trophy size={20} weight="fill" className="text-yellow-300" />
               </div>
               <div>
-                <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Hasil Terverifikasi</p>
-                <p className="text-xs font-black text-turquoise-deep font-roboto">Evaluasi Logika Selesai</p>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-turquoise" />
+                  <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Status Evaluasi</p>
+                </div>
+                <p className="text-xs font-black text-turquoise-deep font-roboto">Hasil Diagnostik Sah</p>
               </div>
             </div>
 
-            <div
-              className="flex items-center gap-3 px-5 py-3 rounded-3xl border-2 border-pink-soft/30 shadow-pink animate-float-reverse"
-              style={{ background: 'linear-gradient(135deg, #fff0f5 0%, #ffffff 100%)' }}
-            >
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-pink-soft to-pink-hover text-white flex items-center justify-center shadow-pink">
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-pink-light/60 to-white border border-pink-soft/20 animate-pink-breathe transition-colors">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-pink-soft to-pink-hover text-white flex items-center justify-center shadow-pink shrink-0">
                 <Star size={20} weight="fill" />
               </div>
               <div>
-                <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Pencapaian XP</p>
-                <p className="text-xs font-black text-pink-hover">+100 XP Diagnostik</p>
+                <div className="flex items-center gap-1.5">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-soft opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-hover"></span>
+                  </span>
+                  <p className="text-[10px] text-pink-hover font-black uppercase tracking-wider">Reward Prestasi</p>
+                </div>
+                <p className="text-xs font-black text-gray-900">+100 XP Diagnostik 🔥</p>
               </div>
             </div>
 
-            <div
-              className="flex items-center gap-3 px-5 py-3 rounded-3xl border-2 border-turquoise/30 shadow-soft animate-float-slow"
-              style={{ background: 'linear-gradient(135deg, #f0fbff 0%, #e8fafb 100%)' }}
-            >
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft">
+            <div className="shimmer-card flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-turquoise-surface/60 via-white to-turquoise-surface/40 border border-turquoise/15 hover:border-turquoise/40 transition-colors">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft shrink-0">
                 <Compass size={20} weight="bold" />
               </div>
               <div>
-                <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Rute Sprint</p>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Rute Sprint</p>
+                </div>
                 <p className="text-xs font-black text-turquoise-deep">Modul Rekomendasi Terbuka</p>
               </div>
             </div>
@@ -332,45 +335,51 @@ export default function DiagnosticPage() {
       <main className="max-w-6xl mx-auto px-4 pt-6 sm:pt-10">
 
         {/* ============================================================ */}
-        {/* DESKTOP-ONLY: Floating Widgets above Active Quiz             */}
+        {/* DESKTOP-ONLY: Grounded Diagnostik Status Bar (No Float)       */}
         {/* ============================================================ */}
-        <div className="hidden lg:flex items-center justify-between mb-6 gap-4">
-          <div
-            className="flex items-center gap-3 px-5 py-3 rounded-3xl border-2 border-turquoise/30 shadow-soft animate-float-slow"
-            style={{ background: 'linear-gradient(135deg, #e8fafb 0%, #ffffff 100%)' }}
-          >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft">
+        <div className="hidden lg:grid grid-cols-3 gap-3.5 mb-6 p-2 rounded-3xl bg-white border-2 border-turquoise/25 shadow-soft">
+          {/* Tile 1: Tantangan Kilat */}
+          <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-turquoise-surface/80 to-white border border-turquoise/15 hover:border-turquoise/40 transition-colors">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft shrink-0">
               <Stethoscope size={20} weight="bold" />
             </div>
             <div>
-              <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Tantangan Kilat</p>
-              <p className="text-xs font-black text-turquoise-deep">3 Soal Diagnostik Cepat</p>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-turquoise" />
+                <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Format Diagnostik</p>
+              </div>
+              <p className="text-xs font-black text-turquoise-deep">3 Soal Kilat Logika</p>
             </div>
           </div>
 
-          <div
-            className="flex items-center gap-3 px-5 py-3 rounded-3xl border-2 border-pink-soft/30 shadow-pink animate-float-reverse"
-            style={{ background: 'linear-gradient(135deg, #fff0f5 0%, #ffffff 100%)' }}
-          >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-pink-soft to-pink-hover text-white flex items-center justify-center shadow-pink">
+          {/* Tile 2: Estimasi Waktu with Live Beacon */}
+          <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-pink-light/60 to-white border border-pink-soft/20 animate-pink-breathe transition-colors">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-pink-soft to-pink-hover text-white flex items-center justify-center shadow-pink shrink-0">
               <Clock size={20} weight="fill" />
             </div>
             <div>
-              <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Estimasi Waktu</p>
-              <p className="text-xs font-black text-pink-hover">&lt; 1 Menit / Soal</p>
+              <div className="flex items-center gap-1.5">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-soft opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-hover"></span>
+                </span>
+                <p className="text-[10px] text-pink-hover font-black uppercase tracking-wider">Estimasi Waktu</p>
+              </div>
+              <p className="text-xs font-black text-gray-900">&lt; 1 Menit / Soal</p>
             </div>
           </div>
 
-          <div
-            className="flex items-center gap-3 px-5 py-3 rounded-3xl border-2 border-turquoise/30 shadow-soft animate-float-slow"
-            style={{ background: 'linear-gradient(135deg, #f0fbff 0%, #e8fafb 100%)' }}
-          >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft">
+          {/* Tile 3: Format Soal with Shimmer */}
+          <div className="shimmer-card flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-turquoise-surface/60 via-white to-turquoise-surface/40 border border-turquoise/15 hover:border-turquoise/40 transition-colors">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft shrink-0">
               <Lightning size={20} weight="fill" className="text-amber-500" />
             </div>
             <div>
-              <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Format Soal</p>
-              <p className="text-xs font-black text-turquoise-deep">Logika Sehari-hari</p>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Metode Uji</p>
+              </div>
+              <p className="text-xs font-black text-turquoise-deep">Konteks Nyata Belanja</p>
             </div>
           </div>
         </div>
