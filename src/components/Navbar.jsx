@@ -102,27 +102,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Navigation bar */}
-      <div className="md:hidden flex border-t border-gray-100 bg-white/95 px-2 py-1 justify-around">
-        {navLinks.map((link) => {
-          const Icon = link.icon
-          const isActive = pathname === link.path
-          return (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`flex flex-col items-center py-1.5 px-3 rounded-xl text-[10px] font-black transition-all ${
-                isActive
-                  ? 'text-turquoise bg-turquoise-light/80 scale-105'
-                  : 'text-gray-400 hover:text-gray-600'
-              }`}
-            >
-              <Icon size={20} weight={isActive ? 'fill' : 'regular'} />
-              <span>{link.label}</span>
-            </Link>
-          )
-        })}
-      </div>
     </nav>
   )
 }
