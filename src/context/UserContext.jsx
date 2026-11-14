@@ -67,12 +67,21 @@ export function UserProvider({ children }) {
       localStorage.setItem('numeracy_diagnostic', JSON.stringify(userData.diagnostic))
     }
 
-    // Sync to backend — server may return a different isPaid (e.g., admin already marked as paid)
+    // Sync to backend — server returns authoritative user record with isPaid & diagnostic!
     const synced = await syncUserWithBackend(userData)
-    if (synced.isPaid !== userData.isPaid) {
-      const updated = { ...userData, isPaid: synced.isPaid }
-      setUser(updated)
-      localStorage.setItem('numeracy_user', JSON.stringify(updated))
+    if (synced) {
+      const merged = {
+        ...userData,
+        isPaid: typeof synced.isPaid === 'boolean' ? synced.isPaid : userData.isPaid,
+        diagnostic: synced.diagnostic || userData.diagnostic || null,
+      }
+      setUser(merged)
+      localStorage.setItem('numeracy_user', JSON.stringify(merged))
+
+      if (merged.diagnostic) {
+        setDiagnosticResult(merged.diagnostic)
+        localStorage.setItem('numeracy_diagnostic', JSON.stringify(merged.diagnostic))
+      }
     }
   }
 

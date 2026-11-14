@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import { defaultExercises } from '../data/exercises'
+import { loadCustomExercises } from '../services/api'
 import {
   PencilSimpleLine,
   CheckCircle,
@@ -18,7 +19,7 @@ import {
 } from '@phosphor-icons/react'
 
 export default function ExercisePage() {
-  const [exercises] = useState(() => {
+  const [exercises, setExercises] = useState(() => {
     const custom = localStorage.getItem('numeracy_custom_exercises')
     return custom ? [...defaultExercises, ...JSON.parse(custom)] : [...defaultExercises]
   })
@@ -28,6 +29,20 @@ export default function ExercisePage() {
   const [feedback, setFeedback] = useState(null)
   const [answeredHistory, setAnsweredHistory] = useState({}) // { [id]: { isCorrect: boolean } }
   const [streak, setStreak] = useState(0)
+
+  // Sync fresh custom exercises from backend
+  useEffect(() => {
+    const custom = localStorage.getItem('numeracy_custom_exercises')
+    if (custom) {
+      setExercises([...defaultExercises, ...JSON.parse(custom)])
+    }
+
+    loadCustomExercises().then((serverExercises) => {
+      if (serverExercises && serverExercises.length > 0) {
+        setExercises([...defaultExercises, ...serverExercises])
+      }
+    })
+  }, [])
 
   const question = exercises[currentIndex] || exercises[0]
   const total = exercises.length

@@ -4,6 +4,7 @@ import PaywallModal from '../components/PaywallModal'
 import { defaultMaterials } from '../data/materials'
 import { useUser } from '../context/UserContext'
 import DynamicIcon from '../components/DynamicIcon'
+import { loadCustomMaterials } from '../services/api'
 import {
   BookOpenText,
   CaretDown,
@@ -132,10 +133,18 @@ export default function MicrolearningPage() {
   })
 
   useEffect(() => {
+    // 1. Instant hydration from localStorage
     const custom = localStorage.getItem('numeracy_custom_materials')
     if (custom) {
       setMaterials([...defaultMaterials, ...JSON.parse(custom)])
     }
+
+    // 2. Fresh sync from backend server
+    loadCustomMaterials().then((serverMaterials) => {
+      if (serverMaterials && serverMaterials.length > 0) {
+        setMaterials([...defaultMaterials, ...serverMaterials])
+      }
+    })
   }, [])
 
   const handleTopicClick = (mat) => {

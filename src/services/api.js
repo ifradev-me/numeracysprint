@@ -21,9 +21,22 @@ async function request(endpoint, options = {}) {
       },
       ...options,
     })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+    // Safety check: ensure response is JSON and not an HTML SPA fallback
+    const contentType = res.headers.get('content-type') || ''
+    if (!contentType.includes('application/json')) {
+      console.warn(`[api] Endpoint ${endpoint} returned non-JSON (${contentType})`)
+      return null
+    }
+
+    if (!res.ok) {
+      console.warn(`[api] Endpoint ${endpoint} returned HTTP ${res.status}`)
+      return null
+    }
+
     return await res.json()
-  } catch {
+  } catch (err) {
+    console.warn(`[api] Request error on ${endpoint}:`, err?.message)
     return null // Graceful fallback — caller uses localStorage
   }
 }
@@ -34,11 +47,9 @@ async function request(endpoint, options = {}) {
 export async function getTeamInfo() {
   const serverResult = await request('/admin/team')
   if (serverResult?.team) {
-    // Keep local copy in sync
     localStorage.setItem('numeracy_team_info', JSON.stringify(serverResult.team))
     return serverResult.team
   }
-  // Fallback: localStorage
   const saved = localStorage.getItem('numeracy_team_info')
   return saved ? JSON.parse(saved) : defaultTeamInfo
 }
@@ -68,7 +79,6 @@ export async function saveTeamInfo(teamData) {
 export async function bootstrap() {
   const result = await request('/bootstrap')
   if (result?.data) {
-    // Hydrate localStorage with fresh server data
     const { team, users, customMaterials, customExercises } = result.data
     if (team) localStorage.setItem('numeracy_team_info', JSON.stringify(team))
     if (users) localStorage.setItem('numeracy_all_users', JSON.stringify(users))
@@ -82,7 +92,7 @@ export async function bootstrap() {
 // ─── User Sync ───────────────────────────────────────────────────────────────
 
 /**
- * Sync user to server and read back authoritative isPaid status.
+ * Sync user to server and read back authoritative isPaid status & diagnostic result.
  * Always writes to localStorage first so UI is never blocked.
  */
 export async function syncUserWithBackend(userData) {
@@ -96,20 +106,26 @@ export async function syncUserWithBackend(userData) {
   else allUsers.push(merged)
   localStorage.setItem('numeracy_all_users', JSON.stringify(allUsers))
 
-  // 2. Send to server (non-blocking, best-effort)
+  // 2. Send to server
   const serverResult = await request('/user/sync', {
     method: 'POST',
     body: JSON.stringify(merged),
   })
 
-  // 3. If server has an authoritative isPaid value, trust it
-  if (serverResult?.user && typeof serverResult.user.isPaid === 'boolean') {
-    merged.isPaid = serverResult.user.isPaid
-    // Update localStorage with server's answer
+  // 3. If server returns authoritative user record, trust it
+  if (serverResult?.user) {
+    if (typeof serverResult.user.isPaid === 'boolean') {
+      merged.isPaid = serverResult.user.isPaid
+    }
+    if (serverResult.user.diagnostic) {
+      merged.diagnostic = serverResult.user.diagnostic
+    }
+
     const idx2 = allUsers.findIndex(
       (u) => u.name.toLowerCase() === merged.name.toLowerCase()
     )
     if (idx2 >= 0) allUsers[idx2] = merged
+    else allUsers.push(merged)
     localStorage.setItem('numeracy_all_users', JSON.stringify(allUsers))
   }
 
@@ -118,7 +134,6 @@ export async function syncUserWithBackend(userData) {
 
 /**
  * Fetch a single user's payment status from the server.
- * Used to re-check isPaid on page load.
  */
 export async function fetchUserPaidStatus(name) {
   const result = await request(`/user/${encodeURIComponent(name)}`)
