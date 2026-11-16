@@ -1,5 +1,5 @@
 import React from 'react'
-import { LockKey, WhatsappLogo, X, CheckCircle, Sparkle, ShieldCheck } from '@phosphor-icons/react'
+import { Lock, WhatsappLogo, X, CheckCircle, Sparkle, ShieldCheck } from '@phosphor-icons/react'
 import { useUser } from '../context/UserContext'
 
 export default function PaywallModal({ isOpen, onClose, materialTitle }) {
@@ -9,83 +9,82 @@ export default function PaywallModal({ isOpen, onClose, materialTitle }) {
 
   const cleanPhone = (teamInfo?.phone || '6281234567890').replace(/\D/g, '')
   const customMessage = encodeURIComponent(
-    `Halo ${teamInfo?.name || 'Admin NumeracySprint'}, saya ${user?.name || 'Siswa'} ingin mengaktifkan akun Premium untuk membuka materi "${materialTitle || 'Microlearning'}" dan fitur lengkap lainnya!`
+    `Halo ${teamInfo?.name || 'Admin EduSpark'}, saya ${user?.name || 'Siswa'} ingin mengaktifkan akun Pro untuk membuka modul materi "${materialTitle || 'Matematika UTBK'}" dan fitur lengkap lainnya!`
   )
   const waUrl = `https://wa.me/${cleanPhone}?text=${customMessage}`
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-pop-in">
-      <div className="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border-4 border-turquoise">
-        {/* Header Banner - Turquoise Card with pattern */}
-        <div className="bg-gradient-to-br from-turquoise via-turquoise-dark to-[#0e5c63] p-6 text-white text-center relative border-b-2 border-white/20">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-edutext/40 backdrop-blur-sm animate-pop-in">
+      <div className="raised max-w-md w-full overflow-hidden p-6 sm:p-8 space-y-6">
+        {/* Modal Header */}
+        <div className="flex items-start justify-between pb-4 border-b border-white/60">
+          <div className="space-y-1">
+            <span className="badge-chip text-[11px]">
+              <Sparkle size={12} weight="fill" className="text-edupink" /> Akses Berbayar
+            </span>
+            <h3 className="text-xl font-black font-display text-edutext mt-1">
+              Buka Seluruh Materi
+            </h3>
+            <p className="text-xs text-edutext-muted font-medium">
+              Modul &ldquo;{materialTitle || 'Materi UTBK'}&rdquo; termasuk materi berbayar EduSpark.
+            </p>
+          </div>
+
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors text-white active:scale-95 cursor-pointer"
+            className="w-8 h-8 rounded-full raised-sm flex items-center justify-center text-edutext hover:text-edudanger shrink-0"
           >
-            <X size={20} weight="bold" />
+            <X size={16} weight="bold" />
           </button>
-
-          <div className="w-16 h-16 rounded-3xl bg-white text-pink-soft mx-auto flex items-center justify-center mb-3 shadow-pink">
-            <LockKey size={34} weight="fill" />
-          </div>
-
-          <span className="badge-pink mb-2">
-            <Sparkle size={14} weight="fill" /> Akses Premium
-          </span>
-          <h3 className="text-xl font-black font-roboto tracking-tight">Buka Seluruh Materi</h3>
-          <p className="text-white/90 text-xs mt-1 font-medium">
-            Materi &ldquo;{materialTitle || 'Microlearning'}&rdquo; termasuk modul level lanjutan.
-          </p>
         </div>
 
-        {/* Modal Body */}
-        <div className="p-6 space-y-4">
-          <div className="bg-turquoise-surface p-4 rounded-2xl text-xs space-y-2.5 text-turquoise-deep border border-turquoise/20">
-            <div className="flex items-center gap-2 font-black text-sm text-turquoise-dark">
-              <ShieldCheck size={18} weight="fill" />
-              <span>Keuntungan Akses Penuh Pro:</span>
-            </div>
-            <div className="flex items-center gap-2 font-medium">
-              <CheckCircle size={16} weight="fill" className="text-turquoise shrink-0" />
-              <span>Akses ke seluruh topik microlearning & studi kasus</span>
-            </div>
-            <div className="flex items-center gap-2 font-medium">
-              <CheckCircle size={16} weight="fill" className="text-turquoise shrink-0" />
-              <span>Video interaktif dan visualisasi grafik nyata</span>
-            </div>
-            <div className="flex items-center gap-2 font-medium">
-              <CheckCircle size={16} weight="fill" className="text-turquoise shrink-0" />
-              <span>Status akun Pro resmi di sistem NumeracySprint</span>
-            </div>
+        {/* Benefits list */}
+        <div className="inset p-4 rounded-2xl text-xs space-y-2.5">
+          <div className="flex items-center gap-2 font-black text-eduaccent">
+            <ShieldCheck size={18} weight="bold" />
+            <span>Keuntungan Paket Pro EduSpark:</span>
           </div>
-
-          <div className="text-center pt-1">
-            <p className="text-xs text-gray-500 mb-1">
-              Untuk aktivasi instan, hubungi tim pengembang via WhatsApp:
-            </p>
-            <p className="font-black text-gray-900 text-sm">{teamInfo?.name || 'Admin NumeracySprint'}</p>
-            <p className="text-xs text-gray-400 font-mono font-bold">+{cleanPhone}</p>
+          <div className="flex items-center gap-2 font-medium text-edutext">
+            <CheckCircle size={16} weight="fill" className="text-eduaccent shrink-0" />
+            <span>Materi lengkap 3 mapel: PK, PM, dan Penalaran Kuantitatif</span>
           </div>
-
-          {/* Action CTA */}
-          <div className="space-y-2 pt-2">
-            <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-accent w-full text-sm py-3.5 shadow-pink font-black flex items-center justify-center gap-2"
-            >
-              <WhatsappLogo size={22} weight="fill" />
-              <span>Hubungi Admin via WhatsApp</span>
-            </a>
-
-            <button
-              onClick={onClose}
-              className="w-full py-2.5 text-xs text-gray-400 hover:text-gray-600 transition-colors font-bold cursor-pointer"
-            >
-              Nanti Saja
-            </button>
+          <div className="flex items-center gap-2 font-medium text-edutext">
+            <CheckCircle size={16} weight="fill" className="text-eduaccent shrink-0" />
+            <span>Try Out UTBK ber-timer penuh tanpa batasan</span>
           </div>
+          <div className="flex items-center gap-2 font-medium text-edutext">
+            <CheckCircle size={16} weight="fill" className="text-eduaccent shrink-0" />
+            <span>Status Pro tersimpan di cloud database (sinkron di semua gadget)</span>
+          </div>
+        </div>
+
+        {/* Admin note */}
+        <div className="text-center space-y-0.5 text-xs">
+          <p className="text-edutext-muted">
+            Untuk aktivasi, hubungi admin EduSpark:
+          </p>
+          <p className="font-bold text-edutext text-sm">{teamInfo?.name || 'Admin EduSpark'}</p>
+          <p className="text-xs text-edutext-muted font-mono">+{cleanPhone}</p>
+        </div>
+
+        {/* Actions */}
+        <div className="space-y-2 pt-2">
+          <a
+            href={waUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-accent w-full text-xs py-3 flex items-center justify-center gap-2"
+          >
+            <WhatsappLogo size={18} weight="fill" />
+            <span>Hubungi Admin via WhatsApp</span>
+          </a>
+
+          <button
+            onClick={onClose}
+            className="btn-secondary w-full text-xs py-2.5 text-edutext-muted"
+          >
+            Nanti Saja
+          </button>
         </div>
       </div>
     </div>

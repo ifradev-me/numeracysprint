@@ -7,62 +7,58 @@ export default {
   theme: {
     extend: {
       colors: {
+        // EduSpark v2 Neumorphism Color Palette
+        edubg: '#F9E4EC',
+        edudeep: '#F3D5E1',
+        edushlight: '#FFF7FA',
+        edushdark: '#DDB5C6',
+        edupink: {
+          DEFAULT: '#EFA7C1',
+          soft: '#F6CADA',
+        },
+        eduaccent: {
+          DEFAULT: '#1B6B58',
+          dark: '#124D3F',
+        },
+        edutext: {
+          DEFAULT: '#4A2A38',
+          muted: '#7A5566',
+        },
+        edudanger: '#B04A5E',
+
+        // Legacy compatibility aliases
         turquoise: {
-          light: '#E6F8F9',
-          surface: '#F0FAFB',
-          DEFAULT: '#2DB4BE',
-          dark: '#1A8A93',
-          deep: '#126168',
+          light: '#F3D5E1',
+          surface: '#F9E4EC',
+          DEFAULT: '#1B6B58',
+          dark: '#124D3F',
+          deep: '#124D3F',
         },
         pink: {
-          soft: '#FF6B9A',
-          hover: '#FF5288',
-          light: '#FFF0F5',
+          soft: '#EFA7C1',
+          hover: '#E291AE',
+          light: '#F6CADA',
         },
-        offwhite: '#F8FAFA',
       },
       fontFamily: {
-        inter: ['Inter', 'sans-serif'],
-        roboto: ['Roboto', 'sans-serif'],
+        display: ['Fraunces', 'Georgia', 'serif'],
+        body: ['Figtree', 'system-ui', 'sans-serif'],
+        sans: ['Figtree', 'system-ui', 'sans-serif'],
+        mono: ['"Share Tech Mono"', 'ui-monospace', 'monospace'],
       },
       borderRadius: {
-        'xl': '12px',
+        'xl': '14px',
         '2xl': '16px',
         '3xl': '24px',
         '4xl': '32px',
       },
       boxShadow: {
-        'soft': '0 4px 14px 0 rgba(45, 180, 190, 0.08)',
-        'card': '0 10px 25px -5px rgba(26, 138, 147, 0.15), 0 8px 10px -6px rgba(26, 138, 147, 0.1)',
-        'card-blue': '0 14px 30px -4px rgba(26, 138, 147, 0.28)',
-        'card-hover': '0 20px 35px -6px rgba(26, 138, 147, 0.35)',
-        'pink': '0 8px 20px -3px rgba(255, 107, 154, 0.35)',
-        'pink-hover': '0 12px 26px -3px rgba(255, 107, 154, 0.45)',
-        'glow': '0 0 25px rgba(45, 180, 190, 0.3)',
-      },
-      animation: {
-        'glow-breathe': 'glow-breathe 4s ease-in-out infinite',
-        'pink-breathe': 'pink-breathe 4s ease-in-out infinite',
-        'pulse-subtle': 'pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'pop-in': 'pop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-      },
-      keyframes: {
-        'glow-breathe': {
-          '0%, 100%': { boxShadow: '0 4px 14px 0 rgba(45, 180, 190, 0.12)', borderColor: 'rgba(45, 180, 190, 0.25)' },
-          '50%': { boxShadow: '0 6px 22px 2px rgba(45, 180, 190, 0.28)', borderColor: 'rgba(45, 180, 190, 0.55)' },
-        },
-        'pink-breathe': {
-          '0%, 100%': { boxShadow: '0 4px 14px 0 rgba(255, 107, 154, 0.15)', borderColor: 'rgba(255, 107, 154, 0.25)' },
-          '50%': { boxShadow: '0 6px 22px 2px rgba(255, 107, 154, 0.32)', borderColor: 'rgba(255, 107, 154, 0.55)' },
-        },
-        'pulse-subtle': {
-          '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.85' },
-        },
-        'pop-in': {
-          '0%': { opacity: '0', transform: 'scale(0.95)' },
-          '100%': { opacity: '1', transform: 'scale(1)' },
-        },
+        'raised': '8px 8px 18px #DDB5C6, -8px -8px 18px #FFF7FA',
+        'raised-sm': '4px 4px 10px #DDB5C6, -4px -4px 10px #FFF7FA',
+        'raised-lg': '12px 12px 24px #DDB5C6, -12px -12px 24px #FFF7FA',
+        'inset': 'inset 5px 5px 10px #DDB5C6, inset -5px -5px 10px #FFF7FA',
+        'inset-sm': 'inset 3px 3px 6px #DDB5C6, inset -3px -3px 6px #FFF7FA',
+        'accent-btn': '5px 5px 12px rgba(18,77,63,0.35), -4px -4px 10px #FFF7FA',
       },
     },
   },

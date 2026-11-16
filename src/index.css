@@ -2,22 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Background page: putih agak pink yang bersih dan segar */
+  --bg: #FDF7FA;
+  --bg-deep: #ECD0DE;
+  
+  /* Card: pinkish neu-skeuomorphism yang timbul dan taktil */
+  --card-bg-start: #F9E2EE;
+  --card-bg-end: #F2D5E3;
+  --card-border: rgba(255, 255, 255, 0.75);
+  --sh-light: #FFFFFF;
+  --sh-dark: #D4A8BD;
+  
+  --pink: #E89BB8;
+  --pink-soft: #F6D0DE;
+  --accent: #1B6B58;
+  --accent-dark: #124D3F;
+  --text: #3D222E;
+  --text-muted: #735060;
+  --danger: #B04A5E;
+}
+
 @layer base {
   html {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Figtree', system-ui, -apple-system, sans-serif;
     scroll-behavior: smooth;
+    background-color: var(--bg);
+    color: var(--text);
   }
 
   body {
-    @apply bg-white text-gray-800 min-h-screen selection:bg-pink-soft selection:text-white;
-    /* Subtle dot grid pattern on white background for texture */
-    background-image: radial-gradient(rgba(45, 180, 190, 0.12) 1.5px, transparent 1.5px);
-    background-size: 24px 24px;
+    background-color: var(--bg);
+    /* Latar putih agak pink dengan ambient glow sangat halus */
+    background-image: 
+      radial-gradient(circle at 10% 5%, rgba(255, 255, 255, 0.95) 0%, transparent 45%),
+      radial-gradient(circle at 90% 15%, rgba(255, 255, 255, 0.9) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(255, 245, 249, 0.7) 0%, transparent 65%),
+      radial-gradient(circle at 15% 85%, rgba(248, 226, 238, 0.3) 0%, transparent 55%),
+      radial-gradient(circle at 85% 85%, rgba(255, 255, 255, 0.85) 0%, transparent 50%);
     background-attachment: fixed;
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.65;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Fraunces', Georgia, serif;
+    line-height: 1.18;
+    color: var(--text);
   }
 
   /* Accessible motion settings */
@@ -35,147 +67,317 @@
 
 @layer components {
   /* ============================================================== */
-  /* 1. SIGNATURE BLUE CARDS (Rich Turquoise to Deep Teal Gradient) */
-  /* Embedded texture & pink-turquoise glow shadow                   */
+  /* PINKISH NEU-SKEUOMORPHISM CARD & SURFACES                     */
   /* ============================================================== */
-  .card-blue {
-    background-color: #17838d;
-    background-image: 
-      radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.18) 1.5px, transparent 1.5px),
-      radial-gradient(circle at 15% 85%, rgba(255, 107, 154, 0.2) 1.5px, transparent 1.5px),
-      linear-gradient(135deg, #24b8c4 0%, #188d97 45%, #0e6169 100%);
-    background-size: 24px 24px, 24px 24px, 100% 100%;
-    color: #ffffff;
+
+  .raised {
+    background: linear-gradient(155deg, #FBE5F0 0%, #F5D7E5 55%, #EFCCE0 100%);
     border-radius: 24px;
-    padding: 1.75rem;
-    box-shadow: 0 16px 36px -4px rgba(24, 141, 151, 0.38), 0 8px 20px -4px rgba(255, 107, 154, 0.2);
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 
+      8px 10px 22px rgba(212, 168, 189, 0.45),
+      -7px -7px 18px rgba(255, 255, 255, 0.95),
+      inset 1px 1px 2px rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.8);
   }
 
-  .card-blue-vibrant {
-    background-color: #126f77;
-    background-image: 
-      radial-gradient(circle at 90% 10%, rgba(255, 255, 255, 0.22) 1.5px, transparent 1.5px),
-      radial-gradient(circle at 10% 90%, rgba(255, 107, 154, 0.25) 1.5px, transparent 1.5px),
-      linear-gradient(135deg, #2fd2df 0%, #1b9ca8 50%, #10666f 100%);
-    background-size: 22px 22px, 22px 22px, 100% 100%;
+  .raised-sm {
+    background: linear-gradient(155deg, #FBE5F0 0%, #F4D7E5 100%);
+    border-radius: 16px;
+    box-shadow: 
+      4px 6px 14px rgba(212, 168, 189, 0.38),
+      -4px -4px 12px rgba(255, 255, 255, 0.95),
+      inset 1px 1px 1.5px rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+  }
+
+  .inset {
+    background: #EED1DF;
+    border-radius: 14px;
+    box-shadow: 
+      inset 4px 4px 8px rgba(189, 140, 163, 0.45),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(214, 172, 192, 0.4);
+  }
+
+  .inset-subtle {
+    background: #F4D9E6;
+    border-radius: 14px;
+    box-shadow: 
+      inset 3px 3px 6px rgba(199, 153, 175, 0.38),
+      inset -3px -3px 6px rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+
+  /* ============================================================== */
+  /* BUTTONS                                                        */
+  /* ============================================================== */
+
+  .btn-accent, .btn-primary {
+    background: var(--accent);
     color: #ffffff;
-    border-radius: 28px;
-    padding: 2rem;
-    box-shadow: 0 20px 42px -6px rgba(27, 156, 168, 0.42), 0 10px 24px -4px rgba(255, 107, 154, 0.25);
-    position: relative;
-    overflow: hidden;
+    border: 0;
+    border-radius: 16px;
+    padding: 0.8rem 1.4rem;
+    font-weight: 700;
+    box-shadow: 
+      4px 6px 16px rgba(18, 77, 63, 0.38),
+      -2px -2px 8px rgba(255, 255, 255, 0.8),
+      inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    transition: all 0.18s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
   }
 
-  .card-blue-subtle {
-    background-color: #17838d;
-    background-image: linear-gradient(135deg, #22b1bd 0%, #157e87 100%);
+  .btn-accent:hover, .btn-primary:hover {
+    background: var(--accent-dark);
+    box-shadow: 
+      5px 8px 20px rgba(18, 77, 63, 0.45),
+      -2px -2px 8px rgba(255, 255, 255, 0.8);
+    transform: translateY(-1px);
+  }
+
+  .btn-accent:active, .btn-primary:active {
+    box-shadow: inset 3px 3px 7px rgba(0, 0, 0, 0.4);
+    transform: translateY(0);
+  }
+
+  .btn-accent:focus-visible, .btn-primary:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .btn-secondary {
+    background: linear-gradient(155deg, #FBE6F1 0%, #F5D8E6 100%);
+    color: var(--text);
+    border: 0;
+    border-radius: 16px;
+    padding: 0.8rem 1.4rem;
+    font-weight: 700;
+    box-shadow: 
+      4px 6px 14px rgba(212, 168, 189, 0.35),
+      -4px -4px 10px rgba(255, 255, 255, 0.95),
+      inset 1px 1px 1.5px rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.18s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover {
+    color: var(--accent);
+    box-shadow: 
+      3px 5px 12px rgba(212, 168, 189, 0.42),
+      -3px -3px 8px rgba(255, 255, 255, 0.95);
+  }
+
+  .btn-secondary:active {
+    box-shadow: 
+      inset 3px 3px 6px rgba(189, 140, 163, 0.42),
+      inset -3px -3px 6px rgba(255, 255, 255, 0.85);
+  }
+
+  .btn-secondary:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .btn-pill {
+    background: linear-gradient(155deg, #FBE6F1 0%, #F5D8E6 100%);
+    color: var(--text);
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: 
+      3px 4px 10px rgba(212, 168, 189, 0.32),
+      -3px -3px 8px rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .btn-pill:hover {
+    color: var(--accent);
+  }
+
+  .btn-pill:active {
+    box-shadow: 
+      inset 2px 2px 5px rgba(189, 140, 163, 0.4),
+      inset -2px -2px 5px rgba(255, 255, 255, 0.85);
+  }
+
+  /* ============================================================== */
+  /* FORM CONTROLS & INPUTS                                         */
+  /* ============================================================== */
+
+  .input-inset {
+    background: #EED1DF;
+    border: 1.5px solid transparent;
+    border-radius: 14px;
+    box-shadow: 
+      inset 3px 3px 7px rgba(189, 140, 163, 0.45),
+      inset -3px -3px 7px rgba(255, 255, 255, 0.85);
+    color: var(--text);
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+    outline: none;
+    width: 100%;
+  }
+
+  .input-inset:focus {
+    border-color: var(--accent);
+    box-shadow: 
+      inset 3px 3px 7px rgba(189, 140, 163, 0.45),
+      inset -3px -3px 7px rgba(255, 255, 255, 0.85),
+      0 0 0 3px rgba(27, 107, 88, 0.18);
+  }
+
+  .input-inset::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+  }
+
+  /* ============================================================== */
+  /* TIMER WELL & DISPLAY                                           */
+  /* ============================================================== */
+
+  .timer-well {
+    background: linear-gradient(160deg, #EBD0DF 0%, #E2C3D3 100%);
+    border-radius: 16px;
+    box-shadow: 
+      inset 4px 4px 8px rgba(175, 126, 149, 0.5),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.9);
+    font-family: 'Share Tech Mono', ui-monospace, monospace;
+    color: var(--accent-dark);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.25rem;
+    font-size: 1.75rem;
+    letter-spacing: 0.05em;
+    border: 1px solid rgba(214, 172, 192, 0.4);
+  }
+
+  .timer-well.timer-critical {
+    color: var(--danger);
+    background: linear-gradient(160deg, #FBE0E7 0%, #F5C7D5 100%);
+    border-color: rgba(176, 74, 94, 0.4);
+    animation: timer-pulse 1s infinite alternate;
+  }
+
+  @keyframes timer-pulse {
+    0% { opacity: 1; }
+    100% { opacity: 0.75; }
+  }
+
+  /* ============================================================== */
+  /* PROGRESS BARS                                                  */
+  /* ============================================================== */
+
+  .progress-track {
+    background: #EED1DF;
+    border-radius: 9999px;
+    box-shadow: 
+      inset 3px 3px 6px rgba(189, 140, 163, 0.45),
+      inset -3px -3px 6px rgba(255, 255, 255, 0.85);
+    overflow: hidden;
+    position: relative;
+    height: 12px;
+  }
+
+  .progress-fill {
+    background: var(--accent);
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 2px 0 6px rgba(18, 77, 63, 0.3);
+  }
+
+  /* ============================================================== */
+  /* BADGES & CHIPS                                                 */
+  /* ============================================================== */
+
+  .badge-chip {
+    background: linear-gradient(155deg, #FBE6F1 0%, #F5D8E6 100%);
+    color: var(--text);
+    border-radius: 9999px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    box-shadow: 
+      2px 3px 8px rgba(212, 168, 189, 0.3),
+      -2px -2px 6px rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .badge-accent {
+    background: var(--accent);
     color: #ffffff;
-    border-radius: 24px;
-    padding: 1.5rem;
-    box-shadow: 0 10px 25px -4px rgba(23, 131, 141, 0.25);
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* Frosted White & Contrast inside Blue Cards */
-  .card-inner-glass {
-    @apply bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl p-4 text-white shadow-sm transition-all duration-200;
-  }
-
-  .card-inner-white {
-    @apply bg-white text-gray-800 rounded-2xl p-5 shadow-soft border-2 border-turquoise/20 transition-all duration-200;
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    box-shadow: 2px 3px 8px rgba(18, 77, 63, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
   }
 
   /* ============================================================== */
-  /* 2. ACCENT BUTTONS & ELEMENTS (VIBRANT PINK & TURQUOISE)        */
+  /* TOAST & NOTIFICATIONS                                          */
   /* ============================================================== */
-  .btn-accent {
-    @apply bg-gradient-to-r from-pink-soft via-[#ff568d] to-pink-hover active:scale-[0.97] text-white font-black py-3 px-6 rounded-2xl transition-all duration-150 shadow-pink hover:shadow-pink-hover flex items-center justify-center gap-2 cursor-pointer border border-white/30;
-  }
 
-  .btn-white {
-    @apply bg-white hover:bg-gray-50 active:scale-[0.97] text-turquoise-deep font-black py-3 px-6 rounded-2xl transition-all duration-150 shadow-soft flex items-center justify-center gap-2 cursor-pointer border border-white/40;
-  }
-
-  .btn-primary {
-    @apply bg-gradient-to-r from-turquoise-deep to-turquoise-dark active:scale-[0.97] text-white font-black py-3 px-6 rounded-2xl transition-all duration-150 shadow-soft flex items-center justify-center gap-2 cursor-pointer border border-turquoise/30;
-  }
-
-  .btn-outline-white {
-    @apply border-2 border-white/80 hover:border-white active:scale-[0.97] text-white hover:bg-white/15 font-black py-2.5 px-5 rounded-2xl transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer;
-  }
-
-  .btn-outline-turquoise {
-    @apply border-2 border-turquoise hover:border-turquoise-dark active:scale-[0.97] text-turquoise-deep hover:bg-turquoise-light/60 font-black py-2.5 px-5 rounded-2xl transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer bg-white shadow-sm;
-  }
-
-  .btn-pink-outline {
-    @apply border-2 border-pink-soft hover:border-pink-hover active:scale-[0.97] text-pink-soft hover:bg-pink-light font-black py-2.5 px-5 rounded-2xl transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer bg-white shadow-sm;
-  }
-
-  /* Input fields */
-  .input-field-light {
-    @apply w-full bg-white border-2 border-turquoise/30 focus:border-turquoise text-gray-800 placeholder-gray-400 outline-none rounded-2xl px-4 py-3 transition-all duration-200 shadow-sm focus:shadow-soft;
-  }
-
-  .input-field-dark {
-    @apply w-full bg-white/20 border-2 border-white/40 focus:border-white text-white placeholder-white/70 outline-none rounded-2xl px-4 py-3 transition-all duration-200 focus:bg-white/25;
+  .toast-raised {
+    background: linear-gradient(155deg, #FBE6F1 0%, #F4D6E4 100%);
+    color: var(--accent-dark);
+    border-radius: 16px;
+    box-shadow: 
+      6px 8px 20px rgba(212, 168, 189, 0.45),
+      -6px -6px 16px rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    padding: 0.85rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.875rem;
   }
 
   /* ============================================================== */
-  /* 3. VIBRANT BADGES (PINK, TURQUOISE, GLASS)                      */
+  /* UTILITY & COMPATIBILITY STYLES                                 */
   /* ============================================================== */
-  .badge-pink {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-gradient-to-r from-pink-soft to-pink-hover text-white shadow-pink border border-white/30 tracking-wide;
-  }
 
-  .badge-pink-soft {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-pink-light text-pink-hover border border-pink-soft/30;
-  }
-
-  .badge-glass {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-white/25 text-white border border-white/40 backdrop-blur-sm shadow-sm;
-  }
-
-  .badge-turquoise {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-turquoise-light text-turquoise-deep border-2 border-turquoise/30 shadow-sm;
-  }
-
-  .badge-white {
-    @apply inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black bg-white text-turquoise-deep shadow-soft border border-turquoise/20;
-  }
-
-  /* Tabular figures for stable timers, numbers & scores */
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
 
-  /* ============================================================== */
-  /* 4. GROUNDED IDLE ANIMATIONS (SHIMMER & BEACON - NO TRANSLATE)  */
-  /* ============================================================== */
-  .shimmer-card {
-    position: relative;
-    overflow: hidden;
+  .card-blue, .card-blue-vibrant, .card-blue-subtle {
+    background: linear-gradient(155deg, #FBE5F0 0%, #F5D7E5 55%, #EFCCE0 100%) !important;
+    color: var(--text) !important;
+    border-radius: 24px !important;
+    padding: 1.75rem !important;
+    box-shadow: 
+      8px 10px 22px rgba(212, 168, 189, 0.45),
+      -7px -7px 18px rgba(255, 255, 255, 0.95),
+      inset 1px 1px 2px rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
   }
 
-  .shimmer-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-    animation: shimmer-sweep 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    pointer-events: none;
+  .card-inner-glass, .card-inner-white {
+    background: #EED1DF !important;
+    color: var(--text) !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(214, 172, 192, 0.4) !important;
+    box-shadow: 
+      inset 3px 3px 6px rgba(189, 140, 163, 0.45),
+      inset -3px -3px 6px rgba(255, 255, 255, 0.85) !important;
   }
-}
-
-@keyframes shimmer-sweep {
-  0% { left: -100%; }
-  25% { left: 160%; }
-  100% { left: 160%; }
 }

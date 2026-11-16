@@ -4,11 +4,11 @@
 const API_BASE = '/api'
 
 export const defaultTeamInfo = {
-  name: 'Tim NumeracySprint',
-  role: 'Pengembang Platform & Dukungan Belajar',
+  name: 'Admin EduSpark',
+  role: 'Layanan Siswa & Bantuan Belajar',
   phone: '6281234567890',
   whatsappMessage:
-    'Halo Admin NumeracySprint, saya ingin konfirmasi pembayaran untuk membuka akses penuh materi Microlearning!',
+    'Halo Admin EduSpark, saya ingin konfirmasi pembayaran untuk aktivasi akun Pro Matematika UTBK!',
 }
 
 // ─── Helper fetch ────────────────────────────────────────────────────────────

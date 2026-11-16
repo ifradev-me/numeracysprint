@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { UserProvider } from './context/UserContext'
+import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import DiagnosticPage from './pages/DiagnosticPage'
@@ -16,7 +17,16 @@ import ProtectedRoute from './components/ProtectedRoute'
 import BottomNav from './components/BottomNav'
 
 // Pages that should show the mobile bottom nav
-const BOTTOM_NAV_ROUTES = ['/dashboard', '/diagnostic', '/microlearning', '/exercise', '/about']
+const BOTTOM_NAV_ROUTES = [
+  '/dashboard',
+  '/diagnostic',
+  '/microlearning',
+  '/materi',
+  '/exercise',
+  '/tryout',
+  '/about',
+  '/tentang',
+]
 
 function AppShell() {
   const { pathname } = useLocation()
@@ -25,7 +35,13 @@ function AppShell() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        {/* Landing Page (Public) */}
+        <Route path="/" element={<HomePage />} />
+
+        {/* Login Page (Public) */}
+        <Route path="/login" element={<LoginPage />} />
+
+        {/* Authenticated Student Routes */}
         <Route
           path="/dashboard"
           element={
@@ -51,7 +67,23 @@ function AppShell() {
           }
         />
         <Route
+          path="/materi"
+          element={
+            <ProtectedRoute>
+              <MicrolearningPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/exercise"
+          element={
+            <ProtectedRoute>
+              <ExercisePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tryout"
           element={
             <ProtectedRoute>
               <ExercisePage />
@@ -66,11 +98,22 @@ function AppShell() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/tentang"
+          element={
+            <ProtectedRoute>
+              <AboutPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin Routes */}
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/admin/materials" element={<AdminMaterials />} />
         <Route path="/admin/exercises" element={<AdminExercises />} />
         <Route path="/admin/team" element={<AdminTeam />} />
+
         {/* 404 Route */}
         <Route path="/404" element={<NotFoundPage />} />
         <Route path="*" element={<NotFoundPage />} />

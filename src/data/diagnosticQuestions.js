@@ -2,6 +2,7 @@ export const diagnosticQuestions = [
   {
     id: 1,
     topic: 'Persentase & Diskon',
+    subtest: 'Pengetahuan Kuantitatif & PM',
     question: 'Sebuah baju seharga Rp200.000 mendapat diskon 25%. Berapa harga setelah diskon?',
     options: [
       { label: 'A', text: 'Rp150.000', correct: true },
@@ -13,7 +14,8 @@ export const diagnosticQuestions = [
   },
   {
     id: 2,
-    topic: 'Rata-rata Data',
+    topic: 'Rata-rata Data (Mean)',
+    subtest: 'Pengetahuan Kuantitatif',
     question: 'Nilai ulangan 5 siswa adalah 70, 80, 90, 60, dan 100. Berapa nilai rata-ratanya?',
     options: [
       { label: 'A', text: '78', correct: false },
@@ -25,7 +27,8 @@ export const diagnosticQuestions = [
   },
   {
     id: 3,
-    topic: 'Perbandingan',
+    topic: 'Perbandingan & Rasio',
+    subtest: 'Penalaran Kuantitatif',
     question: 'Resep kue membutuhkan tepung dan gula dengan perbandingan 3:1. Jika tepung yang digunakan 300 gram, berapa gram gula yang dibutuhkan?',
     options: [
       { label: 'A', text: '150 gram', correct: false },
@@ -38,8 +41,23 @@ export const diagnosticQuestions = [
 ]
 
 export function calculateLevel(score) {
-  if (score < 40) return { level: 'Dasar', color: 'red', emoji: '🔴', recommendation: 'Mulai dari materi Persentase & Diskon untuk membangun fondasi numerasi.' }
-  if (score < 100) return { level: 'Menengah', color: 'yellow', emoji: '🟡', recommendation: 'Perkuat pemahaman dengan berlatih soal Rata-rata dan Perbandingan.' }
-  return { level: 'Lanjut', color: 'green', emoji: '🟢', recommendation: 'Hebat! Coba tantang dirimu dengan soal latihan kontekstual yang lebih kompleks.' }
+  if (score < 40) {
+    return {
+      level: 'Dasar',
+      badgeClass: 'badge-chip text-edudanger',
+      recommendation: 'Mulai dari materi Persentase & Diskon serta penguatan fondasi aljabar dasar UTBK.',
+    }
+  }
+  if (score < 100) {
+    return {
+      level: 'Menengah',
+      badgeClass: 'badge-accent',
+      recommendation: 'Perkuat pemahaman dengan modul Rata-rata dan Perbandingan, lalu coba Try Out ber-timer.',
+    }
+  }
+  return {
+    level: 'Lanjut',
+    badgeClass: 'badge-accent',
+    recommendation: 'Hebat! Kemampuan dasarmu sangat solid. Langsung asah kecepatanmu di Try Out SNBT ber-timer.',
+  }
 }
-

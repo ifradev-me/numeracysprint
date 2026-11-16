@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import Navbar from '../components/Navbar'
 import {
-  Stethoscope,
+  Brain,
+  ClipboardText,
   BookOpenText,
-  PencilSimpleLine,
+  Timer,
   UsersThree,
   Sparkle,
   ArrowRight,
@@ -15,91 +16,82 @@ import {
   TrendUp,
   Target,
   Lightning,
-  Flame,
   ArrowsClockwise,
   Percent,
   Calculator,
-  ChartPieSlice,
-  CheckFat,
-  Star,
-  Fire,
-  Trophy,
-  Rocket,
-  MathOperations,
-  ChartLine,
+  ChartBar,
+  ShieldCheck,
+  Check,
+  Scales,
 } from '@phosphor-icons/react'
 
 const numeracyBites = [
   {
-    topic: 'Trik Diskon Cepat',
+    topic: 'Trik Hubungan P vs Q (Penalaran Kuantitatif)',
+    formulaPrefix: 'Bentuk Pecahan vs Desimal',
+    formulaAccent: 'Samakan ke Desimal',
+    tip: 'Jika P = 3/4 dan Q = 0,7. Ubah 3/4 menjadi 0,75. Karena 0,75 > 0,70, maka langsung simpulkan P > Q dalam 5 detik!',
+    tag: 'Trik PKu',
+  },
+  {
+    topic: 'Trik Diskon Cepat (Penalaran Matematika)',
     formulaPrefix: 'Diskon 25% =',
     formulaAccent: 'Bagi 4',
-    tip: 'Barang Rp 180.000 diskon 25%? Langsung bagi 4 = Rp 45.000! Bayar sisa Rp 135.000 tanpa ribet kalkulator.',
-    tag: 'Keuangan Praktis',
+    tip: 'Barang Rp80.000 diskon 25%? Langsung bagi 4 = Rp20.000! Bayar sisa Rp60.000 tanpa ribet kalkulator.',
+    tag: 'Trik PM',
   },
   {
-    topic: 'Trik Rata-rata Cepat',
-    formulaPrefix: 'Metode Selisih',
-    formulaAccent: 'Patokan Tengah',
+    topic: 'Trik Persamaan Cepat (Pengetahuan Kuantitatif)',
+    formulaPrefix: 'Eliminasi Cepat',
+    formulaAccent: 'Pindah Ruas',
+    tip: '2x + 6 = 16 → kurangi 6 di kedua sisi: 2x = 10 → x = 5. Latih kecepatanmu agar punya sisa waktu untuk soal geometri.',
+    tag: 'Trik PK',
+  },
+  {
+    topic: 'Trik Rata-rata Cepat (Statistika UTBK)',
+    formulaPrefix: 'Metode Patokan',
+    formulaAccent: 'Jumlah Selisih',
     tip: 'Nilai 78, 82, 85, 75? Ambil patokan 80. Selisih: -2, +2, +5, -5 (total selisih = 0). Maka rata-rata persis 80!',
-    tag: 'Statistika Harian',
-  },
-  {
-    topic: 'Trik 15% Tip / Pajak',
-    formulaPrefix: '10% +',
-    formulaAccent: 'Separuhnya (5%)',
-    tip: 'Makan Rp 120.000 kena pajak 15%? 10% adalah 12.000, separuhnya 6.000. Total pajak = 12.000 + 6.000 = Rp 18.000.',
-    tag: 'Finansial Harian',
-  },
-  {
-    topic: 'Rasio Perbandingan Gampang',
-    formulaPrefix: 'Skala Bagian',
-    formulaAccent: 'Bagi Total',
-    tip: 'Resep rasio gula : tepung = 2 : 5. Total 7 bagian. Jika butuh 350g adonan, tiap bagian = 50g. Gula = 100g, tepung = 250g.',
-    tag: 'Logika Rasio',
+    tag: 'Statistika',
   },
 ]
 
 const menuCards = [
   {
     path: '/diagnostic',
-    title: 'Tes Diagnostik',
-    desc: 'Uji logika matematikamu dalam 3 menit untuk memetakan level dan rekomendasi sprint belajarmu.',
-    icon: Stethoscope,
-    badge: '3 Pertanyaan Kilat',
-    highlight: 'Rekomendasi Pintar',
-    motif: '%',
-    actionText: 'Mulai Tes',
+    title: 'Evaluasi Kemampuan',
+    desc: 'Uji logika matematikamu dalam 3 soal kilat untuk memetakan level dan rekomendasi subtes belajarmu.',
+    icon: ClipboardText,
+    badge: '3 Soal Evaluasi',
+    highlight: 'Rekomendasi Belajar',
+    actionText: 'Mulai Evaluasi',
   },
   {
-    path: '/microlearning',
-    title: 'Materi Microlearning',
-    desc: 'Bite-sized visual: pelajari persentase, rata-rata, dan rasio dengan analogi dunia nyata.',
+    path: '/materi',
+    title: 'Materi Matematika',
+    desc: 'Modul terstruktur PK, PM, dan PKu dengan pembahasan kontekstual, gambar ilustrasi, dan video.',
     icon: BookOpenText,
-    badge: 'Teks, Gambar & Video',
-    highlight: 'Modul Bertahap',
-    motif: '÷',
+    badge: 'Modul PK, PM, PKu',
+    highlight: 'Akses Uji Coba & Pro',
     actionText: 'Buka Materi',
   },
   {
-    path: '/exercise',
-    title: 'Latihan Soal Adaptif',
-    desc: 'Tantang dirimu dengan soal konteks belanja, statistika mini, dan dapatkan umpan balik instan.',
-    icon: PencilSimpleLine,
-    badge: 'Umpan Balik Instan',
-    highlight: 'Pilihan & Isian',
-    motif: '×',
-    actionText: 'Asah Soal',
+    path: '/tryout',
+    title: 'Try Out Ber-Timer',
+    desc: 'Simulasi ujian matematika UTBK dengan countdown 2 menit per soal dan umpan balik pembahasan instan.',
+    icon: Timer,
+    badge: 'Timer 2 Menit/Soal',
+    highlight: 'Skor & Pembahasan',
+    actionText: 'Mulai Try Out',
   },
   {
     path: '/about',
-    title: 'Tentang Tim & Bantuan',
-    desc: 'Visi pengembang NumeracySprint dan kontak admin WhatsApp untuk aktivasi akun Pro.',
+    title: 'Tentang & Tim Admin',
+    desc: 'Profil tim EduSpark dan kontak admin via WhatsApp untuk bantuan pendaftaran dan aktivasi paket Pro.',
     icon: UsersThree,
     badge: 'WhatsApp Admin',
-    highlight: 'Dukungan Belajar',
-    motif: '+',
-    actionText: 'Kontak Admin',
+    highlight: 'Bantuan Belajar',
+    actionText: 'Hubungi Admin',
   },
 ]
 
@@ -108,7 +100,7 @@ export default function DashboardPage() {
   const navigate = useNavigate()
   const [biteIndex, setBiteIndex] = useState(0)
 
-  // Quick stats from localStorage
+  // Completed materials from localStorage
   const completedMaterials = JSON.parse(
     localStorage.getItem('numeracy_completed_materials') || '[]'
   )
@@ -120,149 +112,67 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-24">
+    <div className="min-h-screen bg-edubg text-edutext pb-24 selection:bg-edupink selection:text-white">
       <Navbar />
 
-      <main className="max-w-5xl mx-auto px-4 pt-6 sm:pt-10">
-
-        {/* ============================================================ */}
-        {/* DESKTOP-ONLY: Grounded Sprint Status Ribbon (Solid / No Float) */}
-        {/* ============================================================ */}
-        <div className="hidden lg:grid grid-cols-3 gap-3.5 mb-6 p-2 rounded-3xl bg-white border-2 border-turquoise/25 shadow-soft">
-          {/* Tile 1: Rumus Cepat */}
-          <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-turquoise-surface/80 to-white border border-turquoise/15 hover:border-turquoise/40 transition-colors">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft shrink-0">
-              <Calculator size={20} weight="bold" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-turquoise" />
-                <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Rumus Cepat Saku</p>
-              </div>
-              <p className="text-xs font-black text-turquoise-deep font-mono">
-                78 × 2 = <span className="text-pink-soft font-bold">156</span>
-              </p>
-            </div>
-          </div>
-
-          {/* Tile 2: Streak Aktif with Live Beacon Ping */}
-          <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-pink-light/60 to-white border border-pink-soft/20 animate-pink-breathe transition-colors">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-pink-soft to-pink-hover text-white flex items-center justify-center shadow-pink shrink-0">
-              <Fire size={20} weight="fill" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                {/* Live radar beacon dot */}
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-soft opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-hover"></span>
-                </span>
-                <p className="text-[10px] text-pink-hover font-black uppercase tracking-wider">Sprint Aktif</p>
-              </div>
-              <p className="text-xs font-black text-gray-900">Level Up! 🔥</p>
-            </div>
-          </div>
-
-          {/* Tile 3: Progress with subtle gleam */}
-          <div className="shimmer-card flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-turquoise-surface/60 via-white to-turquoise-surface/40 border border-turquoise/15 hover:border-turquoise/40 transition-colors">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft shrink-0">
-              <TrendUp size={20} weight="bold" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Target Harian</p>
-              </div>
-              <p className="text-xs font-black text-turquoise-deep tabular-nums">+12 XP Terkumpul</p>
-            </div>
-          </div>
-        </div>
-
+      <main className="max-w-5xl mx-auto px-4 pt-6 sm:pt-10 space-y-8">
         {/* ============================================================== */}
-        {/* 1. HERO CARD: VIBRANT RICH BLUE with PINK ACCENTS & MOTIFS    */}
+        {/* 1. HERO CARD NEUMORPHIC                                       */}
         {/* ============================================================== */}
-        <div className="card-blue-vibrant mb-8 relative border-2 border-white/30">
-          {/* Desktop-only large math watermarks scattered across card */}
-          <div className="hidden md:block absolute -right-4 -bottom-6 text-white/[0.07] text-[10rem] font-mono font-black select-none pointer-events-none leading-none">
-            %
-          </div>
-          <div className="hidden md:block absolute right-56 -top-4 text-white/[0.07] text-8xl font-mono font-black select-none pointer-events-none">
-            ×
-          </div>
-          <div className="hidden md:block absolute right-20 top-24 text-white/[0.06] text-7xl font-mono font-black select-none pointer-events-none">
-            ÷
-          </div>
-          <div className="hidden lg:block absolute left-72 bottom-4 text-white/[0.06] text-6xl font-mono font-black select-none pointer-events-none">
-            +
-          </div>
-
-          {/* Desktop-only pink flame widget — top right inside card */}
-          <div className="hidden lg:flex absolute top-6 right-8 bg-white/15 backdrop-blur-md rounded-3xl p-4 border border-white/30 text-white items-center gap-3.5 shadow-card">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-soft to-pink-hover text-white flex items-center justify-center font-bold shadow-pink animate-pulse-subtle">
-              <Flame size={26} weight="fill" />
-            </div>
-            <div>
-              <p className="text-[10px] uppercase font-black tracking-wider text-pink-light">Sprint Aktif</p>
-              <p className="text-sm font-extrabold text-white flex items-center gap-2">
-                <span>Siap Eksplorasi</span>
-                <span className="w-2.5 h-2.5 rounded-full bg-pink-soft animate-ping" />
-              </p>
-            </div>
-          </div>
-
-          <div className="max-w-xl relative z-10">
+        <div className="raised p-6 sm:p-8 relative">
+          <div className="max-w-2xl space-y-4">
             {/* Badges strip */}
-            <div className="flex flex-wrap items-center gap-2 mb-3.5">
-              <span className="badge-pink">
-                <Sparkle size={13} weight="fill" /> Berani Bernumerasi
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="badge-chip">
+                <Sparkle size={13} weight="fill" className="text-edupink" /> SNBT 2026 Ready
               </span>
               {user?.isPaid ? (
-                <span className="badge-pink flex items-center gap-1 shadow-pink">
-                  <Crown size={14} weight="fill" className="text-yellow-300" /> Akun Pro Lunas
+                <span className="badge-accent flex items-center gap-1">
+                  <Crown size={14} weight="fill" /> Akun Pro Aktif
                 </span>
               ) : (
-                <span className="badge-glass text-white">
-                  Sprint Siswa
+                <span className="badge-chip text-edutext-muted">
+                  Paket Gratis
                 </span>
               )}
             </div>
 
             {/* Headline */}
-            <h1 className="text-2xl sm:text-4xl font-black font-roboto text-white leading-tight">
-              Halo, {user?.name || 'Sobat Numerasi'}! 👋
+            <h1 className="text-2xl sm:text-4xl font-black font-display text-edutext leading-tight">
+              Halo, {user?.name || 'Sobat EduSpark'}!
             </h1>
-            <p className="text-white/95 text-xs sm:text-sm mt-2.5 leading-relaxed font-medium">
-              Matematika bukan cuma rumus abstrak, tapi cara berpikir kritis buat keputusan nyata. Siap asah logikamu hari ini?
+            <p className="text-edutext-muted text-xs sm:text-sm leading-relaxed font-medium">
+              Siap menaklukkan Pengetahuan Kuantitatif, Penalaran Matematika, dan Penalaran Kuantitatif hari ini? Asah kemampuanmu dengan konsisten!
             </p>
 
             {/* Quick Diagnostic / Progress Strip inside Hero */}
-            <div className="mt-6 flex flex-wrap items-center gap-3">
+            <div className="pt-2 flex flex-wrap items-center gap-3">
               {diagnosticResult ? (
-                <div className="card-inner-glass !py-2.5 !px-4 inline-flex items-center gap-3.5 text-xs shadow-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="text-white/80 font-bold">Level:</span>
-                    <span className="badge-pink text-xs font-black shadow-pink">
+                <div className="inset p-3 sm:p-4 rounded-2xl flex flex-wrap items-center gap-3 text-xs">
+                  <div className="flex items-center gap-1.5 font-bold">
+                    <span className="text-edutext-muted">Level:</span>
+                    <span className="badge-accent !py-0.5 !px-2 text-[11px]">
                       {diagnosticResult.levelInfo?.level}
                     </span>
                   </div>
-                  <span className="text-white/40">•</span>
-                  <div className="flex items-center gap-1.5 font-black tabular-nums text-white">
-                    <Target size={16} weight="bold" className="text-white" />
-                    <span>Skor: <strong className="text-yellow-300">{diagnosticResult.score}</strong>/100</span>
+                  <span className="text-edutext-muted/40">•</span>
+                  <div className="flex items-center gap-1.5 font-black text-edutext">
+                    <Target size={16} weight="bold" className="text-eduaccent" />
+                    <span>Skor: <strong className="text-eduaccent">{diagnosticResult.score}</strong>/100</span>
                   </div>
-                  <span className="text-white/40 hidden sm:inline">•</span>
-                  <div className="hidden sm:flex items-center gap-1.5 text-white font-bold">
-                    <CheckFat size={14} weight="fill" className="text-emerald-300" />
+                  <span className="text-edutext-muted/40 hidden sm:inline">•</span>
+                  <div className="hidden sm:flex items-center gap-1.5 font-bold text-edutext">
+                    <CheckCircle size={15} weight="fill" className="text-eduaccent" />
                     <span>{diagnosticResult.correct}/{diagnosticResult.total} Tepat</span>
                   </div>
                 </div>
               ) : (
                 <button
                   onClick={() => navigate('/diagnostic')}
-                  className="btn-accent text-xs sm:text-sm py-3 px-6 font-black shadow-pink flex items-center gap-2"
+                  className="btn-accent text-xs sm:text-sm py-3 px-5 flex items-center gap-2"
                 >
-                  <Stethoscope size={18} weight="bold" />
-                  <span>Ambil Tes Diagnostik Kilat (3 Menit)</span>
+                  <ClipboardText size={18} weight="bold" />
+                  <span>Ambil Evaluasi Kemampuan Awal (3 Soal)</span>
                 </button>
               )}
             </div>
@@ -270,35 +180,30 @@ export default function DashboardPage() {
         </div>
 
         {/* ============================================================== */}
-        {/* 2. NUMERACY QUICK BITE (Vibrant Blue + Punchy Pink Accent)    */}
+        {/* 2. NUMERACY QUICK BITE                                         */}
         {/* ============================================================== */}
-        <div className="mb-8 rounded-3xl bg-gradient-to-r from-turquoise-surface via-white to-pink-light/40 p-5 sm:p-6 border-2 border-turquoise shadow-card relative overflow-hidden">
-          {/* Subtle watermark */}
-          <div className="hidden sm:block absolute right-4 -bottom-6 text-turquoise/15 text-8xl font-black select-none pointer-events-none">
-            ⚡
-          </div>
-
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+        <div className="raised p-5 sm:p-6 relative">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shrink-0 shadow-soft">
-                <Lightbulb size={26} weight="fill" />
+              <div className="w-12 h-12 rounded-2xl inset flex items-center justify-center shrink-0 text-eduaccent">
+                <Lightbulb size={24} weight="fill" />
               </div>
-              <div>
+              <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="badge-pink text-[10px] uppercase font-black tracking-wider shadow-sm">
+                  <span className="badge-chip text-[10px] uppercase tracking-wider">
                     {currentBite.tag}
                   </span>
-                  <span className="text-xs font-black text-gray-500">
+                  <span className="text-xs font-bold text-edutext-muted">
                     {currentBite.topic}
                   </span>
                 </div>
-                <h4 className="text-sm sm:text-base font-black text-gray-900 mt-1 font-roboto flex items-center gap-1.5">
-                  <span className="text-turquoise-deep">{currentBite.formulaPrefix}</span>
-                  <span className="bg-pink-soft text-white px-2 py-0.5 rounded-lg text-xs font-black shadow-sm">
+                <h4 className="text-sm sm:text-base font-black font-display text-edutext flex items-center gap-1.5">
+                  <span>{currentBite.formulaPrefix}</span>
+                  <span className="badge-accent !py-0.5 !px-2 text-xs font-bold">
                     {currentBite.formulaAccent}
                   </span>
                 </h4>
-                <p className="text-xs sm:text-sm text-gray-700 mt-1.5 leading-relaxed max-w-2xl font-medium">
+                <p className="text-xs sm:text-sm text-edutext-muted leading-relaxed max-w-2xl font-medium">
                   {currentBite.tip}
                 </p>
               </div>
@@ -307,10 +212,10 @@ export default function DashboardPage() {
             <button
               onClick={nextBite}
               title="Ganti trik berikutnya"
-              className="btn-accent text-xs py-2.5 px-4 shrink-0 self-end sm:self-center font-black shadow-pink flex items-center gap-1.5"
+              className="btn-secondary text-xs py-2 px-3.5 shrink-0 self-end sm:self-center flex items-center gap-1.5"
             >
-              <ArrowsClockwise size={16} weight="bold" />
-              <span>Ganti Trik</span>
+              <ArrowsClockwise size={15} weight="bold" />
+              <span>Trik Lain</span>
             </button>
           </div>
         </div>
@@ -318,73 +223,67 @@ export default function DashboardPage() {
         {/* ============================================================== */}
         {/* 3. SECTION TITLE WITH QUICK STAT PILLS                         */}
         {/* ============================================================== */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl sm:text-2xl font-black font-roboto text-gray-900 tracking-tight flex items-center gap-2">
-              <span>Sprint Belajarmu</span>
-              <span className="w-3 h-3 rounded-full bg-pink-soft shadow-pink" />
+            <h2 className="text-xl sm:text-2xl font-black font-display text-edutext tracking-tight flex items-center gap-2">
+              <span>Menu Belajar EduSpark</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-edupink" />
             </h2>
-            <p className="text-gray-400 text-xs sm:text-sm font-medium">
-              Eksplorasi modul berurutan atau langsung asah kemampuan kontekstual
+            <p className="text-edutext-muted text-xs sm:text-sm font-medium">
+              Eksplorasi modul materi, uji kemampuan awal, atau simulasikan try out ber-timer
             </p>
           </div>
 
-          {/* Quick learning progress counters */}
           <div className="flex items-center gap-2">
-            <div className="badge-pink text-xs px-3.5 py-1.5 flex items-center gap-1.5 shadow-pink">
-              <BookOpenText size={15} weight="bold" />
-              <span className="tabular-nums font-black">
-                {completedMaterials.length} Modul Tuntas
+            <div className="badge-chip text-xs px-3 py-1 flex items-center gap-1.5">
+              <BookOpenText size={15} weight="bold" className="text-eduaccent" />
+              <span className="tabular-nums font-bold">
+                {completedMaterials.length} Modul Terbaca
               </span>
             </div>
           </div>
         </div>
 
         {/* ============================================================== */}
-        {/* 4. FOUR BLUE CARDS: Richly blue with pink action badges        */}
+        {/* 4. FOUR MENU CARDS NEUMORPHIC                                  */}
         {/* ============================================================== */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {menuCards.map((card) => {
             const Icon = card.icon
             return (
               <div
                 key={card.path}
                 onClick={() => navigate(card.path)}
-                className="card-blue group cursor-pointer hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 border-2 border-white/25 flex flex-col justify-between"
+                className="raised p-6 flex flex-col justify-between cursor-pointer hover:border-eduaccent transition-all duration-200 group space-y-6"
               >
-                {/* Desktop-only subtle corner motif */}
-                <span className="hidden md:block absolute -right-2 -bottom-4 text-white/[0.09] font-mono text-7xl font-black pointer-events-none select-none">
-                  {card.motif}
-                </span>
-
-                <div>
-                  {/* Top Bar inside Card */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-14 h-14 rounded-2xl bg-white text-turquoise-deep flex items-center justify-center shadow-soft group-hover:scale-105 transition-transform duration-200">
-                      <Icon size={30} weight="bold" />
+                <div className="space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div className="w-13 h-13 rounded-2xl inset flex items-center justify-center text-eduaccent group-hover:scale-105 transition-transform">
+                      <Icon size={26} weight="bold" />
                     </div>
-                    <span className="badge-pink text-[11px] font-black shadow-pink">
+                    <span className="badge-chip text-[11px] font-bold">
                       {card.badge}
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-black font-roboto text-white flex items-center gap-2 tracking-tight">
-                    {card.title}
-                  </h3>
-                  <p className="text-white/95 text-xs sm:text-sm mt-1.5 leading-relaxed font-normal">
-                    {card.desc}
-                  </p>
+                  <div>
+                    <h3 className="text-lg font-black font-display text-edutext tracking-tight">
+                      {card.title}
+                    </h3>
+                    <p className="text-edutext-muted text-xs sm:text-sm mt-1.5 leading-relaxed font-normal">
+                      {card.desc}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Bottom Action Footer with Pink Pop */}
-                <div className="mt-6 pt-4 border-t border-white/20 flex items-center justify-between">
-                  <span className="text-[11px] text-white/90 font-black uppercase tracking-wider">
+                <div className="pt-4 border-t border-white/60 flex items-center justify-between">
+                  <span className="text-[11px] text-edutext-muted font-bold uppercase tracking-wider">
                     {card.highlight}
                   </span>
-                  <div className="flex items-center gap-2 text-xs font-black text-white group-hover:text-pink-light transition-colors">
+                  <div className="flex items-center gap-2 text-xs font-black text-eduaccent group-hover:translate-x-1 transition-transform">
                     <span>{card.actionText}</span>
-                    <div className="w-8 h-8 rounded-full bg-pink-soft group-hover:bg-white text-white group-hover:text-pink-hover flex items-center justify-center transition-all shadow-pink">
-                      <ArrowRight size={15} weight="bold" />
+                    <div className="w-7 h-7 rounded-full inset flex items-center justify-center">
+                      <ArrowRight size={14} weight="bold" />
                     </div>
                   </div>
                 </div>
@@ -394,42 +293,27 @@ export default function DashboardPage() {
         </div>
 
         {/* ============================================================== */}
-        {/* 5. DESKTOP-ONLY: Bottom decorative numeracy banner             */}
+        {/* 5. BOTTOM MOTIVATION BANNER                                    */}
         {/* ============================================================== */}
-        <div
-          className="hidden md:flex items-center justify-between mt-10 mb-4 px-8 py-5 rounded-3xl border-2 border-turquoise/20"
-          style={{ background: 'linear-gradient(135deg, #e8fafb 0%, #fff0f6 60%, #f0fbff 100%)' }}
-        >
-          {/* Left group */}
+        <div className="raised p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center shadow-soft">
-              <ChartPieSlice size={24} weight="bold" />
+            <div className="w-12 h-12 rounded-2xl inset flex items-center justify-center text-eduaccent shrink-0">
+              <Brain size={24} weight="bold" />
             </div>
             <div>
-              <p className="text-xs text-gray-400 font-black uppercase tracking-wider">NumeracySprint</p>
-              <p className="text-sm font-black text-turquoise-deep">Matematika, cara berpikir kritis nyata.</p>
+              <p className="text-xs text-edutext-muted font-bold uppercase tracking-wider">EduSpark UTBK-SNBT</p>
+              <p className="text-sm font-black font-display text-edutext">Konsistensi latihan adalah kunci taklukkan tes matematika.</p>
             </div>
           </div>
 
-          {/* Center math symbols decorative */}
-          <div className="hidden lg:flex items-center gap-6 font-mono font-black text-2xl">
-            <span className="text-turquoise/40">%</span>
-            <span className="text-pink-soft/40">÷</span>
-            <span className="text-turquoise/40">×</span>
-            <span className="text-pink-soft/40">+</span>
-            <span className="text-turquoise/40">−</span>
-          </div>
-
-          {/* Right CTA */}
           <button
-            onClick={() => navigate('/microlearning')}
-            className="btn-primary text-xs py-2.5 px-5"
+            onClick={() => navigate('/tryout')}
+            className="btn-accent text-xs py-2.5 px-5 shrink-0"
           >
-            <BookOpenText size={16} weight="bold" />
-            Mulai Belajar
+            <Timer size={16} weight="bold" />
+            <span>Mulai Try Out</span>
           </button>
         </div>
-
       </main>
     </div>
   )

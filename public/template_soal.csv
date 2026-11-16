@@ -1,0 +1,6 @@
+topic,question,answer,answerDisplay,explanation,hint
+"Pengetahuan Kuantitatif","Jika 2x + 6 = 16, berapakah nilai x?","5","5","Kurangkan 6 pada kedua sisi: 2x = 10, kemudian bagi 2: x = 5.","Pindahkan konstanta 6 ke ruas kanan"
+"Penalaran Matematika","Sebuah baju seharga Rp80.000 mendapat diskon 25%. Berapakah harga akhir yang harus dibayar?","60000","Rp60.000","Diskon 25% = 1/4 × 80.000 = Rp20.000. Maka harga bayar = 80.000 − 20.000 = Rp60.000.","Gunakan trik bagi 4 untuk diskon 25%"
+"Penalaran Kuantitatif","Diberikan P = 3/4 dan Q = 0,7. Hubungan yang tepat antara P dan Q adalah...","P > Q","P > Q","Ubah 3/4 ke bentuk desimal: 3/4 = 0,75. Karena 0,75 > 0,70, maka P > Q.","Ubah pecahan menjadi desimal agar mudah dibandingkan"
+"Pengetahuan Kuantitatif","Nilai rata-rata dari 4, 6, 8, dan 10 adalah...","7","7","Jumlahkan seluruh data: 4 + 6 + 8 + 10 = 28. Bagi dengan banyaknya data (4): 28 ÷ 4 = 7.","Jumlahkan semua angka lalu bagi dengan banyaknya angka"
+"Penalaran Matematika","Sebuah mesin memproduksi 12 botol per menit. Berapa botol yang dihasilkan mesin tersebut dalam 2,5 jam?","1800","1.800 botol","2,5 jam = 2,5 × 60 menit = 150 menit. Total botol = 150 menit × 12 botol/menit = 1.800 botol.","Ubah satuan jam ke menit terlebih dahulu"

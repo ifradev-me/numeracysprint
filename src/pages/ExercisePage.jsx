@@ -1,321 +1,825 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import PaywallModal from '../components/PaywallModal'
 import { defaultExercises } from '../data/exercises'
-import { loadCustomExercises } from '../services/api'
+import { loadCustomExercises, syncUserWithBackend } from '../services/api'
+import { useUser } from '../context/UserContext'
 import {
-  PencilSimpleLine,
+  Timer,
   CheckCircle,
   XCircle,
-  Lightbulb,
   ArrowRight,
   ArrowLeft,
   Sparkle,
-  ListNumbers,
   Check,
-  TrendUp,
-  Flame,
-  CheckFat,
+  Lock,
+  LockOpen,
+  Crown,
+  Play,
   ClockCounterClockwise,
+  WarningCircle,
+  ListNumbers,
+  Target,
+  Trophy,
+  ShieldCheck,
+  Question,
+  BookOpenText,
+  House,
 } from '@phosphor-icons/react'
 
+const SECONDS_PER_QUESTION = 120 // 2 menit per soal (aturan UTBK)
+
 export default function ExercisePage() {
-  const [exercises, setExercises] = useState(() => {
+  const { user } = useUser()
+  const navigate = useNavigate()
+
+  const [allBankExercises, setAllBankExercises] = useState(() => {
     const custom = localStorage.getItem('numeracy_custom_exercises')
     return custom ? [...defaultExercises, ...JSON.parse(custom)] : [...defaultExercises]
   })
+
+  // Selected mode: 'preview' (3 soal, gratis) vs 'full' (seluruh bank soal, butuh Pro)
+  const [examMode, setExamMode] = useState('preview')
+  const [paywallOpen, setPaywallOpen] = useState(false)
+
+  // Exam state
+  const [isStarted, setIsStarted] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [userAnswer, setUserAnswer] = useState('')
-  const [selectedOption, setSelectedOption] = useState(null)
-  const [feedback, setFeedback] = useState(null)
-  const [answeredHistory, setAnsweredHistory] = useState({}) // { [id]: { isCorrect: boolean } }
-  const [streak, setStreak] = useState(0)
+  const [answers, setAnswers] = useState({}) // { [id]: userChoice }
+  const [doubtful, setDoubtful] = useState({}) // { [id]: boolean } (Ragu-ragu ala UTBK)
+  const [timeLeft, setTimeLeft] = useState(0)
+  const [totalDuration, setTotalDuration] = useState(0)
+  const [timeExpiredModal, setTimeExpiredModal] = useState(false)
+  const [confirmSubmitModal, setConfirmSubmitModal] = useState(false)
+  const [examResult, setExamResult] = useState(null)
+
+  const timerRef = useRef(null)
 
   // Sync fresh custom exercises from backend
   useEffect(() => {
-    const custom = localStorage.getItem('numeracy_custom_exercises')
-    if (custom) {
-      setExercises([...defaultExercises, ...JSON.parse(custom)])
-    }
-
     loadCustomExercises().then((serverExercises) => {
       if (serverExercises && serverExercises.length > 0) {
-        setExercises([...defaultExercises, ...serverExercises])
+        setAllBankExercises([...defaultExercises, ...serverExercises])
       }
     })
   }, [])
 
-  const question = exercises[currentIndex] || exercises[0]
-  const total = exercises.length
+  // Active questions pool based on mode:
+  // If preview: take first 3 questions.
+  // If full: take all questions.
+  const activeQuestions = examMode === 'preview'
+    ? allBankExercises.slice(0, 3)
+    : allBankExercises
 
-  const checkAnswer = () => {
-    let isCorrect = false
-    if (question.type === 'input') {
-      const cleanInput = userAnswer.replace(/\./g, '').replace(/,/g, '.').trim().toLowerCase()
-      const cleanAnswer = (question.answer || '').replace(/\./g, '').replace(/,/g, '.').trim().toLowerCase()
-      const cleanDisplay = (question.answerDisplay || '').replace(/\./g, '').replace(/,/g, '.').trim().toLowerCase()
-      isCorrect = cleanInput === cleanAnswer || cleanInput === cleanDisplay
-    } else {
-      isCorrect = selectedOption === question.options?.find((o) => o.correct)?.label
+  const totalQuestions = activeQuestions.length
+
+  // Global Countdown Timer (runs without reset across all questions)
+  useEffect(() => {
+    if (isStarted && !isSubmitted && timeLeft > 0) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(timerRef.current)
+            handleAutoFinishTimeUp()
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
     }
 
-    if (isCorrect) {
-      setStreak((s) => s + 1)
-    } else {
-      setStreak(0)
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
+  }, [isStarted, isSubmitted, timeLeft])
+
+  const formatTimer = (secs) => {
+    const m = Math.floor(secs / 60)
+    const s = secs % 60
+    return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`
+  }
+
+  // Handle start tryout
+  const handleStartExam = (mode) => {
+    if (mode === 'full' && !user?.isPaid) {
+      setPaywallOpen(true)
+      return
     }
 
-    setFeedback({ isCorrect, explanation: question.explanation })
-    setAnsweredHistory((prev) => ({
+    const pool = mode === 'preview' ? allBankExercises.slice(0, 3) : allBankExercises
+    const duration = pool.length * SECONDS_PER_QUESTION
+
+    setExamMode(mode)
+    setTotalDuration(duration)
+    setTimeLeft(duration)
+    setAnswers({})
+    setDoubtful({})
+    setCurrentIndex(0)
+    setIsSubmitted(false)
+    setExamResult(null)
+    setIsStarted(true)
+  }
+
+  // Auto finish when timer reaches zero
+  const handleAutoFinishTimeUp = () => {
+    setTimeExpiredModal(true)
+    finishExam(true)
+  }
+
+  // Calculate final results and submit
+  const finishExam = async (wasAutoTimeUp = false) => {
+    if (timerRef.current) clearInterval(timerRef.current)
+
+    let correctCount = 0
+    let incorrectCount = 0
+    let emptyCount = 0
+
+    activeQuestions.forEach((q) => {
+      const userChoice = (answers[q.id] || '').trim().toLowerCase()
+      if (!userChoice) {
+        emptyCount++
+        return
+      }
+
+      if (q.type === 'input') {
+        const cleanAnswer = (q.answer || '').replace(/\./g, '').replace(/,/g, '.').trim().toLowerCase()
+        const cleanDisplay = (q.answerDisplay || '').replace(/\./g, '').replace(/,/g, '.').trim().toLowerCase()
+        const cleanInput = userChoice.replace(/\./g, '').replace(/,/g, '.')
+        if (cleanInput === cleanAnswer || cleanInput === cleanDisplay) {
+          correctCount++
+        } else {
+          incorrectCount++
+        }
+      } else {
+        const correctLabel = q.options?.find((o) => o.correct)?.label?.toLowerCase()
+        if (userChoice === correctLabel) {
+          correctCount++
+        } else {
+          incorrectCount++
+        }
+      }
+    })
+
+    const score = Math.round((correctCount / totalQuestions) * 100)
+    const timeUsed = totalDuration - timeLeft
+
+    const resultData = {
+      score,
+      totalQuestions,
+      correctCount,
+      incorrectCount,
+      emptyCount,
+      timeUsed,
+      wasAutoTimeUp,
+      completedAt: new Date().toISOString(),
+      mode: examMode,
+      answers,
+    }
+
+    setExamResult(resultData)
+    setIsSubmitted(true)
+    setConfirmSubmitModal(false)
+
+    // Save to user history & cloud
+    try {
+      const savedHist = JSON.parse(localStorage.getItem('eduspark_tryout_history') || '[]')
+      savedHist.unshift(resultData)
+      localStorage.setItem('eduspark_tryout_history', JSON.stringify(savedHist))
+
+      if (user?.name) {
+        await syncUserWithBackend({
+          name: user.name,
+          latestTryout: { score, completedAt: resultData.completedAt },
+        })
+      }
+    } catch (e) {
+      console.warn('Failed to persist tryout score to backend:', e)
+    }
+  }
+
+  const currentQuestion = activeQuestions[currentIndex] || activeQuestions[0]
+  const currentAnswer = answers[currentQuestion?.id] || ''
+  const isCurrentDoubtful = !!doubtful[currentQuestion?.id]
+
+  const handleSelectOption = (label) => {
+    setAnswers((prev) => ({
       ...prev,
-      [question.id]: { isCorrect },
+      [currentQuestion.id]: label,
     }))
   }
 
-  const handleSelectQuestion = (idx) => {
-    setFeedback(null)
-    setUserAnswer('')
-    setSelectedOption(null)
-    setCurrentIndex(idx)
+  const handleInputAnswer = (val) => {
+    setAnswers((prev) => ({
+      ...prev,
+      [currentQuestion.id]: val,
+    }))
   }
 
-  const next = () => {
-    if (currentIndex < total - 1) {
-      handleSelectQuestion(currentIndex + 1)
-    }
+  const toggleDoubtful = () => {
+    setDoubtful((prev) => ({
+      ...prev,
+      [currentQuestion.id]: !prev[currentQuestion.id],
+    }))
   }
 
-  const prev = () => {
-    if (currentIndex > 0) {
-      handleSelectQuestion(currentIndex - 1)
-    }
-  }
+  const answeredCount = Object.keys(answers).filter((k) => answers[k] && answers[k].trim()).length
 
-  const correctCount = Object.values(answeredHistory).filter((a) => a.isCorrect).length
-  const attemptedCount = Object.keys(answeredHistory).length
+  // ==============================================================
+  // VIEW 1: RESULTS & DETAILED REVIEW (SETELAH UJIAN SELESAI)
+  // ==============================================================
+  if (isSubmitted && examResult) {
+    return (
+      <div className="min-h-screen bg-edubg text-edutext pb-28 selection:bg-edupink selection:text-white">
+        <Navbar />
 
-  return (
-    <div className="min-h-screen bg-white pb-20">
-      <Navbar />
+        <main className="max-w-4xl mx-auto px-4 pt-6 sm:pt-10 space-y-8">
+          {/* Result Banner Card */}
+          <div className="raised p-6 sm:p-10 space-y-8 text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl inset text-eduaccent mx-auto">
+              <Trophy size={44} weight="bold" />
+            </div>
 
-      <main className="max-w-4xl mx-auto px-4 pt-6 sm:pt-10">
-        {/* Header Title with Streak & Score */}
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="badge-pink">
-                <Sparkle size={13} weight="fill" /> Latihan Numerasi Kontekstual
+            <div className="space-y-2">
+              <span className="badge-chip">
+                <Sparkle size={12} weight="fill" className="text-edupink" /> Try Out Selesai
               </span>
-              {streak > 1 && (
-                <span className="badge-turquoise text-xs font-black flex items-center gap-1 animate-pulse-subtle">
-                  <Flame size={14} weight="fill" className="text-pink-soft" /> {streak}x Tepat Berurutan!
-                </span>
-              )}
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-black font-roboto text-gray-900 tracking-tight">
-              Latihan Soal Adaptif
-            </h1>
-            <p className="text-gray-400 text-xs sm:text-sm mt-1">
-              Pecahkan masalah kontekstual matematika dengan bantuan umpan balik instan.
-            </p>
-          </div>
-
-          {/* Score Counter Widget */}
-          <div className="bg-gradient-to-r from-turquoise-surface to-pink-light/40 p-3.5 sm:p-4 rounded-3xl border-2 border-turquoise flex items-center gap-3 shrink-0 shadow-card">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white flex items-center justify-center font-bold shadow-soft">
-              <TrendUp size={22} weight="bold" />
-            </div>
-            <div>
-              <p className="text-[10px] uppercase font-black text-turquoise-dark tracking-wider">Akurasi Latihan</p>
-              <p className="text-sm sm:text-base font-black text-turquoise-deep tabular-nums">
-                {correctCount} / {total} Soal Tuntas
+              <h1 className="text-3xl sm:text-4xl font-black font-display text-edutext">
+                Hasil & Pembahasan Try Out UTBK
+              </h1>
+              <p className="text-edutext-muted text-xs sm:text-sm max-w-md mx-auto">
+                {examResult.wasAutoTimeUp
+                  ? 'Waktu ujian telah habis. Seluruh jawabanmu otomatis tersimpan dan dievaluasi.'
+                  : 'Sesi ujian telah selesai dikerjakan. Berikut rincian nilai dan pembahasan lengkapnya:'}
               </p>
             </div>
-          </div>
-        </div>
 
-        {/* Question Outline Bar ("tampil apa aja soalnya dan berapa banyak") */}
-        <div className="card-inner-white mb-6 border-2 border-turquoise/30 shadow-card">
-          <div className="flex items-center justify-between mb-3 text-xs">
-            <div className="flex items-center gap-2 font-black text-gray-800">
-              <ListNumbers size={18} weight="bold" className="text-turquoise" />
-              <span>Navigasi Soal ({total} Soal Tersedia):</span>
-            </div>
-            <span className="text-[11px] text-pink-hover font-black tabular-nums bg-pink-light px-2.5 py-0.5 rounded-full border border-pink-soft/30">
-              {attemptedCount} dari {total} telah dicoba
-            </span>
-          </div>
+            {/* Score Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto">
+              <div className="inset p-4 space-y-1">
+                <p className="text-[10px] font-bold text-edutext-muted uppercase tracking-wider">Skor Akhir</p>
+                <p className="text-3xl font-black font-display text-eduaccent tabular-nums">
+                  {examResult.score}<span className="text-sm text-edutext-muted">/100</span>
+                </p>
+              </div>
 
-          {/* Quick jump question badges */}
-          <div className="flex flex-wrap gap-2">
-            {exercises.map((item, idx) => {
-              const hist = answeredHistory[item.id]
-              const isCurrent = currentIndex === idx
-              let statusClasses = 'bg-gray-100 text-gray-700 hover:bg-turquoise-light/60 border border-gray-200'
-              if (hist?.isCorrect) statusClasses = 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-black shadow-sm border border-emerald-300'
-              else if (hist?.isCorrect === false) statusClasses = 'bg-gradient-to-r from-pink-soft to-pink-hover text-white font-black shadow-pink border border-pink-soft'
+              <div className="inset p-4 space-y-1">
+                <p className="text-[10px] font-bold text-edutext-muted uppercase tracking-wider">Benar</p>
+                <p className="text-3xl font-black font-display text-emerald-700 tabular-nums">
+                  {examResult.correctCount}<span className="text-sm text-edutext-muted">/{examResult.totalQuestions}</span>
+                </p>
+              </div>
 
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => handleSelectQuestion(idx)}
-                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-2xl text-xs font-black transition-all duration-150 active:scale-95 flex items-center justify-center cursor-pointer ${statusClasses} ${
-                    isCurrent ? 'ring-3 ring-pink-soft ring-offset-2 scale-105' : ''
-                  }`}
-                  title={`Soal ${idx + 1} - ${item.topic}`}
-                >
-                  {idx + 1}
-                </button>
-              )
-            })}
-          </div>
-        </div>
+              <div className="inset p-4 space-y-1">
+                <p className="text-[10px] font-bold text-edutext-muted uppercase tracking-wider">Salah / Kosong</p>
+                <p className="text-3xl font-black font-display text-edudanger tabular-nums">
+                  {examResult.incorrectCount + examResult.emptyCount}
+                </p>
+              </div>
 
-        {/* Main Blue Card for active question */}
-        <div className="card-blue relative border-2 border-white/25 shadow-2xl">
-          {/* Subtle math watermark on desktop */}
-          <span className="hidden sm:block absolute right-4 -bottom-6 text-white/[0.08] text-8xl font-mono font-black pointer-events-none select-none">
-            #
-          </span>
-
-          <div className="flex items-center justify-between mb-4">
-            <span className="badge-glass text-[11px] font-bold">
-              Soal #{currentIndex + 1} &bull; {question.topic}
-            </span>
-            <span className="text-xs text-white/80 font-mono font-bold bg-white/10 px-2.5 py-1 rounded-xl">
-              {question.type === 'input' ? 'Isian Mandiri' : 'Pilihan Ganda'}
-            </span>
-          </div>
-
-          <h2 className="text-base sm:text-lg font-bold font-roboto text-white mb-6 leading-relaxed">
-            {question.question}
-          </h2>
-
-          {/* Hint if available */}
-          {question.hint && (
-            <div className="mb-5 p-3.5 rounded-2xl bg-white/15 border border-white/25 text-xs text-white flex items-start gap-2.5 shadow-sm">
-              <Lightbulb size={20} weight="fill" className="text-yellow-300 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-extrabold text-white">Petunjuk Pengerjaan: </span>
-                <span className="text-white/90">{question.hint}</span>
+              <div className="inset p-4 space-y-1">
+                <p className="text-[10px] font-bold text-edutext-muted uppercase tracking-wider">Waktu Dipakai</p>
+                <p className="text-2xl font-black font-display text-edutext tabular-nums font-mono mt-1">
+                  {formatTimer(examResult.timeUsed)}
+                </p>
               </div>
             </div>
-          )}
 
-          {/* Interactive Answer Form */}
-          {question.type === 'input' ? (
-            <div className="space-y-2">
-              <label className="block text-xs font-extrabold text-white uppercase tracking-wider">
-                Tulis Jawabanmu (Ketik Angka atau Teks):
-              </label>
-              <input
-                type="text"
-                className="input-field-light text-sm font-bold text-gray-900"
-                placeholder="Contoh: 180000 atau Rp180.000"
-                value={userAnswer}
-                disabled={!!feedback}
-                onChange={(e) => setUserAnswer(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && !feedback && userAnswer.trim() && checkAnswer()}
-              />
+            {/* Feedback Summary */}
+            <div className="inset p-5 max-w-2xl mx-auto text-left space-y-2">
+              <div className="flex items-center gap-2 text-xs font-black text-eduaccent uppercase tracking-wider">
+                <ShieldCheck size={18} weight="bold" />
+                <span>Analisa Evaluasi EduSpark:</span>
+              </div>
+              <p className="text-xs sm:text-sm text-edutext leading-relaxed font-medium">
+                {examResult.score >= 80
+                  ? 'Luar biasa! Pemahaman konsep matematika dan kecepatan pengerjaanmu sudah sangat kompetitif untuk bersaing di UTBK-SNBT.'
+                  : examResult.score >= 50
+                  ? 'Cukup baik! Kamu sudah menguasai beberapa soal dasar, namun perlu melatih manajemen waktu pada tipe soal kontekstual.'
+                  : 'Tetap semangat! Telusuri pembahasan soal di bawah ini dan pelajari kembali modul microlearning untuk memperkuat fondasi.'}
+              </p>
             </div>
-          ) : (
-            <div className="space-y-3">
-              {question.options?.map((opt) => {
-                const isSelected = selectedOption === opt.label
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+              <button
+                onClick={() => {
+                  setIsStarted(false)
+                  setIsSubmitted(false)
+                }}
+                className="btn-accent text-xs sm:text-sm py-3 px-6 font-bold"
+              >
+                <ClockCounterClockwise size={18} weight="bold" />
+                <span>Ulangi Try Out</span>
+              </button>
+
+              <button
+                onClick={() => navigate('/materi')}
+                className="btn-secondary text-xs sm:text-sm py-3 px-6 font-bold"
+              >
+                <BookOpenText size={18} weight="bold" className="text-eduaccent" />
+                <span>Pelajari Modul Terkait</span>
+              </button>
+
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="btn-secondary text-xs sm:text-sm py-3 px-5 font-bold"
+              >
+                <House size={18} weight="bold" />
+                <span>Ke Dashboard</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Detailed Question Review List */}
+          <div className="raised p-6 sm:p-8 space-y-6">
+            <div className="flex items-center justify-between pb-3 border-b border-white/60">
+              <h3 className="text-xl font-black font-display text-edutext">
+                Pembahasan Lengkap Semua Soal
+              </h3>
+              <span className="badge-chip text-[11px] font-bold">
+                {activeQuestions.length} Soal Dianalisis
+              </span>
+            </div>
+
+            <div className="space-y-6">
+              {activeQuestions.map((q, idx) => {
+                const userChoice = (answers[q.id] || '').trim()
+                const correctOpt = q.options?.find((o) => o.correct)
+                let isCorrect = false
+
+                if (q.type === 'input') {
+                  const cleanAnswer = (q.answer || '').replace(/\./g, '').replace(/,/g, '.').trim().toLowerCase()
+                  const cleanDisplay = (q.answerDisplay || '').replace(/\./g, '').replace(/,/g, '.').trim().toLowerCase()
+                  const cleanInput = userChoice.replace(/\./g, '').replace(/,/g, '.').toLowerCase()
+                  isCorrect = cleanInput === cleanAnswer || cleanInput === cleanDisplay
+                } else {
+                  isCorrect = userChoice.toLowerCase() === correctOpt?.label?.toLowerCase()
+                }
+
                 return (
-                  <button
-                    key={opt.label}
-                    onClick={() => !feedback && setSelectedOption(opt.label)}
-                    disabled={!!feedback}
-                    className={`w-full text-left flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-150 active:scale-[0.98] cursor-pointer ${
-                      isSelected
-                        ? 'border-pink-soft bg-white text-gray-900 shadow-pink font-bold'
-                        : 'border-white/30 bg-white/10 hover:bg-white/20 text-white font-medium'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3.5">
-                      <span
-                        className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black shrink-0 ${
-                          isSelected ? 'bg-pink-soft text-white' : 'bg-white/20 text-white'
-                        }`}
-                      >
-                        {opt.label}
+                  <div key={q.id} className="inset p-5 sm:p-6 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="badge-chip text-[11px]">
+                        Soal #{idx + 1} &bull; {q.topic}
                       </span>
-                      <span className="text-sm">{opt.text}</span>
+                      {userChoice ? (
+                        isCorrect ? (
+                          <span className="badge-accent text-[11px] flex items-center gap-1">
+                            <CheckCircle size={14} weight="fill" /> Jawaban Tepat
+                          </span>
+                        ) : (
+                          <span className="badge-chip text-edudanger text-[11px] flex items-center gap-1">
+                            <XCircle size={14} weight="fill" /> Jawaban Salah
+                          </span>
+                        )
+                      ) : (
+                        <span className="badge-chip text-edutext-muted text-[11px]">
+                          Tidak Dijawab
+                        </span>
+                      )}
                     </div>
 
-                    {isSelected && (
-                      <span className="w-6 h-6 rounded-full bg-pink-soft text-white flex items-center justify-center shrink-0">
-                        <Check size={14} weight="bold" />
-                      </span>
-                    )}
-                  </button>
+                    <p className="text-sm font-bold text-edutext leading-relaxed">
+                      {q.question}
+                    </p>
+
+                    {/* Answer comparison */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
+                      <div className="raised-sm p-3 space-y-0.5">
+                        <span className="text-[10px] font-bold text-edutext-muted uppercase">Jawabanmu:</span>
+                        <p className={`font-bold ${isCorrect ? 'text-eduaccent' : userChoice ? 'text-edudanger' : 'text-edutext-muted italic'}`}>
+                          {userChoice || 'Kosong (Tidak Dijawab)'}
+                        </p>
+                      </div>
+
+                      <div className="raised-sm p-3 space-y-0.5">
+                        <span className="text-[10px] font-bold text-edutext-muted uppercase">Kunci Jawaban Resmi:</span>
+                        <p className="font-bold text-eduaccent">
+                          {q.type === 'input'
+                            ? (q.answerDisplay || q.answer)
+                            : `${correctOpt?.label}. ${correctOpt?.text}`}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Explanation */}
+                    <div className="raised-sm p-4 text-xs space-y-1.5">
+                      <div className="flex items-center gap-1.5 text-eduaccent font-bold">
+                        <CheckCircle size={15} weight="bold" />
+                        <span>Langkah Pembahasan:</span>
+                      </div>
+                      <p className="text-edutext leading-relaxed font-medium">
+                        {q.explanation}
+                      </p>
+                    </div>
+                  </div>
                 )
               })}
             </div>
-          )}
+          </div>
+        </main>
+      </div>
+    )
+  }
 
-          {/* Feedback Area with cheerful confirmation */}
-          {feedback && (
-            <div
-              className={`mt-6 p-4 sm:p-5 rounded-2xl bg-white shadow-soft border-2 text-gray-800 animate-pop-in ${
-                feedback.isCorrect ? 'border-emerald-500' : 'border-pink-soft'
-              }`}
-            >
-              <div className="flex items-center gap-2 font-black text-sm sm:text-base">
-                {feedback.isCorrect ? (
+  // ==============================================================
+  // VIEW 2: START GATE (PILIH MODE & PAYWALL)
+  // ==============================================================
+  if (!isStarted) {
+    return (
+      <div className="min-h-screen bg-edubg text-edutext pb-28 selection:bg-edupink selection:text-white">
+        <Navbar />
+
+        <main className="max-w-4xl mx-auto px-4 pt-6 sm:pt-10 space-y-8">
+          <div className="space-y-1">
+            <span className="badge-chip text-[11px]">
+              <Sparkle size={13} weight="fill" className="text-edupink" /> Simulasi UTBK-SNBT 2026
+            </span>
+            <h1 className="text-3xl sm:text-4xl font-black font-display text-edutext tracking-tight">
+              Try Out Matematika Ber-Timer
+            </h1>
+            <p className="text-edutext-muted text-xs sm:text-sm font-medium">
+              Sistem ujian mengadopsi mekanisme resmi UTBK: timer global countdown berjalan tanpa henti (2 menit × jumlah soal). Selama ujian berlangsung tidak ada pembahasan atau jawaban benar/salah. Hasil dan pembahasan keluar setelah sesi berakhir.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Card 1: Pratinjau Gratis */}
+            <div className="raised p-6 flex flex-col justify-between space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-12 h-12 rounded-2xl inset text-eduaccent flex items-center justify-center font-bold">
+                    <Timer size={24} weight="bold" />
+                  </div>
+                  <span className="badge-chip text-[11px] text-eduaccent">Gratis</span>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-black font-display text-edutext">
+                    Pratinjau Try Out (3 Soal)
+                  </h3>
+                  <p className="text-xs text-edutext-muted mt-1 leading-relaxed">
+                    Sesi uji coba singkat untuk membiasakan ritme manajemen waktu 2 menit per soal.
+                  </p>
+                </div>
+
+                <div className="inset p-4 rounded-2xl space-y-2 text-xs font-semibold">
+                  <div className="flex justify-between">
+                    <span className="text-edutext-muted">Jumlah Soal:</span>
+                    <span className="font-bold">3 Soal UTBK</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-edutext-muted">Durasi Total:</span>
+                    <span className="font-bold text-eduaccent font-mono">06:00 (6 Menit)</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-edutext-muted">Mekanisme:</span>
+                    <span className="font-bold">Timer Global Countdown</span>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => handleStartExam('preview')}
+                className="btn-accent w-full text-xs py-3.5 font-bold flex items-center justify-center gap-2"
+              >
+                <Play size={16} weight="fill" />
+                <span>Mulai Pratinjau Gratis</span>
+              </button>
+            </div>
+
+            {/* Card 2: Try Out Penuh (Paywall / Pro) */}
+            <div className="raised p-6 flex flex-col justify-between space-y-6 relative border-2 border-eduaccent/30">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-12 h-12 rounded-2xl inset text-eduaccent flex items-center justify-center font-bold">
+                    <Trophy size={24} weight="bold" />
+                  </div>
+                  {user?.isPaid ? (
+                    <span className="badge-accent text-[11px] flex items-center gap-1">
+                      <Crown size={12} weight="fill" /> Pro Unlocked
+                    </span>
+                  ) : (
+                    <span className="badge-chip text-[11px] text-edupink flex items-center gap-1">
+                      <Lock size={12} weight="bold" /> Butuh Paket Pro
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-black font-display text-edutext">
+                    Try Out Penuh (Bank Soal UTBK)
+                  </h3>
+                  <p className="text-xs text-edutext-muted mt-1 leading-relaxed">
+                    Simulasi intensif mencakup seluruh kumpulan soal Pengetahuan Kuantitatif, Penalaran Matematika, dan Penalaran Kuantitatif.
+                  </p>
+                </div>
+
+                <div className="inset p-4 rounded-2xl space-y-2 text-xs font-semibold">
+                  <div className="flex justify-between">
+                    <span className="text-edutext-muted">Jumlah Soal:</span>
+                    <span className="font-bold">{allBankExercises.length} Soal Lengkap</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-edutext-muted">Durasi Total:</span>
+                    <span className="font-bold text-eduaccent font-mono">
+                      {formatTimer(allBankExercises.length * SECONDS_PER_QUESTION)} ({allBankExercises.length * 2} Menit)
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-edutext-muted">Pembahasan:</span>
+                    <span className="font-bold">Lengkap di Akhir Sesi</span>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => handleStartExam('full')}
+                className={`w-full text-xs py-3.5 font-bold flex items-center justify-center gap-2 ${
+                  user?.isPaid ? 'btn-accent' : 'btn-secondary text-eduaccent'
+                }`}
+              >
+                {user?.isPaid ? (
                   <>
-                    <CheckCircle size={22} weight="fill" className="text-emerald-600 shrink-0" />
-                    <span className="text-emerald-800">Mantap! Jawabanmu Tepat Sekali! 🎯</span>
+                    <Play size={16} weight="fill" />
+                    <span>Mulai Try Out Penuh</span>
                   </>
                 ) : (
                   <>
-                    <XCircle size={22} weight="fill" className="text-pink-soft shrink-0" />
-                    <span className="text-pink-hover">Hampir Tepat! Yuk Pelajari Caranya. 💡</span>
+                    <Lock size={16} weight="bold" />
+                    <span>Buka Akses Penuh (Upgrade Pro)</span>
                   </>
                 )}
+              </button>
+            </div>
+          </div>
+        </main>
+
+        {/* Paywall Modal */}
+        <PaywallModal
+          isOpen={paywallOpen}
+          onClose={() => setPaywallOpen(false)}
+          materialTitle="Try Out UTBK Penuh Ber-Timer"
+        />
+      </div>
+    )
+  }
+
+  // ==============================================================
+  // VIEW 3: ACTIVE EXAM SCREEN (KAYA UTBK BIASANYA — TANPA FEEDBACK!)
+  // ==============================================================
+  return (
+    <div className="min-h-screen bg-edubg text-edutext pb-24 selection:bg-edupink selection:text-white">
+      {/* Top Test Header (Sticky with Global Timer) */}
+      <header className="sticky top-0 z-40 bg-edubg/95 backdrop-blur-md border-b border-white/60 shadow-raised-sm">
+        <div className="max-w-5xl mx-auto px-4 h-18 flex items-center justify-between">
+          <div>
+            <span className="text-[10px] uppercase font-bold text-edutext-muted tracking-wider">
+              {examMode === 'preview' ? 'Pratinjau Gratis' : 'Simulasi Penuh UTBK'}
+            </span>
+            <h2 className="text-sm sm:text-base font-black font-display text-edutext">
+              Soal {currentIndex + 1} dari {totalQuestions}
+            </h2>
+          </div>
+
+          {/* Global Countdown Timer Well */}
+          <div className="flex items-center gap-3">
+            <div className={`timer-well ${timeLeft < 60 ? 'timer-critical' : ''}`}>
+              <Timer size={20} weight="bold" className="mr-2" />
+              <span>{formatTimer(timeLeft)}</span>
+            </div>
+
+            <button
+              onClick={() => setConfirmSubmitModal(true)}
+              className="btn-accent text-xs py-2 px-4 font-bold"
+            >
+              <span>Selesai Ujian</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-4 pt-6 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Main Question Panel (8 cols) */}
+          <div className="lg:col-span-8 space-y-6">
+            <div className="raised p-6 sm:p-8 space-y-6">
+              <div className="flex items-center justify-between pb-3 border-b border-white/60">
+                <span className="badge-chip text-[11px] font-bold">
+                  {currentQuestion?.topic || 'Matematika UTBK'}
+                </span>
+                <span className="text-xs font-mono font-bold text-edutext-muted">
+                  {currentQuestion?.type === 'input' ? 'Isian' : 'Pilihan Ganda'}
+                </span>
               </div>
-              <p className="text-xs sm:text-sm text-gray-600 mt-2 leading-relaxed">{feedback.explanation}</p>
-              {!feedback.isCorrect && question.answerDisplay && (
-                <div className="mt-3 inline-block bg-turquoise-light/80 text-turquoise-deep px-3 py-1.5 rounded-xl text-xs font-extrabold">
-                  Kunci Jawaban: {question.answerDisplay}
+
+              {/* Question Text */}
+              <p className="text-base sm:text-lg font-bold font-display text-edutext leading-relaxed">
+                {currentQuestion?.question}
+              </p>
+
+              {/* Answer Choices (WITHOUT ANY INSTANT FEEDBACK!) */}
+              {currentQuestion?.type === 'input' ? (
+                <div className="space-y-2 pt-2">
+                  <label className="block text-xs font-black text-edutext uppercase tracking-wider">
+                    Masukkan Jawabanmu:
+                  </label>
+                  <input
+                    type="text"
+                    className="input-inset text-base font-bold font-mono"
+                    placeholder="Ketik angka atau jawaban..."
+                    value={currentAnswer}
+                    onChange={(e) => handleInputAnswer(e.target.value)}
+                  />
+                </div>
+              ) : (
+                <div className="space-y-3 pt-2">
+                  {currentQuestion?.options?.map((opt) => {
+                    const isSelected = currentAnswer.toLowerCase() === opt.label.toLowerCase()
+                    return (
+                      <button
+                        key={opt.label}
+                        onClick={() => handleSelectOption(opt.label)}
+                        className={`w-full text-left flex items-center justify-between p-4 rounded-2xl transition-all cursor-pointer ${
+                          isSelected
+                            ? 'inset border-2 border-eduaccent text-eduaccent font-bold'
+                            : 'raised-sm hover:border-eduaccent text-edutext font-medium'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black shrink-0 ${
+                              isSelected ? 'bg-eduaccent text-white' : 'inset text-edutext'
+                            }`}
+                          >
+                            {opt.label}
+                          </span>
+                          <span className="text-sm">{opt.text}</span>
+                        </div>
+
+                        {isSelected && <CheckCircle size={20} weight="fill" className="text-eduaccent" />}
+                      </button>
+                    )
+                  })}
                 </div>
               )}
+
+              {/* Bottom Nav inside question card: Prev, Ragu-ragu, Next */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-6 border-t border-white/60">
+                <button
+                  onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
+                  disabled={currentIndex === 0}
+                  className="btn-secondary text-xs py-2.5 px-4 disabled:opacity-30 disabled:pointer-events-none"
+                >
+                  <ArrowLeft size={16} weight="bold" />
+                  <span>Sebelumnya</span>
+                </button>
+
+                <button
+                  onClick={toggleDoubtful}
+                  className={`btn-secondary text-xs py-2 px-3.5 font-bold ${
+                    isCurrentDoubtful ? 'inset text-amber-700 font-black border border-amber-400' : 'text-edutext-muted'
+                  }`}
+                >
+                  <Question size={16} weight="bold" />
+                  <span>{isCurrentDoubtful ? 'Ragu-ragu (Ditandai)' : 'Tandai Ragu-ragu'}</span>
+                </button>
+
+                {currentIndex < totalQuestions - 1 ? (
+                  <button
+                    onClick={() => setCurrentIndex((prev) => Math.min(totalQuestions - 1, prev + 1))}
+                    className="btn-accent text-xs py-2.5 px-5 font-bold"
+                  >
+                    <span>Berikutnya</span>
+                    <ArrowRight size={16} weight="bold" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setConfirmSubmitModal(true)}
+                    className="btn-accent text-xs py-2.5 px-5 font-bold"
+                  >
+                    <Check size={16} weight="bold" />
+                    <span>Kumpulkan Ujian</span>
+                  </button>
+                )}
+              </div>
             </div>
-          )}
+          </div>
 
-          {/* Actions Bar */}
-          <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/20">
-            <button
-              onClick={prev}
-              disabled={currentIndex === 0}
-              className="btn-outline-white text-xs py-2.5 px-4 disabled:opacity-30 disabled:pointer-events-none"
-            >
-              <ArrowLeft size={16} weight="bold" />
-              <span>Sebelumnya</span>
-            </button>
+          {/* Sidebar Question Palette (4 cols) */}
+          <div className="lg:col-span-4 space-y-5">
+            <div className="raised p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 font-black text-xs text-edutext">
+                  <ListNumbers size={18} weight="bold" className="text-eduaccent" />
+                  <span>Lembar Jawaban</span>
+                </div>
+                <span className="badge-chip text-[10px] font-bold">
+                  {answeredCount}/{totalQuestions} Terisi
+                </span>
+              </div>
 
-            {!feedback ? (
-              <button
-                onClick={checkAnswer}
-                disabled={question.type === 'input' ? !userAnswer.trim() : !selectedOption}
-                className="btn-accent text-xs py-3 px-6 font-extrabold disabled:opacity-40 disabled:pointer-events-none shadow-pink"
-              >
-                <span>Periksa Jawaban</span>
-                <Check size={16} weight="bold" />
-              </button>
-            ) : (
-              <button
-                onClick={next}
-                disabled={currentIndex === total - 1}
-                className="btn-white text-xs py-2.5 px-5 font-extrabold disabled:opacity-40 disabled:pointer-events-none"
-              >
-                <span>Soal Berikutnya</span>
-                <ArrowRight size={16} weight="bold" />
-              </button>
-            )}
+              {/* Number Grid */}
+              <div className="grid grid-cols-5 gap-2">
+                {activeQuestions.map((q, idx) => {
+                  const hasAnswer = !!(answers[q.id] && answers[q.id].trim())
+                  const isDoubt = !!doubtful[q.id]
+                  const isCur = currentIndex === idx
+
+                  let btnClass = 'raised-sm text-edutext-muted'
+                  if (isDoubt) {
+                    btnClass = 'inset text-amber-800 border-2 border-amber-400 font-black'
+                  } else if (hasAnswer) {
+                    btnClass = 'inset text-eduaccent border-2 border-eduaccent font-black'
+                  }
+
+                  return (
+                    <button
+                      key={q.id}
+                      onClick={() => setCurrentIndex(idx)}
+                      className={`h-10 rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center cursor-pointer ${btnClass} ${
+                        isCur ? 'ring-2 ring-eduaccent-dark' : ''
+                      }`}
+                    >
+                      {idx + 1}
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* Legend */}
+              <div className="pt-3 border-t border-white/60 space-y-1.5 text-[11px] text-edutext-muted font-medium">
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 rounded inset border border-eduaccent bg-eduaccent/20" />
+                  <span>Sudah dijawab</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 rounded inset border border-amber-400 bg-amber-100" />
+                  <span>Ragu-ragu</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 rounded raised-sm border border-white" />
+                  <span>Belum dijawab</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
+
+      {/* Confirmation Modal to Submit */}
+      {confirmSubmitModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-edutext/40 backdrop-blur-sm animate-pop-in">
+          <div className="raised p-6 sm:p-8 max-w-md w-full space-y-5">
+            <h3 className="text-xl font-black font-display text-edutext">
+              Kumpulkan Lembar Jawaban?
+            </h3>
+            <p className="text-xs text-edutext-muted leading-relaxed font-medium">
+              Kamu telah menjawab <strong>{answeredCount}</strong> dari total <strong>{totalQuestions}</strong> soal. Masih ada sisa waktu <strong>{formatTimer(timeLeft)}</strong>.
+            </p>
+
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => finishExam(false)}
+                className="btn-accent flex-1 text-xs py-3 font-bold"
+              >
+                Ya, Kumpulkan Sekarang
+              </button>
+              <button
+                onClick={() => setConfirmSubmitModal(false)}
+                className="btn-secondary text-xs py-3 px-5 font-bold"
+              >
+                Lanjut Mengerjakan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Time Up Notification Modal */}
+      {timeExpiredModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-edutext/50 backdrop-blur-sm animate-pop-in">
+          <div className="raised p-6 sm:p-8 max-w-md w-full space-y-4 text-center">
+            <div className="w-16 h-16 rounded-3xl inset text-edudanger mx-auto flex items-center justify-center">
+              <Timer size={36} weight="bold" />
+            </div>
+            <h3 className="text-xl font-black font-display text-edutext">
+              Waktu Ujian Habis!
+            </h3>
+            <p className="text-xs text-edutext-muted leading-relaxed font-medium">
+              Waktu 2 menit per soal telah berakhir. Sistem telah mengumpulkan jawabanmu secara otomatis.
+            </p>
+            <button
+              onClick={() => setTimeExpiredModal(false)}
+              className="btn-accent w-full text-xs py-3 font-bold"
+            >
+              Lihat Hasil & Pembahasan
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

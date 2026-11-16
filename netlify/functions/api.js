@@ -11,11 +11,11 @@ export const config = {
 
 // Default team contact information
 const DEFAULT_TEAM = {
-  name: 'Admin NumeracySprint',
-  role: 'Pengembang & Layanan Siswa',
+  name: 'Admin EduSpark',
+  role: 'Layanan Siswa & Bantuan Belajar',
   phone: '6281234567890',
   whatsappMessage:
-    'Halo Admin NumeracySprint, saya ingin berlangganan akses penuh materi Microlearning!',
+    'Halo Admin EduSpark, saya ingin berlangganan akses penuh materi Matematika UTBK-SNBT!',
 }
 
 // In-memory fallback cache in case Blobs is unavailable or initializing

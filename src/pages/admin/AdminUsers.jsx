@@ -23,7 +23,7 @@ export default function AdminUsers() {
   // Load fresh data from server on mount
   useEffect(() => {
     loadAllUsers().then((serverUsers) => {
-      if (serverUsers.length > 0) setUsers(serverUsers)
+      if (serverUsers && serverUsers.length > 0) setUsers(serverUsers)
     })
   }, [])
 
@@ -34,10 +34,10 @@ export default function AdminUsers() {
   }
 
   const exportCSV = () => {
-    const header = 'Nama,Status_Bayar,Tanggal_Login,Skor_Diagnostik,Level,Soal_Benar,Total_Soal'
+    const header = 'Nama,Status_Paket,Tanggal_Login,Skor_Evaluasi,Level,Soal_Benar,Total_Soal'
     const rows = users.map((u) => {
       const loginDate = u.loginAt ? new Date(u.loginAt).toLocaleDateString('id-ID') : '-'
-      const isPaid = u.isPaid ? 'Sudah Bayar' : 'Belum Bayar'
+      const isPaid = u.isPaid ? 'Berbayar (Pro)' : 'Gratis'
       const score = u.diagnostic?.score ?? '-'
       const level = u.diagnostic?.levelInfo?.level ?? '-'
       const correct = u.diagnostic?.correct ?? '-'
@@ -49,43 +49,41 @@ export default function AdminUsers() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `data-siswa-numeracysprint-${Date.now()}.csv`
+    a.download = `data-siswa-eduspark-${Date.now()}.csv`
     a.click()
   }
 
   return (
-    <div className="min-h-screen bg-white pb-16">
+    <div className="min-h-screen bg-edubg text-edutext pb-24 selection:bg-edupink selection:text-white">
       {/* Top Bar */}
-      <nav className="bg-white border-b border-gray-100 shadow-soft sticky top-0 z-40">
+      <nav className="bg-edubg/95 backdrop-blur-md border-b border-white/60 shadow-raised-sm sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link
             to="/admin"
-            className="text-xs font-bold text-gray-500 hover:text-turquoise flex items-center gap-1.5"
+            className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5"
           >
             <ArrowLeft size={16} weight="bold" />
             <span>Dashboard Admin</span>
           </Link>
-          <div className="flex items-center gap-2">
-            <span className="badge-pink text-xs font-bold">Kelola Siswa</span>
-          </div>
+          <span className="badge-chip text-xs font-bold">Kelola Status Siswa</span>
         </div>
       </nav>
 
-      <main className="max-w-5xl mx-auto px-4 pt-6 sm:pt-10">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <main className="max-w-5xl mx-auto px-4 pt-6 sm:pt-10 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold font-roboto text-gray-900 tracking-tight">
-              Data Siswa & Status Pembayaran
+            <h1 className="text-2xl sm:text-3xl font-black font-display text-edutext tracking-tight">
+              Data Siswa & Status Paket
             </h1>
-            <p className="text-gray-400 text-xs sm:text-sm mt-1">
-              Toggle status bayar siswa di sini untuk membuka akses materi Microlearning premium.
+            <p className="text-edutext-muted text-xs sm:text-sm mt-1">
+              Toggle status paket siswa (Gratis / Berbayar Pro) untuk membuka modul materi dan try out lengkap.
             </p>
           </div>
 
           <button
             onClick={exportCSV}
             disabled={users.length === 0}
-            className="btn-accent text-xs py-2.5 px-4 font-bold shadow-pink shrink-0 disabled:opacity-40"
+            className="btn-accent text-xs py-2.5 px-4 font-bold shrink-0 disabled:opacity-40"
           >
             <DownloadSimple size={18} weight="bold" />
             <span>Export CSV</span>
@@ -93,94 +91,113 @@ export default function AdminUsers() {
         </div>
 
         {users.length === 0 ? (
-          <div className="card-inner-white text-center py-16 text-gray-400">
-            <UsersThree size={48} weight="duotone" className="mx-auto mb-3 text-turquoise/40" />
-            <p className="font-bold text-gray-600">Belum ada siswa terdaftar</p>
-            <p className="text-xs mt-1">Siswa akan otomatis muncul saat login pertama kali.</p>
+          <div className="raised text-center py-16 space-y-3">
+            <UsersThree size={48} weight="bold" className="mx-auto text-eduaccent opacity-40" />
+            <p className="font-bold text-edutext">Belum ada siswa terdaftar</p>
+            <p className="text-xs text-edutext-muted">Siswa akan otomatis muncul saat login pertama kali.</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {users.map((u, i) => {
-              const isPaid = !!u.isPaid
-              const hasDiagnostic = !!u.diagnostic
+          <div className="raised overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-white/60 text-xs font-black text-edutext uppercase tracking-wider">
+                    <th className="py-4 px-5">Siswa</th>
+                    <th className="py-4 px-4">Status Paket</th>
+                    <th className="py-4 px-4">Aksi Toggle</th>
+                    <th className="py-4 px-4">Hasil Evaluasi</th>
+                    <th className="py-4 px-5 text-right">Login Terakhir</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/40 text-xs">
+                  {users.map((u, idx) => {
+                    const score = u.diagnostic?.score
+                    const level = u.diagnostic?.levelInfo?.level
+                    const loginDate = u.loginAt
+                      ? new Date(u.loginAt).toLocaleDateString('id-ID', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                        })
+                      : '-'
 
-              return (
-                <div
-                  key={i}
-                  className="card-blue flex flex-col md:flex-row md:items-center justify-between gap-4 border border-white/20 shadow-md"
-                >
-                  {/* Left: User Identity */}
-                  <div className="flex items-center gap-3.5">
-                    <div className="w-12 h-12 rounded-2xl bg-white text-turquoise-dark flex items-center justify-center font-black text-base shadow-soft shrink-0">
-                      {u.name ? u.name.charAt(0).toUpperCase() : 'S'}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-white text-base font-roboto">{u.name}</h3>
-                        {isPaid ? (
-                          <span className="badge-pink text-[10px] py-0.5 px-2 uppercase font-bold tracking-wider flex items-center gap-1">
-                            <Crown size={12} weight="fill" /> Lunas / Pro
-                          </span>
-                        ) : (
-                          <span className="badge-glass text-[10px] text-white/80 py-0.5 px-2">
-                            Reguler / Belum Bayar
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs text-white/70 mt-0.5 flex items-center gap-1">
-                        <CalendarBlank size={13} weight="bold" />
-                        Masuk: {u.loginAt ? new Date(u.loginAt).toLocaleDateString('id-ID') : '-'}
-                      </p>
-                    </div>
-                  </div>
+                    return (
+                      <tr key={idx} className="hover:bg-white/20 transition-colors">
+                        {/* Student Name */}
+                        <td className="py-4 px-5">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full inset flex items-center justify-center font-bold text-eduaccent shrink-0">
+                              {u.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="font-bold text-edutext">{u.name}</p>
+                              <span className="text-[10px] text-edutext-muted font-mono">ID: #{idx + 1}</span>
+                            </div>
+                          </div>
+                        </td>
 
-                  {/* Middle: Diagnostic info */}
-                  <div className="card-inner-glass !py-2 !px-3 text-xs flex items-center gap-4 text-white">
-                    {hasDiagnostic ? (
-                      <>
-                        <div>
-                          <p className="text-[10px] text-white/70 uppercase font-bold">Diagnostik</p>
-                          <p className="font-black text-sm text-yellow-300">
-                            {u.diagnostic.score}/100
-                          </p>
-                        </div>
-                        <div className="h-6 w-px bg-white/20" />
-                        <div>
-                          <p className="text-[10px] text-white/70 uppercase font-bold">Level</p>
-                          <p className="font-bold text-white">{u.diagnostic.levelInfo?.level}</p>
-                        </div>
-                      </>
-                    ) : (
-                      <span className="text-white/60 italic text-xs">Belum tes diagnostik</span>
-                    )}
-                  </div>
+                        {/* Package Status */}
+                        <td className="py-4 px-4">
+                          {u.isPaid ? (
+                            <span className="badge-accent text-[11px] flex items-center gap-1 w-max">
+                              <Crown size={12} weight="fill" /> Berbayar (Pro)
+                            </span>
+                          ) : (
+                            <span className="badge-chip text-[11px] text-edutext-muted w-max">
+                              Gratis
+                            </span>
+                          )}
+                        </td>
 
-                  {/* Right: Toggle Payment Status Button (Requirement 6) */}
-                  <div className="flex items-center gap-2 shrink-0 self-end md:self-auto">
-                    <button
-                      onClick={() => handleTogglePaid(u.name, isPaid)}
-                      className={`text-xs font-bold py-2.5 px-4 rounded-xl transition-all flex items-center gap-2 shadow-soft ${
-                        isPaid
-                          ? 'bg-white text-turquoise-deep border-2 border-white'
-                          : 'bg-white hover:bg-gray-100 text-gray-800 border-2 border-transparent'
-                      }`}
-                    >
-                      {isPaid ? (
-                        <>
-                          <CheckCircle size={18} weight="fill" className="text-turquoise" />
-                          <span>Status: Sudah Bayar</span>
-                        </>
-                      ) : (
-                        <>
-                          <XCircle size={18} weight="bold" className="text-pink-soft" />
-                          <span>Klik: Tandai Lunas</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              )
-            })}
+                        {/* Toggle Button */}
+                        <td className="py-4 px-4">
+                          <button
+                            onClick={() => handleTogglePaid(u.name, u.isPaid)}
+                            className={`btn-secondary text-[11px] py-1.5 px-3 flex items-center gap-1.5 cursor-pointer ${
+                              u.isPaid ? 'text-eduaccent font-black' : 'text-edutext-muted'
+                            }`}
+                            title="Klik untuk mengubah status paket siswa"
+                          >
+                            {u.isPaid ? (
+                              <>
+                                <ToggleRight size={18} weight="fill" className="text-eduaccent" />
+                                <span>Aktif Pro</span>
+                              </>
+                            ) : (
+                              <>
+                                <ToggleLeft size={18} weight="bold" />
+                                <span>Set ke Pro</span>
+                              </>
+                            )}
+                          </button>
+                        </td>
+
+                        {/* Diagnostic score */}
+                        <td className="py-4 px-4">
+                          {score !== undefined ? (
+                            <div className="flex items-center gap-2">
+                              <span className="font-display font-black text-eduaccent tabular-nums">
+                                {score}/100
+                              </span>
+                              <span className="badge-chip text-[10px]">
+                                {level}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-edutext-muted italic text-[11px]">Belum Evaluasi</span>
+                          )}
+                        </td>
+
+                        {/* Login date */}
+                        <td className="py-4 px-5 text-right text-edutext-muted font-mono text-[11px]">
+                          {loginDate}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </main>

@@ -2,52 +2,24 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { defaultExercises } from '../../data/exercises'
 import { saveCustomExercises, loadCustomExercises } from '../../services/api'
+import { parseExercisesCSV } from '../../utils/csvParser'
 import {
-  PencilSimpleLine,
+  Timer,
   Plus,
   Trash,
   PencilSimple,
   ArrowLeft,
   FileCsv,
   Sparkle,
-  FloppyDisk,
   X,
   CheckCircle,
-  Question,
   ListNumbers,
+  Question,
+  ArrowsClockwise,
 } from '@phosphor-icons/react'
 
-function parseCSV(text) {
-  const lines = text.trim().split('\n')
-  if (lines.length < 2) return []
-
-  const headers = lines[0].split(',').map((s) => s.trim().toLowerCase())
-  return lines
-    .slice(1)
-    .map((line, i) => {
-      // Basic CSV splitter that handles potential quoted strings
-      const vals = line.split(',').map((s) => s.trim().replace(/^"|"$/g, ''))
-      const obj = {}
-      headers.forEach((h, idx) => {
-        obj[h] = vals[idx] || ''
-      })
-
-      return {
-        id: Date.now() + i,
-        topic: obj.topic || 'Persentase',
-        question: obj.question || '',
-        type: 'input',
-        answer: (obj.answer || '').replace(/\./g, '').replace(/,/g, ''),
-        answerDisplay: obj.answer || '',
-        explanation: obj.explanation || 'Pembahasan telah disediakan.',
-        hint: obj.hint || '',
-      }
-    })
-    .filter((q) => q.question.length > 0)
-}
-
 const emptyForm = {
-  topic: '',
+  topic: 'Pengetahuan Kuantitatif',
   question: '',
   type: 'input',
   answer: '',
@@ -68,7 +40,7 @@ export default function AdminExercises() {
   // Load fresh data from server on mount
   useEffect(() => {
     loadCustomExercises().then((serverExercises) => {
-      setExercises(serverExercises)
+      if (serverExercises) setExercises(serverExercises)
     })
   }, [])
 
@@ -97,14 +69,15 @@ export default function AdminExercises() {
   }
 
   const remove = async (id) => {
-    if (!confirm('Hapus soal ini?')) return
-    const updated = exercises.filter((e) => e.id !== id)
-    await persistExercises(updated)
+    if (window.confirm('Yakin ingin menghapus soal ini?')) {
+      const updated = exercises.filter((e) => e.id !== id)
+      await persistExercises(updated)
+    }
   }
 
   const startEdit = (ex) => {
     setForm({
-      topic: ex.topic || '',
+      topic: ex.topic || 'Pengetahuan Kuantitatif',
       question: ex.question || '',
       type: ex.type || 'input',
       answer: ex.answer || '',
@@ -122,49 +95,87 @@ export default function AdminExercises() {
 
     const reader = new FileReader()
     reader.onload = async (evt) => {
-      const parsed = parseCSV(evt.target.result)
-      if (parsed.length === 0) {
-        alert('File CSV tidak memiliki baris data yang valid.')
-        return
-      }
+      try {
+        const parsed = parseExercisesCSV(evt.target.result)
+        if (parsed.length === 0) {
+          alert('File CSV tidak memiliki baris data soal yang valid atau format header tidak sesuai.')
+          return
+        }
 
-      const updated = [...exercises, ...parsed]
-      await persistExercises(updated)
-      alert(`Berhasil mengimpor ${parsed.length} soal numerasi baru dari CSV!`)
+        const updated = [...exercises, ...parsed]
+        await persistExercises(updated)
+        alert(`Berhasil mengimpor ${parsed.length} soal try out baru dari CSV!`)
+      } catch (err) {
+        alert('Gagal membaca file CSV: ' + err.message)
+      } finally {
+        if (fileRef.current) fileRef.current.value = ''
+      }
     }
     reader.readAsText(file)
+  }
+
+  const clearAllCustomExercises = async () => {
+    if (
+      window.confirm(
+        `Yakin ingin menghapus seluruh ${exercises.length} soal tambahan kustom? (Soal bawaan sistem tidak akan terhapus)`
+      )
+    ) {
+      await persistExercises([])
+      alert('Semua soal tambahan kustom berhasil dibersihkan.')
+    }
   }
 
   const allExercises = [...defaultExercises, ...exercises]
 
   return (
-    <div className="min-h-screen bg-white pb-16">
+    <div className="min-h-screen bg-edubg text-edutext pb-24 selection:bg-edupink selection:text-white">
       {/* Top Navbar */}
-      <nav className="bg-white border-b border-gray-100 shadow-soft sticky top-0 z-40">
+      <nav className="bg-edubg/95 backdrop-blur-md border-b border-white/60 shadow-raised-sm sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link
             to="/admin"
-            className="text-xs font-bold text-gray-500 hover:text-turquoise flex items-center gap-1.5"
+            className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5"
           >
             <ArrowLeft size={16} weight="bold" />
             <span>Dashboard Admin</span>
           </Link>
-          <span className="badge-pink text-xs font-bold">Kelola Soal & CSV</span>
+          <span className="badge-chip text-xs font-bold">Kelola Soal & CSV</span>
         </div>
       </nav>
 
-      <main className="max-w-5xl mx-auto px-4 pt-6 sm:pt-10">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <main className="max-w-5xl mx-auto px-4 pt-6 sm:pt-10 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold font-roboto text-gray-900 tracking-tight">
-              Kelola Soal & Import CSV
+            <h1 className="text-2xl sm:text-3xl font-black font-display text-edutext tracking-tight">
+              Kelola Soal Try Out & Import CSV
             </h1>
-            <p className="text-gray-400 text-xs sm:text-sm mt-1">
-              Total {allExercises.length} soal numerasi siap dikerjakan siswa di halaman latihan.
+            <p className="text-edutext-muted text-xs sm:text-sm mt-1">
+              Total {allExercises.length} soal ({defaultExercises.length} bawaan + {exercises.length} kustom) siap dikerjakan dalam Try Out.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            {exercises.length > 0 && (
+              <button
+                onClick={clearAllCustomExercises}
+                className="btn-secondary text-xs py-2.5 px-3 font-bold flex items-center gap-1.5 text-edudanger hover:text-red-700"
+                title="Hapus semua soal kustom (misal yang sempat salah format)"
+              >
+                <Trash size={16} weight="bold" />
+                <span>Bersihkan ({exercises.length})</span>
+              </button>
+            )}
+
+            <a
+              href="/template_soal.csv"
+              download="template_soal.csv"
+              className="btn-secondary text-xs py-2.5 px-3.5 font-bold flex items-center gap-1.5"
+              title="Download file template CSV untuk diisi di Excel"
+            >
+              <FileCsv size={16} weight="bold" />
+              <span>Template CSV</span>
+            </a>
+
             <input
               ref={fileRef}
               type="file"
@@ -174,9 +185,9 @@ export default function AdminExercises() {
             />
             <button
               onClick={() => fileRef.current?.click()}
-              className="btn-accent text-xs py-2.5 px-4 font-bold shadow-pink flex items-center gap-2"
+              className="btn-secondary text-xs py-2.5 px-3.5 font-bold flex items-center gap-1.5"
             >
-              <FileCsv size={18} weight="bold" />
+              <FileCsv size={16} weight="bold" className="text-eduaccent" />
               <span>Import CSV</span>
             </button>
 
@@ -186,105 +197,96 @@ export default function AdminExercises() {
                 setEditId(null)
                 setForm(emptyForm)
               }}
-              className="btn-primary text-xs py-2.5 px-4 font-bold flex items-center gap-2"
+              className="btn-accent text-xs py-2.5 px-4 font-bold flex items-center gap-1.5"
             >
-              <Plus size={18} weight="bold" />
+              <Plus size={16} weight="bold" />
               <span>Tambah Soal</span>
             </button>
           </div>
         </div>
 
-        {/* CSV Format Guide Card */}
-        <div className="card-inner-white mb-6 border-2 border-turquoise/20">
-          <div className="flex items-center gap-2 font-bold text-gray-800 text-xs mb-2">
-            <FileCsv size={20} weight="bold" className="text-pink-soft" />
-            <span>Format Kolom CSV untuk Import Soal:</span>
+        {/* CSV Format Guide */}
+        <div className="raised p-4 sm:p-5 space-y-2">
+          <div className="flex items-center gap-2 font-black text-edutext text-xs">
+            <FileCsv size={20} weight="bold" className="text-eduaccent" />
+            <span>Format Header File CSV yang Didukung:</span>
           </div>
-          <code className="text-xs font-mono bg-turquoise-light/50 p-2.5 rounded-xl block text-turquoise-deep font-semibold">
+          <code className="block inset p-3 font-mono text-[11px] text-edutext overflow-x-auto">
             topic,question,answer,explanation,hint
           </code>
-          <p className="text-[11px] text-gray-400 mt-1.5 leading-relaxed">
-            Contoh baris data: <br />
-            <code className="text-[10px] text-gray-600 font-mono">
-              Persentase,Berapa 10% dari Rp500.000?,50000,10/100 * 500000 = 50000,Gunakan rumus persentase dasar
-            </code>
+          <p className="text-[11px] text-edutext-muted">
+            Contoh baris: Pengetahuan Kuantitatif,"Jika 2x + 6 = 16, berapakah nilai x?",5,"2x = 10 maka x = 5","Pindah ruas 6"
           </p>
         </div>
 
-        {/* Form Modal */}
+        {/* Form Modal/Card */}
         {showForm && (
-          <div className="card-blue mb-8 border-2 border-white/30 shadow-2xl animate-pop-in">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold font-roboto text-white flex items-center gap-2">
-                <PencilSimpleLine size={22} weight="bold" />
-                <span>{editId ? 'Edit Soal Numerasi' : 'Tambah Soal Baru'}</span>
+          <div className="raised p-6 sm:p-8 space-y-5 animate-pop-in">
+            <div className="flex items-center justify-between pb-3 border-b border-white/60">
+              <h2 className="text-lg font-black font-display text-edutext">
+                {editId ? 'Edit Soal' : 'Tambah Soal Baru'}
               </h2>
               <button
                 onClick={() => setShowForm(false)}
-                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white"
+                className="w-8 h-8 rounded-full raised-sm flex items-center justify-center text-edutext hover:text-edudanger"
               >
                 <X size={16} weight="bold" />
               </button>
             </div>
 
             <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-white uppercase tracking-wider mb-1">
-                    Topik / Kategori *:
-                  </label>
-                  <input
-                    className="input-field-light text-xs font-semibold"
-                    placeholder="Contoh: Persentase, Rata-rata, Rasio"
-                    value={form.topic}
-                    onChange={(e) => setForm({ ...form, topic: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-white uppercase tracking-wider mb-1">
-                    Tipe Soal:
-                  </label>
-                  <select
-                    className="input-field-light text-xs font-bold"
-                    value={form.type}
-                    onChange={(e) => setForm({ ...form, type: e.target.value })}
-                  >
-                    <option value="input">Isian Teks / Angka</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-xs font-black uppercase tracking-wider mb-1">
+                  Subtes / Topik
+                </label>
+                <select
+                  className="input-inset text-sm font-bold"
+                  value={form.topic}
+                  onChange={(e) => setForm({ ...form, topic: e.target.value })}
+                >
+                  <option value="Pengetahuan Kuantitatif">Pengetahuan Kuantitatif (PK)</option>
+                  <option value="Penalaran Matematika">Penalaran Matematika (PM)</option>
+                  <option value="Penalaran Kuantitatif">Penalaran Kuantitatif (PKu)</option>
+                  <option value="Persentase & Diskon">Persentase & Diskon</option>
+                  <option value="Rata-rata Data">Rata-rata Data</option>
+                  <option value="Perbandingan & Rasio">Perbandingan & Rasio</option>
+                </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white uppercase tracking-wider mb-1">
-                  Pertanyaan Soal Kontekstual *:
+                <label className="block text-xs font-black uppercase tracking-wider mb-1">
+                  Teks Pertanyaan
                 </label>
                 <textarea
-                  className="input-field-light text-xs font-normal resize-y min-h-[90px]"
-                  placeholder="Tulis soal cerita atau permasalahan numerasi..."
+                  rows={3}
+                  className="input-inset text-sm"
+                  placeholder="Ketik soal cerita atau persamaan matematika..."
                   value={form.question}
                   onChange={(e) => setForm({ ...form, question: e.target.value })}
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-white uppercase tracking-wider mb-1">
-                    Kunci Jawaban (Angka / Teks) *:
+                  <label className="block text-xs font-black uppercase tracking-wider mb-1">
+                    Kunci Jawaban (Angka / Teks)
                   </label>
                   <input
-                    className="input-field-light text-xs font-mono font-bold"
-                    placeholder="Contoh: 180000"
+                    type="text"
+                    className="input-inset text-sm"
+                    placeholder="Contoh: 180000 atau 5"
                     value={form.answer}
                     onChange={(e) => setForm({ ...form, answer: e.target.value })}
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-white uppercase tracking-wider mb-1">
-                    Format Tampilan Jawaban (Opsional):
+                  <label className="block text-xs font-black uppercase tracking-wider mb-1">
+                    Tampilan Jawaban (Label)
                   </label>
                   <input
-                    className="input-field-light text-xs font-semibold"
-                    placeholder="Contoh: Rp180.000"
+                    type="text"
+                    className="input-inset text-sm"
+                    placeholder="Contoh: Rp180.000 atau 5 kg"
                     value={form.answerDisplay}
                     onChange={(e) => setForm({ ...form, answerDisplay: e.target.value })}
                   />
@@ -292,94 +294,100 @@ export default function AdminExercises() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white uppercase tracking-wider mb-1">
-                  Pembahasan / Penjelasan Jawaban:
+                <label className="block text-xs font-black uppercase tracking-wider mb-1">
+                  Pembahasan Detail
                 </label>
-                <input
-                  className="input-field-light text-xs font-normal"
-                  placeholder="Langkah perhitungan yang benar..."
+                <textarea
+                  rows={3}
+                  className="input-inset text-sm"
+                  placeholder="Penjelasan langkah demi langkah penyelesaian soal..."
                   value={form.explanation}
                   onChange={(e) => setForm({ ...form, explanation: e.target.value })}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white uppercase tracking-wider mb-1">
-                  Petunjuk / Hint (Opsional):
+                <label className="block text-xs font-black uppercase tracking-wider mb-1">
+                  Petunjuk / Hint (Opsional)
                 </label>
                 <input
-                  className="input-field-light text-xs font-normal"
-                  placeholder="Petunjuk rumus atau konsep awal..."
+                  type="text"
+                  className="input-inset text-sm"
+                  placeholder="Petunjuk singkat sebelum menjawab..."
                   value={form.hint}
                   onChange={(e) => setForm({ ...form, hint: e.target.value })}
                 />
               </div>
+            </div>
 
-              <div className="flex gap-3 pt-2">
-                <button onClick={save} className="btn-accent text-xs py-2.5 px-6 font-bold shadow-pink">
-                  <FloppyDisk size={18} weight="bold" />
-                  <span>Simpan Soal</span>
-                </button>
-                <button onClick={() => setShowForm(false)} className="btn-outline-white text-xs py-2.5 px-5">
-                  Batal
-                </button>
-              </div>
+            <div className="flex justify-end gap-3 pt-4 border-t border-white/60">
+              <button
+                onClick={() => setShowForm(false)}
+                className="btn-secondary text-xs py-2.5 px-4"
+              >
+                Batal
+              </button>
+              <button
+                onClick={save}
+                className="btn-accent text-xs py-2.5 px-6 font-bold"
+              >
+                Simpan Soal
+              </button>
             </div>
           </div>
         )}
 
         {/* Exercises List */}
-        <div className="space-y-3">
-          {allExercises.map((ex, i) => {
-            const isDefault = i < defaultExercises.length
-            return (
-              <div
-                key={ex.id}
-                className="card-blue flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-white/20 shadow-md"
-              >
-                <div className="flex items-start gap-3.5">
-                  <div className="w-9 h-9 rounded-xl bg-white text-turquoise-dark flex items-center justify-center font-black text-xs shadow-soft shrink-0 mt-0.5">
-                    {i + 1}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="badge-pink text-[10px] py-0.5 px-2 font-bold uppercase tracking-wider">
+        <div className="space-y-4">
+          <h2 className="text-base font-black font-display text-edutext">
+            Daftar Soal Try Out ({allExercises.length})
+          </h2>
+
+          <div className="space-y-3">
+            {allExercises.map((ex, idx) => {
+              const isDefault = defaultExercises.some((d) => d.id === ex.id)
+              return (
+                <div key={ex.id} className="raised p-5 flex items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="badge-chip text-[10px]">
+                        Soal #{idx + 1}
+                      </span>
+                      <span className="badge-chip text-[10px] text-eduaccent">
                         {ex.topic}
                       </span>
                       {isDefault && (
-                        <span className="badge-glass text-[10px] text-white/80 py-0.5 px-2">Default</span>
+                        <span className="text-[10px] text-edutext-muted font-bold">
+                          [Bawaan Sistem]
+                        </span>
                       )}
                     </div>
-                    <p className="text-white text-xs sm:text-sm font-medium leading-relaxed">
-                      {ex.question}
-                    </p>
-                    <p className="text-[11px] text-white/70 mt-1">
-                      Kunci: <strong className="text-yellow-300">{ex.answerDisplay || ex.answer}</strong>
+                    <p className="font-bold text-sm text-edutext mt-1 whitespace-pre-line">{ex.question}</p>
+                    <p className="text-xs text-edutext-muted">
+                      Kunci: <strong className="text-eduaccent">{ex.answerDisplay || ex.answer}</strong>
                     </p>
                   </div>
-                </div>
 
-                {!isDefault && (
-                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-                    <button
-                      onClick={() => startEdit(ex)}
-                      className="text-xs font-bold py-2 px-3.5 rounded-xl bg-white/20 hover:bg-white text-white hover:text-gray-900 transition-colors flex items-center gap-1.5"
-                    >
-                      <PencilSimple size={14} weight="bold" />
-                      <span>Edit</span>
-                    </button>
-                    <button
-                      onClick={() => remove(ex.id)}
-                      className="text-xs font-bold py-2 px-3 rounded-xl bg-pink-soft/80 hover:bg-pink-soft text-white transition-colors flex items-center gap-1"
-                    >
-                      <Trash size={14} weight="bold" />
-                      <span>Hapus</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            )
-          })}
+                  {!isDefault && (
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        onClick={() => startEdit(ex)}
+                        className="w-8 h-8 rounded-xl raised-sm flex items-center justify-center text-edutext hover:text-eduaccent"
+                      >
+                        <PencilSimple size={16} weight="bold" />
+                      </button>
+                      <button
+                        onClick={() => remove(ex.id)}
+                        className="w-8 h-8 rounded-xl raised-sm flex items-center justify-center text-edutext hover:text-edudanger"
+                      >
+                        <Trash size={16} weight="bold" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
         </div>
       </main>
     </div>

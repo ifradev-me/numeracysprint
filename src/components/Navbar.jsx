@@ -2,24 +2,23 @@ import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import {
-  MathOperations,
+  Brain,
   Gauge,
-  Stethoscope,
+  ClipboardText,
   BookOpenText,
-  PencilSimpleLine,
+  Timer,
   UsersThree,
   SignOut,
   User,
   Crown,
-  Sparkle,
 } from '@phosphor-icons/react'
 
 const navLinks = [
   { path: '/dashboard', label: 'Dashboard', icon: Gauge },
-  { path: '/diagnostic', label: 'Diagnostik', icon: Stethoscope },
-  { path: '/microlearning', label: 'Materi', icon: BookOpenText },
-  { path: '/exercise', label: 'Latihan', icon: PencilSimpleLine },
-  { path: '/about', label: 'Tentang', icon: UsersThree },
+  { path: '/diagnostic', label: 'Evaluasi', icon: ClipboardText },
+  { path: '/materi', label: 'Materi', icon: BookOpenText, alias: '/microlearning' },
+  { path: '/tryout', label: 'Try Out', icon: Timer, alias: '/exercise' },
+  { path: '/about', label: 'Tentang', icon: UsersThree, alias: '/tentang' },
 ]
 
 export default function Navbar() {
@@ -33,39 +32,38 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-white/95 backdrop-blur-md border-b-2 border-turquoise/20 shadow-soft sticky top-0 z-40">
-      {/* Top micro vibrant accent line: Turquoise to Pink gradient */}
-      <div className="h-1 w-full bg-gradient-to-r from-turquoise via-turquoise-dark to-pink-soft" />
-
-      <div className="max-w-5xl mx-auto px-4 h-16 sm:h-20 flex items-center justify-between">
-        {/* Logo */}
+    <nav className="bg-edubg/95 backdrop-blur-md border-b border-white/60 shadow-raised-sm sticky top-0 z-40">
+      <div className="max-w-6xl mx-auto px-4 h-16 sm:h-20 flex items-center justify-between">
+        {/* Logo EduSpark */}
         <Link to="/dashboard" className="flex items-center gap-2.5 group">
-          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-turquoise to-turquoise-dark flex items-center justify-center text-white shadow-soft group-hover:scale-105 transition-transform border border-white/20">
-            <MathOperations size={24} weight="bold" />
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl raised-sm flex items-center justify-center relative">
+            <Brain size={24} weight="bold" className="text-eduaccent" />
+            <span className="w-2.5 h-2.5 rounded-full bg-eduaccent absolute -top-1 -right-1 ring-2 ring-edubg" />
           </div>
           <div>
-            <span className="font-black text-gray-900 font-roboto text-base sm:text-lg tracking-tight flex items-center gap-1.5">
-              Numeracy<span className="text-turquoise">Sprint</span>
+            <span className="font-black font-display text-lg sm:text-xl tracking-tight flex items-center">
+              <span className="text-edutext">Edu</span>
+              <span className="text-edupink">Spark</span>
             </span>
-            <span className="hidden sm:block text-[10px] text-gray-400 font-bold -mt-1 tracking-wider uppercase">
-              Microlearning Platform
+            <span className="hidden sm:block text-[10px] text-edutext-muted font-bold -mt-1 tracking-wider uppercase">
+              Matematika UTBK-SNBT
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden md:flex items-center gap-1.5">
+        <div className="hidden md:flex items-center gap-2">
           {navLinks.map((link) => {
             const Icon = link.icon
-            const isActive = pathname === link.path
+            const isActive = pathname === link.path || (link.alias && pathname === link.alias)
             return (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`flex items-center gap-2 px-4 py-2 rounded-2xl text-sm font-black transition-all duration-150 ${
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-150 ${
                   isActive
-                    ? 'bg-gradient-to-r from-turquoise to-turquoise-dark text-white shadow-soft shadow-turquoise/30 scale-105'
-                    : 'text-gray-600 hover:text-turquoise-deep hover:bg-turquoise-light/60'
+                    ? 'inset text-eduaccent font-extrabold shadow-inset-sm'
+                    : 'text-edutext-muted hover:text-eduaccent hover:bg-edupink-soft/40'
                 }`}
               >
                 <Icon size={18} weight={isActive ? 'bold' : 'regular'} />
@@ -77,16 +75,20 @@ export default function Navbar() {
 
         {/* User Status & Logout */}
         <div className="flex items-center gap-2.5 sm:gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-turquoise-surface border-2 border-turquoise/30 shadow-sm">
-            <div className="w-6 h-6 rounded-full bg-turquoise text-white flex items-center justify-center font-black text-xs">
-              {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl raised-sm border border-white/60">
+            <div className="w-7 h-7 rounded-full inset flex items-center justify-center font-black text-xs text-eduaccent font-display">
+              {user?.name ? user.name.charAt(0).toUpperCase() : 'S'}
             </div>
-            <span className="text-xs font-black text-turquoise-deep max-w-[100px] sm:max-w-[130px] truncate">
+            <span className="text-xs font-bold text-edutext max-w-[100px] sm:max-w-[130px] truncate">
               {user?.name || 'Siswa'}
             </span>
-            {user?.isPaid && (
-              <span className="badge-pink !py-0.5 !px-2 text-[10px] uppercase tracking-wider flex items-center gap-1 shadow-pink">
+            {user?.isPaid ? (
+              <span className="badge-accent !py-0.5 !px-2 text-[10px] uppercase tracking-wider flex items-center gap-1">
                 <Crown size={12} weight="fill" /> Pro
+              </span>
+            ) : (
+              <span className="badge-chip !py-0.5 !px-2 text-[10px] uppercase tracking-wider text-edutext-muted">
+                Gratis
               </span>
             )}
           </div>
@@ -94,14 +96,13 @@ export default function Navbar() {
           <button
             onClick={handleLogout}
             title="Keluar"
-            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-pink-soft font-bold px-2.5 py-2 rounded-xl hover:bg-pink-light transition-colors active:scale-95"
+            className="flex items-center gap-1.5 text-xs text-edutext-muted hover:text-edudanger font-bold px-2.5 py-2 rounded-xl raised-sm hover:inset transition-all active:scale-95"
           >
-            <SignOut size={18} weight="bold" />
+            <SignOut size={16} weight="bold" />
             <span className="hidden sm:inline">Keluar</span>
           </button>
         </div>
       </div>
-
     </nav>
   )
 }

@@ -2,17 +2,17 @@ import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import {
-  MathOperations,
+  Brain,
   ArrowRight,
   Sparkle,
   LockKey,
   CheckCircle,
-  Lightning,
+  Timer,
   Student,
   Percent,
   ChartBar,
   Scales,
-  Fire,
+  ArrowLeft,
 } from '@phosphor-icons/react'
 
 export default function LoginPage() {
@@ -36,91 +36,66 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-between p-4 sm:p-8 relative overflow-hidden">
-      {/* Desktop-only fun decorative background math shapes */}
-      <div className="hidden md:block absolute -top-16 -left-16 w-72 h-72 bg-turquoise-light rounded-full blur-3xl opacity-60 pointer-events-none" />
-      <div className="hidden md:block absolute -bottom-16 -right-16 w-80 h-80 bg-pink-light rounded-full blur-3xl opacity-50 pointer-events-none" />
+    <div className="min-h-screen bg-edubg text-edutext flex flex-col justify-between p-4 sm:p-8 relative selection:bg-edupink selection:text-white">
+      {/* Top Bar with back link to landing page */}
+      <div className="max-w-md w-full mx-auto flex items-center justify-between z-10 pt-2">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-edutext-muted hover:text-eduaccent raised-sm px-3 py-1.5 transition-all"
+        >
+          <ArrowLeft size={14} weight="bold" />
+          <span>Kembali ke Beranda</span>
+        </Link>
 
-      {/* Desktop-only subtle floating math symbols watermark */}
-      <div className="hidden lg:block absolute top-12 right-24 text-gray-200/60 font-mono text-9xl font-black select-none pointer-events-none">
-        %
-      </div>
-      <div className="hidden lg:block absolute bottom-12 left-20 text-gray-200/60 font-mono text-9xl font-black select-none pointer-events-none">
-        ÷
-      </div>
-
-      {/* Desktop-only stationary feature badges with subtle idle beacon/glow (No Float) */}
-      <div className="hidden lg:flex absolute top-20 left-12 bg-white/90 backdrop-blur-md shadow-card border-2 border-turquoise/25 rounded-2xl p-3.5 items-center gap-3 shimmer-card">
-        <div className="w-10 h-10 rounded-xl bg-turquoise text-white flex items-center justify-center font-bold shadow-soft">
-          <Lightning size={22} weight="fill" />
-        </div>
-        <div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-turquoise" />
-            <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Metode Kilat</p>
-          </div>
-          <p className="text-xs font-black text-gray-900">Sprint Diagnostik 3 Mnt</p>
-        </div>
+        <span className="badge-chip text-[11px]">
+          <Sparkle size={12} weight="fill" className="text-edupink" /> SNBT 2026
+        </span>
       </div>
 
-      <div className="hidden lg:flex absolute bottom-24 right-14 bg-white/90 backdrop-blur-md shadow-card border-2 border-pink-soft/25 rounded-2xl p-3.5 items-center gap-3 animate-pink-breathe">
-        <div className="w-10 h-10 rounded-2xl bg-pink-soft text-white flex items-center justify-center font-bold shadow-pink">
-          <Sparkle size={22} weight="fill" />
-        </div>
-        <div>
-          <div className="flex items-center gap-1.5">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-soft opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-hover"></span>
-            </span>
-            <p className="text-[10px] text-pink-hover font-black uppercase tracking-wider">Format Adaptif</p>
-          </div>
-          <p className="text-xs font-black text-gray-900">Microlearning Praktis</p>
-        </div>
-      </div>
-
-      {/* Main Form container */}
+      {/* Main Login Form Container */}
       <div className="w-full max-w-md mx-auto my-auto z-10 py-6">
-        {/* Brand header */}
+        {/* Brand Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-turquoise to-turquoise-dark text-white shadow-card-blue mb-3 group hover:rotate-6 transition-transform">
-            <MathOperations size={44} weight="bold" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl raised mb-3 text-eduaccent">
+            <Brain size={44} weight="bold" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-gray-900 font-roboto tracking-tight">
-            Numeracy<span className="text-turquoise">Sprint</span>
+          <h1 className="text-3xl sm:text-4xl font-black font-display text-edutext tracking-tight">
+            Edu<span className="text-edupink">Spark</span>
           </h1>
-          <p className="text-gray-400 text-xs sm:text-sm mt-1.5 font-medium">
-            Tingkatkan Nalar Matematika & Keputusan Nyata
+          <p className="text-edutext-muted text-xs sm:text-sm mt-1.5 font-medium">
+            Taklukkan Matematika UTBK-SNBT, langkah demi langkah
           </p>
         </div>
 
-        {/* Card: BLUE with rich texture, math pattern and pink CTA button */}
-        <div className="card-blue-vibrant relative shadow-2xl border-2 border-white/30">
-          <div className="flex items-center justify-between mb-3">
-            <span className="badge-pink">
-              <Sparkle size={13} weight="fill" /> Mulai Petualangan
+        {/* Card Raised Neumorphic */}
+        <div className="raised p-6 sm:p-8 relative space-y-6">
+          <div className="flex items-center justify-between pb-3 border-b border-white/60">
+            <span className="badge-chip text-[11px]">
+              <Sparkle size={13} weight="fill" className="text-edupink" /> Masuk Siswa
             </span>
-            <div className="text-white/80 text-xs font-bold flex items-center gap-1.5">
-              <Student size={16} weight="bold" /> Area Siswa
+            <div className="text-edutext-muted text-xs font-bold flex items-center gap-1.5">
+              <Student size={16} weight="bold" /> Area Latihan
             </div>
           </div>
 
-          <h2 className="text-2xl font-black font-roboto text-white mb-1 tracking-tight">
-            Selamat Datang!
-          </h2>
-          <p className="text-white/85 text-xs mb-6 leading-relaxed">
-            Masukkan nama lengkapmu untuk mulai latihan tes diagnosis dan membuka modul numerasi adaptif.
-          </p>
+          <div>
+            <h2 className="text-2xl font-black font-display text-edutext">
+              Selamat Datang!
+            </h2>
+            <p className="text-edutext-muted text-xs mt-1 leading-relaxed">
+              Masukkan nama lengkapmu untuk mengakses try out ber-timer, tes evaluasi kemampuan, dan modul materi adaptif.
+            </p>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-extrabold text-white uppercase tracking-wider mb-2">
+              <label className="block text-xs font-black text-edutext uppercase tracking-wider mb-2">
                 Nama Lengkap Siswa
               </label>
               <input
                 type="text"
-                className="input-field-dark text-sm placeholder:text-white/50 font-medium"
-                placeholder="Contoh: Budi Santoso"
+                className="input-inset text-sm font-semibold"
+                placeholder="Contoh: Budi Pratama"
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value)
@@ -129,35 +104,34 @@ export default function LoginPage() {
                 autoFocus
               />
               {error && (
-                <div className="mt-2 text-xs font-bold text-white bg-pink-soft/90 p-2.5 rounded-xl border border-white/40 shadow-sm animate-pop-in">
+                <div className="mt-2 text-xs font-bold text-white bg-edudanger p-3 rounded-xl shadow-sm animate-pop-in">
                   {error}
                 </div>
               )}
             </div>
 
-            {/* Accent Button: Soft Pink for refreshing pop with tactile active scale */}
             <button
               type="submit"
-              className="btn-accent w-full text-sm py-3.5 shadow-pink font-extrabold"
+              className="btn-accent w-full text-sm py-3.5 font-extrabold"
             >
-              <span>Masuk Sekarang</span>
+              <span>Mulai Belajar Sekarang</span>
               <ArrowRight size={18} weight="bold" />
             </button>
           </form>
 
-          {/* Quick value props pill strip */}
-          <div className="mt-6 pt-4 border-t border-white/20 grid grid-cols-3 gap-2 text-center text-[11px] text-white">
-            <div className="card-inner-glass !p-2 flex flex-col items-center justify-center font-bold">
-              <Percent size={18} weight="bold" className="text-white mb-1" />
-              <span>Persentase</span>
+          {/* Quick Subtests Pill Strip */}
+          <div className="pt-4 border-t border-white/60 grid grid-cols-3 gap-2 text-center text-[11px]">
+            <div className="inset p-2.5 flex flex-col items-center justify-center font-bold">
+              <Percent size={18} weight="bold" className="text-eduaccent mb-1" />
+              <span>Kuantitatif</span>
             </div>
-            <div className="card-inner-glass !p-2 flex flex-col items-center justify-center font-bold">
-              <ChartBar size={18} weight="bold" className="text-white mb-1" />
-              <span>Rata-Rata</span>
+            <div className="inset p-2.5 flex flex-col items-center justify-center font-bold">
+              <ChartBar size={18} weight="bold" className="text-eduaccent mb-1" />
+              <span>Penalaran</span>
             </div>
-            <div className="card-inner-glass !p-2 flex flex-col items-center justify-center font-bold">
-              <Scales size={18} weight="bold" className="text-white mb-1" />
-              <span>Rasio & Skala</span>
+            <div className="inset p-2.5 flex flex-col items-center justify-center font-bold">
+              <Timer size={18} weight="bold" className="text-eduaccent mb-1" />
+              <span>Try Out Timer</span>
             </div>
           </div>
         </div>
@@ -166,17 +140,17 @@ export default function LoginPage() {
         <div className="text-center mt-6">
           <Link
             to="/admin"
-            className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-turquoise font-bold transition-all bg-gray-50 hover:bg-turquoise-light/50 px-4 py-2 rounded-full border border-gray-100 shadow-sm active:scale-95"
+            className="inline-flex items-center gap-1.5 text-xs text-edutext-muted hover:text-eduaccent font-bold raised-sm px-4 py-2 transition-all active:scale-95"
           >
             <LockKey size={14} weight="bold" />
-            <span>Panel Admin NumeracySprint</span>
+            <span>Panel Admin EduSpark</span>
           </Link>
         </div>
       </div>
 
       {/* Copyright */}
-      <div className="text-center text-[11px] text-gray-400 py-2">
-        NumeracySprint &copy; 2026 &bull; Pembelajaran Numerasi Berbasis Diagnosis
+      <div className="text-center text-[11px] text-edutext-muted py-2">
+        EduSpark &copy; 2026 &bull; Platform Belajar Matematika UTBK-SNBT
       </div>
     </div>
   )
