@@ -26,8 +26,8 @@ export default function AdminPage() {
   const paidUsersCount = allUsers.filter((u) => u.isPaid).length
   const avgScore = allUsers.length
     ? Math.round(
-        allUsers.reduce((s, u) => s + (u.diagnostic?.score || 0), 0) / allUsers.length
-      )
+      allUsers.reduce((s, u) => s + (u.diagnostic?.score || 0), 0) / allUsers.length
+    )
     : 0
 
   const handleLogin = (e) => {
@@ -36,7 +36,7 @@ export default function AdminPage() {
       sessionStorage.setItem('admin_auth', 'true')
       setAuthed(true)
     } else {
-      setError('Password salah! Coba gunakan default: admin123')
+      setError('Password yang Anda masukkan salah!')
     }
   }
 
@@ -64,7 +64,7 @@ export default function AdminPage() {
               <input
                 type="password"
                 className="input-field-dark text-sm font-semibold"
-                placeholder="Password (default: admin123)"
+                placeholder="Masukkan kata sandi admin..."
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value)
