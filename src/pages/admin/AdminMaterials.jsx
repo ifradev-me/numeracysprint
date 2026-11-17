@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { defaultMaterials } from '../../data/materials'
 import DynamicIcon from '../../components/DynamicIcon'
 import { saveCustomMaterials, loadCustomMaterials } from '../../services/api'
+import { parseMaterialsCSV } from '../../utils/csvParser'
 import {
   BookOpenText,
   Plus,
@@ -16,6 +17,7 @@ import {
   CheckCircle,
   FloppyDisk,
   Sparkle,
+  FileCsv,
 } from '@phosphor-icons/react'
 
 const emptyForm = {
@@ -35,6 +37,7 @@ export default function AdminMaterials() {
   const [editId, setEditId] = useState(null)
   const [mediaInput, setMediaInput] = useState({ type: 'image', url: '', caption: '' })
   const [showForm, setShowForm] = useState(false)
+  const fileInputRef = useRef(null)
 
   // Load fresh custom materials from server on mount
   useEffect(() => {
@@ -46,6 +49,42 @@ export default function AdminMaterials() {
   const persistMaterials = async (updated) => {
     setMaterials(updated)
     await saveCustomMaterials(updated)
+  }
+
+  const handleCSVImport = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = async (evt) => {
+      try {
+        const parsed = parseMaterialsCSV(evt.target.result)
+        if (parsed.length === 0) {
+          alert('File CSV tidak memiliki baris materi yang valid atau format header tidak sesuai.')
+          return
+        }
+
+        const updated = [...materials, ...parsed]
+        await persistMaterials(updated)
+        alert(`Berhasil mengimpor ${parsed.length} materi baru dari CSV!`)
+      } catch (err) {
+        alert('Gagal membaca file CSV: ' + err.message)
+      } finally {
+        if (fileInputRef.current) fileInputRef.current.value = ''
+      }
+    }
+    reader.readAsText(file)
+  }
+
+  const clearAllCustomMaterials = async () => {
+    if (
+      window.confirm(
+        `Yakin ingin menghapus seluruh ${materials.length} materi tambahan kustom? (Materi bawaan sistem tidak akan terhapus)`
+      )
+    ) {
+      await persistMaterials([])
+      alert('Semua materi tambahan kustom berhasil dibersihkan.')
+    }
   }
 
   const save = async () => {
@@ -121,21 +160,73 @@ export default function AdminMaterials() {
               Kelola Materi Microlearning
             </h1>
             <p className="text-gray-400 text-xs sm:text-sm mt-1">
-              Atur materi default, buat topik baru, pasang media dan tandai materi berbayar/free.
+              Total {allMaterials.length} materi ({defaultMaterials.length} bawaan + {materials.length} kustom).
             </p>
           </div>
 
-          <button
-            onClick={() => {
-              setShowForm(true)
-              setEditId(null)
-              setForm(emptyForm)
-            }}
-            className="btn-accent text-xs py-2.5 px-4 font-bold shadow-pink flex items-center gap-2"
-          >
-            <Plus size={18} weight="bold" />
-            <span>Tambah Materi Baru</span>
-          </button>
+          <div className="flex flex-wrap items-center gap-2.5">
+            {materials.length > 0 && (
+              <button
+                onClick={clearAllCustomMaterials}
+                className="text-xs py-2 px-3 font-bold rounded-xl border border-red-200 text-red-600 hover:bg-red-50 flex items-center gap-1.5"
+                title="Hapus semua materi kustom"
+              >
+                <Trash size={16} weight="bold" />
+                <span>Bersihkan ({materials.length})</span>
+              </button>
+            )}
+
+            <a
+              href="/template_materi.csv"
+              download="template_materi.csv"
+              className="text-xs py-2 px-3 font-bold rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 flex items-center gap-1.5"
+              title="Download file template CSV materi"
+            >
+              <FileCsv size={16} weight="bold" />
+              <span>Template CSV</span>
+            </a>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv"
+              onChange={handleCSVImport}
+              className="hidden"
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="btn-accent text-xs py-2.5 px-4 font-bold shadow-pink flex items-center gap-2"
+            >
+              <FileCsv size={18} weight="bold" />
+              <span>Import CSV</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setShowForm(true)
+                setEditId(null)
+                setForm(emptyForm)
+              }}
+              className="btn-primary text-xs py-2.5 px-4 font-bold flex items-center gap-2"
+            >
+              <Plus size={18} weight="bold" />
+              <span>Tambah Materi Baru</span>
+            </button>
+          </div>
+        </div>
+
+        {/* CSV Format Guide Card */}
+        <div className="card-inner-white mb-6 border-2 border-turquoise/20">
+          <div className="flex items-center gap-2 font-bold text-gray-800 text-xs mb-2">
+            <FileCsv size={20} weight="bold" className="text-pink-soft" />
+            <span>Format Kolom CSV untuk Import Materi:</span>
+          </div>
+          <code className="text-xs font-mono bg-turquoise-light/50 p-2.5 rounded-xl block text-turquoise-deep font-semibold">
+            title,iconName,isPremium,summary,content,mediaType,mediaUrl,mediaCaption
+          </code>
+          <p className="text-[11px] text-gray-400 mt-1.5 leading-relaxed">
+            Unduh <strong>Template CSV</strong> di atas, buka di Excel/Google Sheets, isi modul materi, lalu klik <strong>Import CSV</strong>. Tanda petik ganda dan teks multiline (paragraf) didukung penuh.
+          </p>
         </div>
 
         {/* Modal Form */}

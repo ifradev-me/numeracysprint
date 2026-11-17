@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { defaultExercises } from '../../data/exercises'
 import { saveCustomExercises, loadCustomExercises } from '../../services/api'
+import { parseExercisesCSV } from '../../utils/csvParser'
 import {
   PencilSimpleLine,
   Plus,
@@ -16,35 +17,6 @@ import {
   Question,
   ListNumbers,
 } from '@phosphor-icons/react'
-
-function parseCSV(text) {
-  const lines = text.trim().split('\n')
-  if (lines.length < 2) return []
-
-  const headers = lines[0].split(',').map((s) => s.trim().toLowerCase())
-  return lines
-    .slice(1)
-    .map((line, i) => {
-      // Basic CSV splitter that handles potential quoted strings
-      const vals = line.split(',').map((s) => s.trim().replace(/^"|"$/g, ''))
-      const obj = {}
-      headers.forEach((h, idx) => {
-        obj[h] = vals[idx] || ''
-      })
-
-      return {
-        id: Date.now() + i,
-        topic: obj.topic || 'Persentase',
-        question: obj.question || '',
-        type: 'input',
-        answer: (obj.answer || '').replace(/\./g, '').replace(/,/g, ''),
-        answerDisplay: obj.answer || '',
-        explanation: obj.explanation || 'Pembahasan telah disediakan.',
-        hint: obj.hint || '',
-      }
-    })
-    .filter((q) => q.question.length > 0)
-}
 
 const emptyForm = {
   topic: '',
@@ -122,17 +94,34 @@ export default function AdminExercises() {
 
     const reader = new FileReader()
     reader.onload = async (evt) => {
-      const parsed = parseCSV(evt.target.result)
-      if (parsed.length === 0) {
-        alert('File CSV tidak memiliki baris data yang valid.')
-        return
-      }
+      try {
+        const parsed = parseExercisesCSV(evt.target.result)
+        if (parsed.length === 0) {
+          alert('File CSV tidak memiliki baris data soal yang valid atau format header tidak sesuai.')
+          return
+        }
 
-      const updated = [...exercises, ...parsed]
-      await persistExercises(updated)
-      alert(`Berhasil mengimpor ${parsed.length} soal numerasi baru dari CSV!`)
+        const updated = [...exercises, ...parsed]
+        await persistExercises(updated)
+        alert(`Berhasil mengimpor ${parsed.length} soal numerasi baru dari CSV!`)
+      } catch (err) {
+        alert('Gagal membaca file CSV: ' + err.message)
+      } finally {
+        if (fileRef.current) fileRef.current.value = ''
+      }
     }
     reader.readAsText(file)
+  }
+
+  const clearAllCustomExercises = async () => {
+    if (
+      window.confirm(
+        `Yakin ingin menghapus seluruh ${exercises.length} soal tambahan kustom? (Soal bawaan sistem tidak akan terhapus)`
+      )
+    ) {
+      await persistExercises([])
+      alert('Semua soal tambahan kustom berhasil dibersihkan.')
+    }
   }
 
   const allExercises = [...defaultExercises, ...exercises]
@@ -160,11 +149,32 @@ export default function AdminExercises() {
               Kelola Soal & Import CSV
             </h1>
             <p className="text-gray-400 text-xs sm:text-sm mt-1">
-              Total {allExercises.length} soal numerasi siap dikerjakan siswa di halaman latihan.
+              Total {allExercises.length} soal ({defaultExercises.length} bawaan + {exercises.length} kustom) siap dikerjakan siswa.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
+            {exercises.length > 0 && (
+              <button
+                onClick={clearAllCustomExercises}
+                className="text-xs py-2 px-3 font-bold rounded-xl border border-red-200 text-red-600 hover:bg-red-50 flex items-center gap-1.5"
+                title="Hapus semua soal kustom"
+              >
+                <Trash size={16} weight="bold" />
+                <span>Bersihkan ({exercises.length})</span>
+              </button>
+            )}
+
+            <a
+              href="/template_soal.csv"
+              download="template_soal.csv"
+              className="text-xs py-2 px-3 font-bold rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 flex items-center gap-1.5"
+              title="Download file template CSV untuk diisi di Excel"
+            >
+              <FileCsv size={16} weight="bold" />
+              <span>Template CSV</span>
+            </a>
+
             <input
               ref={fileRef}
               type="file"
@@ -350,7 +360,7 @@ export default function AdminExercises() {
                         <span className="badge-glass text-[10px] text-white/80 py-0.5 px-2">Default</span>
                       )}
                     </div>
-                    <p className="text-white text-xs sm:text-sm font-medium leading-relaxed">
+                    <p className="text-white text-xs sm:text-sm font-medium leading-relaxed whitespace-pre-line">
                       {ex.question}
                     </p>
                     <p className="text-[11px] text-white/70 mt-1">
