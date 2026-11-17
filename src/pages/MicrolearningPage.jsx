@@ -41,7 +41,7 @@ function MediaRenderer({ media }) {
               />
               {item.caption && (
                 <div className="p-3 text-xs text-edutext-muted flex items-center gap-2">
-                  <ImageSquare size={16} weight="bold" className="text-eduaccent" />
+                  <ImageSquare size={16} weight="bold" className="text-edupink" />
                   <span>{item.caption}</span>
                 </div>
               )}
@@ -91,7 +91,7 @@ function FormattedContent({ text }) {
             {parts.map((part, pIdx) => {
               if (part.startsWith('**') && part.endsWith('**')) {
                 return (
-                  <strong key={pIdx} className="font-black text-eduaccent font-display">
+                  <strong key={pIdx} className="font-black text-edupink font-display">
                     {part.slice(2, -2)}
                   </strong>
                 )
@@ -186,7 +186,7 @@ export default function MicrolearningPage() {
             <div className="max-w-xl space-y-2">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="badge-chip text-[11px]">
-                  <Sparkle size={13} weight="fill" className="text-edupink" /> Modul Microlearning UTBK
+                  <Sparkle size={13} weight="fill" className="text-edupink" /> Modul Microlearning
                 </span>
                 {user?.isPaid ? (
                   <span className="badge-accent text-[11px] flex items-center gap-1">
@@ -200,7 +200,7 @@ export default function MicrolearningPage() {
               </div>
 
               <h1 className="text-2xl sm:text-3xl font-black font-display text-edutext">
-                Materi Matematika UTBK-SNBT
+                Materi Pembelajaran Matematika
               </h1>
               <p className="text-xs sm:text-sm text-edutext-muted font-medium leading-relaxed">
                 Pelajari konsep inti Pengetahuan Kuantitatif, Penalaran Matematika, dan Penalaran Kuantitatif dengan analogi praktis dan trik cepat.
@@ -211,7 +211,7 @@ export default function MicrolearningPage() {
             <div className="inset p-4 rounded-2xl min-w-[200px] text-center space-y-2">
               <div className="flex items-center justify-between text-xs font-bold">
                 <span className="text-edutext-muted">Progres Modul</span>
-                <span className="text-eduaccent tabular-nums font-black">{progressPercent}%</span>
+                <span className="text-edupink tabular-nums font-black">{progressPercent}%</span>
               </div>
               <div className="progress-track">
                 <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
@@ -236,7 +236,7 @@ export default function MicrolearningPage() {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
                   isActive
-                    ? 'raised-sm text-eduaccent bg-edubg'
+                    ? 'raised-sm text-edupink bg-edubg'
                     : 'text-edutext-muted hover:text-edutext'
                 }`}
               >
@@ -264,10 +264,10 @@ export default function MicrolearningPage() {
                 {/* Header item */}
                 <div
                   onClick={() => handleTopicClick(mat)}
-                  className="p-5 sm:p-6 cursor-pointer flex items-center justify-between gap-4 select-none hover:border-eduaccent"
+                  className="p-5 sm:p-6 cursor-pointer flex items-center justify-between gap-4 select-none hover:border-edupink"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl inset flex items-center justify-center text-eduaccent shrink-0">
+                    <div className="w-12 h-12 rounded-2xl inset flex items-center justify-center text-edupink shrink-0">
                       <DynamicIcon name={mat.iconName || 'BookOpenText'} size={24} />
                     </div>
 
@@ -287,7 +287,7 @@ export default function MicrolearningPage() {
                             </span>
                           )
                         ) : (
-                          <span className="badge-chip text-[10px] text-eduaccent">
+                          <span className="badge-chip text-[10px] text-edupink">
                             Gratis
                           </span>
                         )}
@@ -311,7 +311,7 @@ export default function MicrolearningPage() {
                       <CaretDown
                         size={16}
                         weight="bold"
-                        className={`transition-transform duration-200 ${isOpen ? 'rotate-180 text-eduaccent' : ''}`}
+                        className={`transition-transform duration-200 ${isOpen ? 'rotate-180 text-edupink' : ''}`}
                       />
                     )}
                   </div>
@@ -329,7 +329,7 @@ export default function MicrolearningPage() {
                       <button
                         onClick={() => markComplete(mat.id)}
                         className={`btn-secondary text-xs py-2.5 px-4 flex items-center gap-2 ${
-                          isCompleted ? 'text-eduaccent font-black' : ''
+                          isCompleted ? 'text-edupink font-black' : ''
                         }`}
                       >
                         <CheckCircle size={16} weight={isCompleted ? 'fill' : 'bold'} />
@@ -337,7 +337,7 @@ export default function MicrolearningPage() {
                       </button>
 
                       <span className="text-[11px] text-edutext-muted font-semibold">
-                        Modul #{mat.id} &bull; EduSpark UTBK
+                        Modul #{mat.id} &bull; EduSpark Learning
                       </span>
                     </div>
                   </div>

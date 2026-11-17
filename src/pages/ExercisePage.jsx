@@ -237,7 +237,7 @@ export default function ExercisePage() {
         <main className="max-w-4xl mx-auto px-4 pt-6 sm:pt-10 space-y-8">
           {/* Result Banner Card */}
           <div className="raised p-6 sm:p-10 space-y-8 text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl inset text-eduaccent mx-auto">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl inset text-edupink mx-auto">
               <Trophy size={44} weight="bold" />
             </div>
 
@@ -246,7 +246,7 @@ export default function ExercisePage() {
                 <Sparkle size={12} weight="fill" className="text-edupink" /> Try Out Selesai
               </span>
               <h1 className="text-3xl sm:text-4xl font-black font-display text-edutext">
-                Hasil & Pembahasan Try Out UTBK
+                Hasil & Pembahasan Try Out
               </h1>
               <p className="text-edutext-muted text-xs sm:text-sm max-w-md mx-auto">
                 {examResult.wasAutoTimeUp
@@ -259,7 +259,7 @@ export default function ExercisePage() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto">
               <div className="inset p-4 space-y-1">
                 <p className="text-[10px] font-bold text-edutext-muted uppercase tracking-wider">Skor Akhir</p>
-                <p className="text-3xl font-black font-display text-eduaccent tabular-nums">
+                <p className="text-3xl font-black font-display text-edupink tabular-nums">
                   {examResult.score}<span className="text-sm text-edutext-muted">/100</span>
                 </p>
               </div>
@@ -288,13 +288,13 @@ export default function ExercisePage() {
 
             {/* Feedback Summary */}
             <div className="inset p-5 max-w-2xl mx-auto text-left space-y-2">
-              <div className="flex items-center gap-2 text-xs font-black text-eduaccent uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-xs font-black text-edupink uppercase tracking-wider">
                 <ShieldCheck size={18} weight="bold" />
                 <span>Analisa Evaluasi EduSpark:</span>
               </div>
               <p className="text-xs sm:text-sm text-edutext leading-relaxed font-medium">
                 {examResult.score >= 80
-                  ? 'Luar biasa! Pemahaman konsep matematika dan kecepatan pengerjaanmu sudah sangat kompetitif untuk bersaing di UTBK-SNBT.'
+                  ? 'Luar biasa! Pemahaman konsep matematika dan kecepatan pengerjaanmu sudah sangat kompetitif dan matang.'
                   : examResult.score >= 50
                   ? 'Cukup baik! Kamu sudah menguasai beberapa soal dasar, namun perlu melatih manajemen waktu pada tipe soal kontekstual.'
                   : 'Tetap semangat! Telusuri pembahasan soal di bawah ini dan pelajari kembali modul microlearning untuk memperkuat fondasi.'}
@@ -318,7 +318,7 @@ export default function ExercisePage() {
                 onClick={() => navigate('/materi')}
                 className="btn-secondary text-xs sm:text-sm py-3 px-6 font-bold"
               >
-                <BookOpenText size={18} weight="bold" className="text-eduaccent" />
+                <BookOpenText size={18} weight="bold" className="text-edupink" />
                 <span>Pelajari Modul Terkait</span>
               </button>
 
@@ -389,14 +389,14 @@ export default function ExercisePage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
                       <div className="raised-sm p-3 space-y-0.5">
                         <span className="text-[10px] font-bold text-edutext-muted uppercase">Jawabanmu:</span>
-                        <p className={`font-bold ${isCorrect ? 'text-eduaccent' : userChoice ? 'text-edudanger' : 'text-edutext-muted italic'}`}>
+                        <p className={`font-bold ${isCorrect ? 'text-edupink' : userChoice ? 'text-edudanger' : 'text-edutext-muted italic'}`}>
                           {userChoice || 'Kosong (Tidak Dijawab)'}
                         </p>
                       </div>
 
                       <div className="raised-sm p-3 space-y-0.5">
                         <span className="text-[10px] font-bold text-edutext-muted uppercase">Kunci Jawaban Resmi:</span>
-                        <p className="font-bold text-eduaccent">
+                        <p className="font-bold text-edupink">
                           {q.type === 'input'
                             ? (q.answerDisplay || q.answer)
                             : `${correctOpt?.label}. ${correctOpt?.text}`}
@@ -406,7 +406,7 @@ export default function ExercisePage() {
 
                     {/* Explanation */}
                     <div className="raised-sm p-4 text-xs space-y-1.5">
-                      <div className="flex items-center gap-1.5 text-eduaccent font-bold">
+                      <div className="flex items-center gap-1.5 text-edupink font-bold">
                         <CheckCircle size={15} weight="bold" />
                         <span>Langkah Pembahasan:</span>
                       </div>
@@ -435,13 +435,13 @@ export default function ExercisePage() {
         <main className="max-w-4xl mx-auto px-4 pt-6 sm:pt-10 space-y-8">
           <div className="space-y-1">
             <span className="badge-chip text-[11px]">
-              <Sparkle size={13} weight="fill" className="text-edupink" /> Simulasi UTBK-SNBT 2026
+              <Sparkle size={13} weight="fill" className="text-edupink" /> Simulasi Ujian Matematika 2026
             </span>
             <h1 className="text-3xl sm:text-4xl font-black font-display text-edutext tracking-tight">
               Try Out Matematika Ber-Timer
             </h1>
             <p className="text-edutext-muted text-xs sm:text-sm font-medium">
-              Sistem ujian mengadopsi mekanisme resmi UTBK: timer global countdown berjalan tanpa henti (2 menit × jumlah soal). Selama ujian berlangsung tidak ada pembahasan atau jawaban benar/salah. Hasil dan pembahasan keluar setelah sesi berakhir.
+              Sistem ujian ber-timer dengan mekanisme global countdown: timer berjalan tanpa henti (2 menit × jumlah soal). Selama sesi berlangsung tidak ada pembahasan atau jawaban benar/salah. Pembahasan lengkap disajikan setelah sesi selesai.
             </p>
           </div>
 
@@ -450,10 +450,10 @@ export default function ExercisePage() {
             <div className="raised p-6 flex flex-col justify-between space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl inset text-eduaccent flex items-center justify-center font-bold">
+                  <div className="w-12 h-12 rounded-2xl inset text-edupink flex items-center justify-center font-bold">
                     <Timer size={24} weight="bold" />
                   </div>
-                  <span className="badge-chip text-[11px] text-eduaccent">Gratis</span>
+                  <span className="badge-chip text-[11px] text-edupink">Gratis</span>
                 </div>
 
                 <div>
@@ -468,11 +468,11 @@ export default function ExercisePage() {
                 <div className="inset p-4 rounded-2xl space-y-2 text-xs font-semibold">
                   <div className="flex justify-between">
                     <span className="text-edutext-muted">Jumlah Soal:</span>
-                    <span className="font-bold">3 Soal UTBK</span>
+                    <span className="font-bold">3 Soal Ujian</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-edutext-muted">Durasi Total:</span>
-                    <span className="font-bold text-eduaccent font-mono">06:00 (6 Menit)</span>
+                    <span className="font-bold text-edupink font-mono">06:00 (6 Menit)</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-edutext-muted">Mekanisme:</span>
@@ -491,10 +491,10 @@ export default function ExercisePage() {
             </div>
 
             {/* Card 2: Try Out Penuh (Paywall / Pro) */}
-            <div className="raised p-6 flex flex-col justify-between space-y-6 relative border-2 border-eduaccent/30">
+            <div className="raised p-6 flex flex-col justify-between space-y-6 relative border-2 border-edupink/30">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl inset text-eduaccent flex items-center justify-center font-bold">
+                  <div className="w-12 h-12 rounded-2xl inset text-edupink flex items-center justify-center font-bold">
                     <Trophy size={24} weight="bold" />
                   </div>
                   {user?.isPaid ? (
@@ -510,7 +510,7 @@ export default function ExercisePage() {
 
                 <div>
                   <h3 className="text-xl font-black font-display text-edutext">
-                    Try Out Penuh (Bank Soal UTBK)
+                    Try Out Penuh (Seluruh Bank Soal)
                   </h3>
                   <p className="text-xs text-edutext-muted mt-1 leading-relaxed">
                     Simulasi intensif mencakup seluruh kumpulan soal Pengetahuan Kuantitatif, Penalaran Matematika, dan Penalaran Kuantitatif.
@@ -524,7 +524,7 @@ export default function ExercisePage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-edutext-muted">Durasi Total:</span>
-                    <span className="font-bold text-eduaccent font-mono">
+                    <span className="font-bold text-edupink font-mono">
                       {formatTimer(allBankExercises.length * SECONDS_PER_QUESTION)} ({allBankExercises.length * 2} Menit)
                     </span>
                   </div>
@@ -538,7 +538,7 @@ export default function ExercisePage() {
               <button
                 onClick={() => handleStartExam('full')}
                 className={`w-full text-xs py-3.5 font-bold flex items-center justify-center gap-2 ${
-                  user?.isPaid ? 'btn-accent' : 'btn-secondary text-eduaccent'
+                  user?.isPaid ? 'btn-accent' : 'btn-secondary text-edupink'
                 }`}
               >
                 {user?.isPaid ? (
@@ -561,14 +561,14 @@ export default function ExercisePage() {
         <PaywallModal
           isOpen={paywallOpen}
           onClose={() => setPaywallOpen(false)}
-          materialTitle="Try Out UTBK Penuh Ber-Timer"
+          materialTitle="Try Out Penuh Ber-Timer"
         />
       </div>
     )
   }
 
   // ==============================================================
-  // VIEW 3: ACTIVE EXAM SCREEN (KAYA UTBK BIASANYA — TANPA FEEDBACK!)
+  // VIEW 3: ACTIVE EXAM SCREEN
   // ==============================================================
   return (
     <div className="min-h-screen bg-edubg text-edutext pb-24 selection:bg-edupink selection:text-white">
@@ -577,7 +577,7 @@ export default function ExercisePage() {
         <div className="max-w-5xl mx-auto px-4 h-18 flex items-center justify-between">
           <div>
             <span className="text-[10px] uppercase font-bold text-edutext-muted tracking-wider">
-              {examMode === 'preview' ? 'Pratinjau Gratis' : 'Simulasi Penuh UTBK'}
+              {examMode === 'preview' ? 'Pratinjau Gratis' : 'Simulasi Try Out Penuh'}
             </span>
             <h2 className="text-sm sm:text-base font-black font-display text-edutext">
               Soal {currentIndex + 1} dari {totalQuestions}
@@ -608,7 +608,7 @@ export default function ExercisePage() {
             <div className="raised p-6 sm:p-8 space-y-6">
               <div className="flex items-center justify-between pb-3 border-b border-white/60">
                 <span className="badge-chip text-[11px] font-bold">
-                  {currentQuestion?.topic || 'Matematika UTBK'}
+                  {currentQuestion?.topic || 'Matematika'}
                 </span>
                 <span className="text-xs font-mono font-bold text-edutext-muted">
                   {currentQuestion?.type === 'input' ? 'Isian' : 'Pilihan Ganda'}
@@ -644,14 +644,14 @@ export default function ExercisePage() {
                         onClick={() => handleSelectOption(opt.label)}
                         className={`w-full text-left flex items-center justify-between p-4 rounded-2xl transition-all cursor-pointer ${
                           isSelected
-                            ? 'inset border-2 border-eduaccent text-eduaccent font-bold'
-                            : 'raised-sm hover:border-eduaccent text-edutext font-medium'
+                            ? 'inset border-2 border-edupink text-edupink font-bold'
+                            : 'raised-sm hover:border-edupink text-edutext font-medium'
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <span
                             className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black shrink-0 ${
-                              isSelected ? 'bg-eduaccent text-white' : 'inset text-edutext'
+                              isSelected ? 'bg-edupink text-white' : 'inset text-edutext'
                             }`}
                           >
                             {opt.label}
@@ -659,7 +659,7 @@ export default function ExercisePage() {
                           <span className="text-sm">{opt.text}</span>
                         </div>
 
-                        {isSelected && <CheckCircle size={20} weight="fill" className="text-eduaccent" />}
+                        {isSelected && <CheckCircle size={20} weight="fill" className="text-edupink" />}
                       </button>
                     )
                   })}
@@ -713,7 +713,7 @@ export default function ExercisePage() {
             <div className="raised p-5 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 font-black text-xs text-edutext">
-                  <ListNumbers size={18} weight="bold" className="text-eduaccent" />
+                  <ListNumbers size={18} weight="bold" className="text-edupink" />
                   <span>Lembar Jawaban</span>
                 </div>
                 <span className="badge-chip text-[10px] font-bold">
@@ -732,7 +732,7 @@ export default function ExercisePage() {
                   if (isDoubt) {
                     btnClass = 'inset text-amber-800 border-2 border-amber-400 font-black'
                   } else if (hasAnswer) {
-                    btnClass = 'inset text-eduaccent border-2 border-eduaccent font-black'
+                    btnClass = 'inset text-edupink border-2 border-edupink font-black'
                   }
 
                   return (
@@ -740,7 +740,7 @@ export default function ExercisePage() {
                       key={q.id}
                       onClick={() => setCurrentIndex(idx)}
                       className={`h-10 rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center justify-center cursor-pointer ${btnClass} ${
-                        isCur ? 'ring-2 ring-eduaccent-dark' : ''
+                        isCur ? 'ring-2 ring-edupink-dark' : ''
                       }`}
                     >
                       {idx + 1}
@@ -752,7 +752,7 @@ export default function ExercisePage() {
               {/* Legend */}
               <div className="pt-3 border-t border-white/60 space-y-1.5 text-[11px] text-edutext-muted font-medium">
                 <div className="flex items-center gap-2">
-                  <span className="w-3.5 h-3.5 rounded inset border border-eduaccent bg-eduaccent/20" />
+                  <span className="w-3.5 h-3.5 rounded inset border border-edupink bg-edupink/20" />
                   <span>Sudah dijawab</span>
                 </div>
                 <div className="flex items-center gap-2">

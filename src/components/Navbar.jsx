@@ -37,8 +37,8 @@ export default function Navbar() {
         {/* Logo EduSpark */}
         <Link to="/dashboard" className="flex items-center gap-2.5 group">
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl raised-sm flex items-center justify-center relative">
-            <Brain size={24} weight="bold" className="text-eduaccent" />
-            <span className="w-2.5 h-2.5 rounded-full bg-eduaccent absolute -top-1 -right-1 ring-2 ring-edubg" />
+            <Brain size={24} weight="bold" className="text-edupink" />
+            <span className="w-2.5 h-2.5 rounded-full bg-edupink absolute -top-1 -right-1 ring-2 ring-edubg" />
           </div>
           <div>
             <span className="font-black font-display text-lg sm:text-xl tracking-tight flex items-center">
@@ -46,7 +46,7 @@ export default function Navbar() {
               <span className="text-edupink">Spark</span>
             </span>
             <span className="hidden sm:block text-[10px] text-edutext-muted font-bold -mt-1 tracking-wider uppercase">
-              Matematika UTBK-SNBT
+              Microlearning Matematika
             </span>
           </div>
         </Link>
@@ -62,8 +62,8 @@ export default function Navbar() {
                 to={link.path}
                 className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all duration-150 ${
                   isActive
-                    ? 'inset text-eduaccent font-extrabold shadow-inset-sm'
-                    : 'text-edutext-muted hover:text-eduaccent hover:bg-edupink-soft/40'
+                    ? 'inset text-edupink font-extrabold shadow-inset-sm'
+                    : 'text-edutext-muted hover:text-edupink hover:bg-edupink-soft/40'
                 }`}
               >
                 <Icon size={18} weight={isActive ? 'bold' : 'regular'} />
@@ -76,7 +76,7 @@ export default function Navbar() {
         {/* User Status & Logout */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-2xl raised-sm border border-white/60">
-            <div className="w-7 h-7 rounded-full inset flex items-center justify-center font-black text-xs text-eduaccent font-display">
+            <div className="w-7 h-7 rounded-full inset flex items-center justify-center font-black text-xs text-edupink font-display">
               {user?.name ? user.name.charAt(0).toUpperCase() : 'S'}
             </div>
             <span className="text-xs font-bold text-edutext max-w-[100px] sm:max-w-[130px] truncate">

@@ -3,21 +3,31 @@
 @tailwind utilities;
 
 :root {
-  /* Background page: putih agak pink yang bersih dan segar */
-  --bg: #FDF7FA;
+  /* Background page: putih lembut dengan ambient blush halus yang bersih dan lega */
+  --bg: #F8EEF4;
   --bg-deep: #ECD0DE;
   
-  /* Card: pinkish neu-skeuomorphism yang timbul dan taktil */
-  --card-bg-start: #F9E2EE;
-  --card-bg-end: #F2D5E3;
-  --card-border: rgba(255, 255, 255, 0.75);
+  /* Card: Putih tulang (bone white / ivory) atau off-white dengan semburat pink sangat tipis */
+  --card-bg-start: #FFFFFF;
+  --card-bg-mid: #FCF8FA;
+  --card-bg-end: #F9F0F5;
+  --card-border: rgba(255, 255, 255, 0.95);
   --sh-light: #FFFFFF;
-  --sh-dark: #D4A8BD;
+  --sh-dark: rgba(205, 168, 185, 0.28);
   
-  --pink: #E89BB8;
-  --pink-soft: #F6D0DE;
-  --accent: #1B6B58;
-  --accent-dark: #124D3F;
+  /* Palette Utama: Putih dan Pink Radiant */
+  --pink: #CF336C;
+  --pink-vibrant: #DF477D;
+  --pink-soft: #F6CADA;
+  --pink-light: #FCE7F0;
+  
+  /* Accent Utama Aplikasi: Vibrant Rose Pink (menggantikan hijau legacy) */
+  --accent: #CF336C;
+  --accent-dark: #B32657;
+  
+  /* Status Semantik Hijau: Dikhususkan hanya untuk jawaban benar & kontak resmi */
+  --success: #16A34A;
+  
   --text: #3D222E;
   --text-muted: #735060;
   --danger: #B04A5E;
@@ -33,12 +43,12 @@
 
   body {
     background-color: var(--bg);
-    /* Latar putih agak pink dengan ambient glow sangat halus */
+    /* Latar lembut putih tulang dengan ambient glow yang sangat halus */
     background-image: 
       radial-gradient(circle at 10% 5%, rgba(255, 255, 255, 0.95) 0%, transparent 45%),
       radial-gradient(circle at 90% 15%, rgba(255, 255, 255, 0.9) 0%, transparent 50%),
-      radial-gradient(circle at 50% 50%, rgba(255, 245, 249, 0.7) 0%, transparent 65%),
-      radial-gradient(circle at 15% 85%, rgba(248, 226, 238, 0.3) 0%, transparent 55%),
+      radial-gradient(circle at 50% 50%, rgba(253, 246, 250, 0.65) 0%, transparent 65%),
+      radial-gradient(circle at 15% 85%, rgba(246, 230, 239, 0.35) 0%, transparent 55%),
       radial-gradient(circle at 85% 85%, rgba(255, 255, 255, 0.85) 0%, transparent 50%);
     background-attachment: fixed;
     color: var(--text);
@@ -67,62 +77,62 @@
 
 @layer components {
   /* ============================================================== */
-  /* PINKISH NEU-SKEUOMORPHISM CARD & SURFACES                     */
+  /* BONE WHITE / OFF-WHITE BLUSH CARD & SURFACES                   */
   /* ============================================================== */
 
   .raised {
-    background: linear-gradient(155deg, #FBE5F0 0%, #F5D7E5 55%, #EFCCE0 100%);
+    background: linear-gradient(150deg, #FFFFFF 0%, #FCF8FA 45%, #F9F0F5 100%);
     border-radius: 24px;
     box-shadow: 
-      8px 10px 22px rgba(212, 168, 189, 0.45),
-      -7px -7px 18px rgba(255, 255, 255, 0.95),
-      inset 1px 1px 2px rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+      7px 10px 24px rgba(205, 168, 185, 0.28),
+      -6px -6px 16px rgba(255, 255, 255, 0.98),
+      inset 1px 1px 2px rgba(255, 255, 255, 1);
+    border: 1px solid rgba(255, 255, 255, 0.95);
   }
 
   .raised-sm {
-    background: linear-gradient(155deg, #FBE5F0 0%, #F4D7E5 100%);
+    background: linear-gradient(150deg, #FFFFFF 0%, #FAF3F7 100%);
     border-radius: 16px;
     box-shadow: 
-      4px 6px 14px rgba(212, 168, 189, 0.38),
-      -4px -4px 12px rgba(255, 255, 255, 0.95),
-      inset 1px 1px 1.5px rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+      4px 6px 14px rgba(205, 168, 185, 0.22),
+      -4px -4px 12px rgba(255, 255, 255, 0.98),
+      inset 1px 1px 1.5px rgba(255, 255, 255, 1);
+    border: 1px solid rgba(255, 255, 255, 0.95);
   }
 
   .inset {
-    background: #EED1DF;
+    background: #F4EAF0;
     border-radius: 14px;
     box-shadow: 
-      inset 4px 4px 8px rgba(189, 140, 163, 0.45),
-      inset -4px -4px 8px rgba(255, 255, 255, 0.85);
-    border: 1px solid rgba(214, 172, 192, 0.4);
+      inset 3px 3px 7px rgba(195, 155, 175, 0.24),
+      inset -3px -3px 7px rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(230, 205, 218, 0.45);
   }
 
   .inset-subtle {
-    background: #F4D9E6;
+    background: #F8F0F5;
     border-radius: 14px;
     box-shadow: 
-      inset 3px 3px 6px rgba(199, 153, 175, 0.38),
-      inset -3px -3px 6px rgba(255, 255, 255, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+      inset 2px 2px 5px rgba(195, 155, 175, 0.18),
+      inset -2px -2px 5px rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.8);
   }
 
   /* ============================================================== */
-  /* BUTTONS                                                        */
+  /* BUTTONS (PINK RADIANT UTAMA)                                   */
   /* ============================================================== */
 
   .btn-accent, .btn-primary {
-    background: var(--accent);
+    background: linear-gradient(135deg, #DF477D 0%, #CF336C 100%);
     color: #ffffff;
     border: 0;
     border-radius: 16px;
     padding: 0.8rem 1.4rem;
     font-weight: 700;
     box-shadow: 
-      4px 6px 16px rgba(18, 77, 63, 0.38),
+      4px 6px 16px rgba(207, 51, 108, 0.32),
       -2px -2px 8px rgba(255, 255, 255, 0.8),
-      inset 0 1px 1px rgba(255, 255, 255, 0.3);
+      inset 0 1px 1px rgba(255, 255, 255, 0.35);
     transition: all 0.18s ease;
     display: inline-flex;
     align-items: center;
@@ -132,15 +142,15 @@
   }
 
   .btn-accent:hover, .btn-primary:hover {
-    background: var(--accent-dark);
+    background: linear-gradient(135deg, #CF336C 0%, #B32657 100%);
     box-shadow: 
-      5px 8px 20px rgba(18, 77, 63, 0.45),
+      5px 8px 20px rgba(207, 51, 108, 0.42),
       -2px -2px 8px rgba(255, 255, 255, 0.8);
     transform: translateY(-1px);
   }
 
   .btn-accent:active, .btn-primary:active {
-    box-shadow: inset 3px 3px 7px rgba(0, 0, 0, 0.4);
+    box-shadow: inset 3px 3px 7px rgba(130, 20, 60, 0.4);
     transform: translateY(0);
   }
 
@@ -150,17 +160,17 @@
   }
 
   .btn-secondary {
-    background: linear-gradient(155deg, #FBE6F1 0%, #F5D8E6 100%);
+    background: linear-gradient(150deg, #FFFFFF 0%, #FAF3F7 100%);
     color: var(--text);
     border: 0;
     border-radius: 16px;
     padding: 0.8rem 1.4rem;
     font-weight: 700;
     box-shadow: 
-      4px 6px 14px rgba(212, 168, 189, 0.35),
-      -4px -4px 10px rgba(255, 255, 255, 0.95),
-      inset 1px 1px 1.5px rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+      4px 6px 14px rgba(205, 168, 185, 0.22),
+      -4px -4px 10px rgba(255, 255, 255, 0.98),
+      inset 1px 1px 1.5px rgba(255, 255, 255, 1);
+    border: 1px solid rgba(255, 255, 255, 0.95);
     transition: all 0.18s ease;
     display: inline-flex;
     align-items: center;
@@ -172,14 +182,14 @@
   .btn-secondary:hover {
     color: var(--accent);
     box-shadow: 
-      3px 5px 12px rgba(212, 168, 189, 0.42),
-      -3px -3px 8px rgba(255, 255, 255, 0.95);
+      3px 5px 12px rgba(207, 51, 108, 0.25),
+      -3px -3px 8px rgba(255, 255, 255, 0.98);
   }
 
   .btn-secondary:active {
     box-shadow: 
-      inset 3px 3px 6px rgba(189, 140, 163, 0.42),
-      inset -3px -3px 6px rgba(255, 255, 255, 0.85);
+      inset 3px 3px 6px rgba(195, 155, 175, 0.3),
+      inset -3px -3px 6px rgba(255, 255, 255, 0.9);
   }
 
   .btn-secondary:focus-visible {
@@ -188,16 +198,16 @@
   }
 
   .btn-pill {
-    background: linear-gradient(155deg, #FBE6F1 0%, #F5D8E6 100%);
+    background: linear-gradient(150deg, #FFFFFF 0%, #FAF3F7 100%);
     color: var(--text);
     border-radius: 9999px;
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
     font-weight: 600;
     box-shadow: 
-      3px 4px 10px rgba(212, 168, 189, 0.32),
-      -3px -3px 8px rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+      3px 4px 10px rgba(205, 168, 185, 0.2),
+      -3px -3px 8px rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.95);
     transition: all 0.15s ease;
     display: inline-flex;
     align-items: center;
@@ -210,8 +220,8 @@
 
   .btn-pill:active {
     box-shadow: 
-      inset 2px 2px 5px rgba(189, 140, 163, 0.4),
-      inset -2px -2px 5px rgba(255, 255, 255, 0.85);
+      inset 2px 2px 5px rgba(195, 155, 175, 0.3),
+      inset -2px -2px 5px rgba(255, 255, 255, 0.9);
   }
 
   /* ============================================================== */
@@ -219,12 +229,12 @@
   /* ============================================================== */
 
   .input-inset {
-    background: #EED1DF;
-    border: 1.5px solid transparent;
+    background: #F4EAF0;
+    border: 1.5px solid rgba(230, 205, 218, 0.45);
     border-radius: 14px;
     box-shadow: 
-      inset 3px 3px 7px rgba(189, 140, 163, 0.45),
-      inset -3px -3px 7px rgba(255, 255, 255, 0.85);
+      inset 3px 3px 7px rgba(195, 155, 175, 0.22),
+      inset -3px -3px 7px rgba(255, 255, 255, 0.9);
     color: var(--text);
     padding: 0.75rem 1rem;
     transition: all 0.2s ease;
@@ -234,10 +244,11 @@
 
   .input-inset:focus {
     border-color: var(--accent);
+    background: #FFFFFF;
     box-shadow: 
-      inset 3px 3px 7px rgba(189, 140, 163, 0.45),
-      inset -3px -3px 7px rgba(255, 255, 255, 0.85),
-      0 0 0 3px rgba(27, 107, 88, 0.18);
+      inset 2px 2px 5px rgba(195, 155, 175, 0.18),
+      inset -2px -2px 5px rgba(255, 255, 255, 0.9),
+      0 0 0 3px rgba(207, 51, 108, 0.18);
   }
 
   .input-inset::placeholder {
@@ -250,25 +261,25 @@
   /* ============================================================== */
 
   .timer-well {
-    background: linear-gradient(160deg, #EBD0DF 0%, #E2C3D3 100%);
+    background: linear-gradient(160deg, #FDF7FA 0%, #F5EBF0 100%);
     border-radius: 16px;
     box-shadow: 
-      inset 4px 4px 8px rgba(175, 126, 149, 0.5),
-      inset -4px -4px 8px rgba(255, 255, 255, 0.9);
+      inset 4px 4px 8px rgba(190, 150, 168, 0.25),
+      inset -4px -4px 8px rgba(255, 255, 255, 0.95);
     font-family: 'Share Tech Mono', ui-monospace, monospace;
-    color: var(--accent-dark);
+    color: #3D222E;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 0.5rem 1.25rem;
     font-size: 1.75rem;
     letter-spacing: 0.05em;
-    border: 1px solid rgba(214, 172, 192, 0.4);
+    border: 1px solid rgba(230, 205, 218, 0.45);
   }
 
   .timer-well.timer-critical {
     color: var(--danger);
-    background: linear-gradient(160deg, #FBE0E7 0%, #F5C7D5 100%);
+    background: linear-gradient(160deg, #FFF0F4 0%, #FAD7E2 100%);
     border-color: rgba(176, 74, 94, 0.4);
     animation: timer-pulse 1s infinite alternate;
   }
@@ -279,26 +290,27 @@
   }
 
   /* ============================================================== */
-  /* PROGRESS BARS                                                  */
+  /* PROGRESS BARS (PINK RADIANT)                                   */
   /* ============================================================== */
 
   .progress-track {
-    background: #EED1DF;
+    background: #F4EAF0;
     border-radius: 9999px;
     box-shadow: 
-      inset 3px 3px 6px rgba(189, 140, 163, 0.45),
-      inset -3px -3px 6px rgba(255, 255, 255, 0.85);
+      inset 2.5px 2.5px 5px rgba(195, 155, 175, 0.24),
+      inset -2.5px -2.5px 5px rgba(255, 255, 255, 0.9);
     overflow: hidden;
     position: relative;
     height: 12px;
+    border: 1px solid rgba(230, 205, 218, 0.35);
   }
 
   .progress-fill {
-    background: var(--accent);
+    background: linear-gradient(90deg, #F06A9A 0%, #CF336C 100%);
     height: 100%;
     border-radius: 9999px;
     transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 2px 0 6px rgba(18, 77, 63, 0.3);
+    box-shadow: 2px 0 6px rgba(207, 51, 108, 0.3);
   }
 
   /* ============================================================== */
@@ -306,29 +318,29 @@
   /* ============================================================== */
 
   .badge-chip {
-    background: linear-gradient(155deg, #FBE6F1 0%, #F5D8E6 100%);
+    background: linear-gradient(150deg, #FFFFFF 0%, #FAF3F7 100%);
     color: var(--text);
     border-radius: 9999px;
     padding: 0.3rem 0.85rem;
     font-size: 0.75rem;
     font-weight: 700;
     box-shadow: 
-      2px 3px 8px rgba(212, 168, 189, 0.3),
-      -2px -2px 6px rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+      2px 3px 8px rgba(205, 168, 185, 0.18),
+      -2px -2px 6px rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.95);
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
   }
 
   .badge-accent {
-    background: var(--accent);
+    background: linear-gradient(135deg, #DF477D 0%, #CF336C 100%);
     color: #ffffff;
     border-radius: 9999px;
     padding: 0.25rem 0.75rem;
     font-size: 0.75rem;
     font-weight: 700;
-    box-shadow: 2px 3px 8px rgba(18, 77, 63, 0.3);
+    box-shadow: 2px 3px 8px rgba(207, 51, 108, 0.28);
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
@@ -339,13 +351,13 @@
   /* ============================================================== */
 
   .toast-raised {
-    background: linear-gradient(155deg, #FBE6F1 0%, #F4D6E4 100%);
-    color: var(--accent-dark);
+    background: linear-gradient(150deg, #FFFFFF 0%, #FAF3F7 100%);
+    color: var(--text);
     border-radius: 16px;
     box-shadow: 
-      6px 8px 20px rgba(212, 168, 189, 0.45),
-      -6px -6px 16px rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.9);
+      6px 8px 20px rgba(205, 168, 185, 0.28),
+      -6px -6px 16px rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.95);
     padding: 0.85rem 1.25rem;
     font-weight: 600;
     font-size: 0.875rem;
@@ -360,24 +372,39 @@
   }
 
   .card-blue, .card-blue-vibrant, .card-blue-subtle {
-    background: linear-gradient(155deg, #FBE5F0 0%, #F5D7E5 55%, #EFCCE0 100%) !important;
+    background: linear-gradient(150deg, #FFFFFF 0%, #FCF8FA 45%, #F9F0F5 100%) !important;
     color: var(--text) !important;
     border-radius: 24px !important;
     padding: 1.75rem !important;
     box-shadow: 
-      8px 10px 22px rgba(212, 168, 189, 0.45),
-      -7px -7px 18px rgba(255, 255, 255, 0.95),
-      inset 1px 1px 2px rgba(255, 255, 255, 0.9) !important;
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+      7px 10px 24px rgba(205, 168, 185, 0.28),
+      -6px -6px 16px rgba(255, 255, 255, 0.98),
+      inset 1px 1px 2px rgba(255, 255, 255, 1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.95) !important;
   }
 
   .card-inner-glass, .card-inner-white {
-    background: #EED1DF !important;
+    background: #F4EAF0 !important;
     color: var(--text) !important;
     border-radius: 16px !important;
-    border: 1px solid rgba(214, 172, 192, 0.4) !important;
+    border: 1px solid rgba(230, 205, 218, 0.45) !important;
     box-shadow: 
-      inset 3px 3px 6px rgba(189, 140, 163, 0.45),
-      inset -3px -3px 6px rgba(255, 255, 255, 0.85) !important;
+      inset 2.5px 2.5px 6px rgba(195, 155, 175, 0.22),
+      inset -2.5px -2.5px 6px rgba(255, 255, 255, 0.9) !important;
+  }
+
+  /* Explicit Pink Overrides to guarantee zero residual green */
+  .text-eduaccent,
+  .hover\:text-eduaccent:hover {
+    color: #CF336C !important;
+  }
+  .bg-eduaccent {
+    background-color: #CF336C !important;
+  }
+  .border-eduaccent {
+    border-color: #CF336C !important;
+  }
+  .ring-eduaccent {
+    --tw-ring-color: #CF336C !important;
   }
 }

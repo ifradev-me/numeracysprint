@@ -69,7 +69,7 @@ export default function DiagnosticPage() {
         <main className="max-w-4xl mx-auto px-4 pt-6 sm:pt-10 space-y-8">
           {/* Result Card */}
           <div className="raised p-6 sm:p-10 space-y-8 text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl inset text-eduaccent">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl inset text-edupink">
               <Trophy size={44} weight="bold" />
             </div>
 
@@ -89,14 +89,14 @@ export default function DiagnosticPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto">
               <div className="inset p-4 space-y-1">
                 <p className="text-[11px] font-bold text-edutext-muted uppercase tracking-wider">Skor Akhir</p>
-                <p className="text-3xl font-black font-display text-eduaccent tabular-nums">
+                <p className="text-3xl font-black font-display text-edupink tabular-nums">
                   {result.score}<span className="text-base text-edutext-muted">/100</span>
                 </p>
               </div>
 
               <div className="inset p-4 space-y-1">
                 <p className="text-[11px] font-bold text-edutext-muted uppercase tracking-wider">Jawaban Benar</p>
-                <p className="text-3xl font-black font-display text-eduaccent tabular-nums">
+                <p className="text-3xl font-black font-display text-edupink tabular-nums">
                   {result.correct}<span className="text-base text-edutext-muted">/{result.total}</span>
                 </p>
               </div>
@@ -113,7 +113,7 @@ export default function DiagnosticPage() {
 
             {/* Recommendation Box */}
             <div className="inset p-5 max-w-xl mx-auto text-left space-y-2">
-              <div className="flex items-center gap-2 text-xs font-black text-eduaccent uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-xs font-black text-edupink uppercase tracking-wider">
                 <ShieldCheck size={18} weight="bold" />
                 <span>Rekomendasi Belajar EduSpark:</span>
               </div>
@@ -136,7 +136,7 @@ export default function DiagnosticPage() {
                 onClick={() => navigate('/tryout')}
                 className="btn-secondary text-xs sm:text-sm py-3 px-6"
               >
-                <Timer size={18} weight="bold" className="text-eduaccent" />
+                <Timer size={18} weight="bold" className="text-edupink" />
                 <span>Lanjut ke Try Out Ber-Timer</span>
               </button>
 
@@ -184,7 +184,7 @@ export default function DiagnosticPage() {
 
                     <div className="text-xs space-y-1 text-edutext-muted">
                       <p>
-                        Jawabanmu: <strong>{userChoice || 'Tidak dijawab'}</strong> &bull; Kunci Jawaban: <strong className="text-eduaccent">{correctOpt?.label}. {correctOpt?.text}</strong>
+                        Jawabanmu: <strong>{userChoice || 'Tidak dijawab'}</strong> &bull; Kunci Jawaban: <strong className="text-edupink">{correctOpt?.label}. {correctOpt?.text}</strong>
                       </p>
                       <p className="p-3 raised-sm rounded-xl mt-2 text-edutext font-medium">
                         <strong>Pembahasan:</strong> {q.explanation}
@@ -212,7 +212,7 @@ export default function DiagnosticPage() {
         <div className="raised p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="badge-chip text-[11px] uppercase tracking-wider mb-2">
-              <ClipboardText size={13} weight="bold" className="text-eduaccent" /> Evaluasi Kemampuan Awal
+              <ClipboardText size={13} weight="bold" className="text-edupink" /> Evaluasi Kemampuan Awal
             </span>
             <h1 className="text-2xl font-black font-display text-edutext">
               Soal {currentIndex + 1} dari {total}
@@ -229,9 +229,9 @@ export default function DiagnosticPage() {
                 onClick={() => setCurrentIndex(idx)}
                 className={`w-9 h-9 rounded-xl font-black text-xs transition-all ${
                   currentIndex === idx
-                    ? 'raised text-eduaccent border-2 border-eduaccent'
+                    ? 'raised text-edupink border-2 border-edupink'
                     : answers[q.id]
-                    ? 'inset text-eduaccent'
+                    ? 'inset text-edupink'
                     : 'raised-sm text-edutext-muted'
                 }`}
               >
@@ -257,14 +257,14 @@ export default function DiagnosticPage() {
                   onClick={() => handleSelect(opt.label)}
                   className={`w-full p-4 rounded-2xl text-left transition-all flex items-center justify-between ${
                     isSelected
-                      ? 'inset border-2 border-eduaccent text-eduaccent font-bold'
-                      : 'raised-sm hover:border-eduaccent text-edutext font-medium'
+                      ? 'inset border-2 border-edupink text-edupink font-bold'
+                      : 'raised-sm hover:border-edupink text-edutext font-medium'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <span
                       className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs ${
-                        isSelected ? 'bg-eduaccent text-white' : 'inset text-edutext'
+                        isSelected ? 'bg-edupink text-white' : 'inset text-edutext'
                       }`}
                     >
                       {opt.label}
@@ -272,7 +272,7 @@ export default function DiagnosticPage() {
                     <span className="text-sm">{opt.text}</span>
                   </div>
 
-                  {isSelected && <CheckCircle size={20} weight="fill" className="text-eduaccent" />}
+                  {isSelected && <CheckCircle size={20} weight="fill" className="text-edupink" />}
                 </button>
               )
             })}

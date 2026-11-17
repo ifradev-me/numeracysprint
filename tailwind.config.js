@@ -7,19 +7,25 @@ export default {
   theme: {
     extend: {
       colors: {
-        // EduSpark v2 Neumorphism Color Palette
-        edubg: '#F9E4EC',
-        edudeep: '#F3D5E1',
-        edushlight: '#FFF7FA',
-        edushdark: '#DDB5C6',
+        // EduSpark v2: White & Pink as primary palette, green minimized
+        edubg: '#F8EEF4',
+        edudeep: '#EAD8E2',
+        edushlight: '#FFFFFF',
+        edushdark: '#DDBECB',
         edupink: {
-          DEFAULT: '#EFA7C1',
+          DEFAULT: '#CF336C',
+          vibrant: '#CF336C',
+          bright: '#DF477D',
           soft: '#F6CADA',
+          light: '#FCE7F0',
+          dark: '#B32657',
         },
         eduaccent: {
-          DEFAULT: '#1B6B58',
-          dark: '#124D3F',
+          DEFAULT: '#CF336C', // Vibrant Rose Pink as primary accent
+          dark: '#B32657',
+          light: '#FCE7F0',
         },
+        edusuccess: '#16A34A', // Semantic green reserved only for correct quiz answers
         edutext: {
           DEFAULT: '#4A2A38',
           muted: '#7A5566',
@@ -28,15 +34,16 @@ export default {
 
         // Legacy compatibility aliases
         turquoise: {
-          light: '#F3D5E1',
-          surface: '#F9E4EC',
-          DEFAULT: '#1B6B58',
-          dark: '#124D3F',
-          deep: '#124D3F',
+          light: '#FCE7F0',
+          surface: '#F8EEF4',
+          DEFAULT: '#CF336C',
+          dark: '#B32657',
+          deep: '#B32657',
         },
         pink: {
+          DEFAULT: '#CF336C',
           soft: '#EFA7C1',
-          hover: '#E291AE',
+          hover: '#DF477D',
           light: '#F6CADA',
         },
       },
@@ -53,12 +60,12 @@ export default {
         '4xl': '32px',
       },
       boxShadow: {
-        'raised': '8px 8px 18px #DDB5C6, -8px -8px 18px #FFF7FA',
-        'raised-sm': '4px 4px 10px #DDB5C6, -4px -4px 10px #FFF7FA',
-        'raised-lg': '12px 12px 24px #DDB5C6, -12px -12px 24px #FFF7FA',
-        'inset': 'inset 5px 5px 10px #DDB5C6, inset -5px -5px 10px #FFF7FA',
-        'inset-sm': 'inset 3px 3px 6px #DDB5C6, inset -3px -3px 6px #FFF7FA',
-        'accent-btn': '5px 5px 12px rgba(18,77,63,0.35), -4px -4px 10px #FFF7FA',
+        'raised': '7px 10px 24px rgba(205, 168, 185, 0.28), -6px -6px 16px rgba(255, 255, 255, 0.98)',
+        'raised-sm': '4px 6px 14px rgba(205, 168, 185, 0.22), -4px -4px 12px rgba(255, 255, 255, 0.98)',
+        'raised-lg': '10px 14px 28px rgba(205, 168, 185, 0.32), -8px -8px 20px rgba(255, 255, 255, 0.98)',
+        'inset': 'inset 3px 3px 7px rgba(195, 155, 175, 0.24), inset -3px -3px 7px rgba(255, 255, 255, 0.9)',
+        'inset-sm': 'inset 2px 2px 5px rgba(195, 155, 175, 0.18), inset -2px -2px 5px rgba(255, 255, 255, 0.9)',
+        'accent-btn': '5px 5px 14px rgba(207, 51, 108, 0.32), -4px -4px 10px #FFFFFF',
       },
     },
   },

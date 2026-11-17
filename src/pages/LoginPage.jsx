@@ -41,7 +41,7 @@ export default function LoginPage() {
       <div className="max-w-md w-full mx-auto flex items-center justify-between z-10 pt-2">
         <Link
           to="/"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-edutext-muted hover:text-eduaccent raised-sm px-3 py-1.5 transition-all"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-edutext-muted hover:text-edupink raised-sm px-3 py-1.5 transition-all"
         >
           <ArrowLeft size={14} weight="bold" />
           <span>Kembali ke Beranda</span>
@@ -56,7 +56,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md mx-auto my-auto z-10 py-6">
         {/* Brand Header */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl raised mb-3 text-eduaccent">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl raised mb-3 text-edupink">
             <Brain size={44} weight="bold" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-black font-display text-edutext tracking-tight">
@@ -122,15 +122,15 @@ export default function LoginPage() {
           {/* Quick Subtests Pill Strip */}
           <div className="pt-4 border-t border-white/60 grid grid-cols-3 gap-2 text-center text-[11px]">
             <div className="inset p-2.5 flex flex-col items-center justify-center font-bold">
-              <Percent size={18} weight="bold" className="text-eduaccent mb-1" />
+              <Percent size={18} weight="bold" className="text-edupink mb-1" />
               <span>Kuantitatif</span>
             </div>
             <div className="inset p-2.5 flex flex-col items-center justify-center font-bold">
-              <ChartBar size={18} weight="bold" className="text-eduaccent mb-1" />
+              <ChartBar size={18} weight="bold" className="text-edupink mb-1" />
               <span>Penalaran</span>
             </div>
             <div className="inset p-2.5 flex flex-col items-center justify-center font-bold">
-              <Timer size={18} weight="bold" className="text-eduaccent mb-1" />
+              <Timer size={18} weight="bold" className="text-edupink mb-1" />
               <span>Try Out Timer</span>
             </div>
           </div>
@@ -140,7 +140,7 @@ export default function LoginPage() {
         <div className="text-center mt-6">
           <Link
             to="/admin"
-            className="inline-flex items-center gap-1.5 text-xs text-edutext-muted hover:text-eduaccent font-bold raised-sm px-4 py-2 transition-all active:scale-95"
+            className="inline-flex items-center gap-1.5 text-xs text-edutext-muted hover:text-edupink font-bold raised-sm px-4 py-2 transition-all active:scale-95"
           >
             <LockKey size={14} weight="bold" />
             <span>Panel Admin EduSpark</span>

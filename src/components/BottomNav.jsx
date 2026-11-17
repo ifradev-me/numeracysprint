@@ -34,13 +34,13 @@ export default function BottomNav() {
               to={link.path}
               className={`flex flex-col items-center gap-1 py-1.5 px-3 rounded-2xl transition-all duration-150 active:scale-95 ${
                 isActive
-                  ? 'inset text-eduaccent'
+                  ? 'inset text-edupink'
                   : 'text-edutext-muted hover:text-edutext'
               }`}
             >
               <div
                 className={`w-8 h-8 flex items-center justify-center rounded-xl transition-all ${
-                  isActive ? 'text-eduaccent' : ''
+                  isActive ? 'text-edupink' : ''
                 }`}
               >
                 <Icon size={20} weight={isActive ? 'fill' : 'regular'} />

@@ -150,7 +150,7 @@ export default function HomePage() {
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 toast-raised max-w-sm animate-pop-in flex items-center gap-2">
-          <Sparkle size={18} weight="fill" className="text-eduaccent shrink-0" />
+          <Sparkle size={18} weight="fill" className="text-edupink shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}
@@ -163,8 +163,8 @@ export default function HomePage() {
           {/* Logo EduSpark */}
           <Link to="/" className="flex items-center gap-2.5 group">
             <div className="w-11 h-11 rounded-2xl raised-sm flex items-center justify-center relative">
-              <Brain size={24} weight="bold" className="text-eduaccent" />
-              <span className="w-2.5 h-2.5 rounded-full bg-eduaccent absolute -top-1 -right-1 ring-2 ring-edubg" />
+              <Brain size={24} weight="bold" className="text-edupink" />
+              <span className="w-2.5 h-2.5 rounded-full bg-edupink absolute -top-1 -right-1 ring-2 ring-edubg" />
             </div>
             <div className="flex flex-col">
               <div className="text-2xl font-black font-display tracking-tight flex items-center">
@@ -179,16 +179,16 @@ export default function HomePage() {
 
           {/* Desktop Nav Items (No Tryout & No UTBK) */}
           <nav className="hidden md:flex items-center gap-7 text-sm font-bold">
-            <a href="#mapel" className="hover:text-eduaccent transition-colors">
+            <a href="#mapel" className="hover:text-edupink transition-colors">
               Mata Pelajaran
             </a>
-            <a href="#progress" className="hover:text-eduaccent transition-colors">
+            <a href="#progress" className="hover:text-edupink transition-colors">
               Progress & Evaluasi
             </a>
-            <a href="#paket" className="hover:text-eduaccent transition-colors">
+            <a href="#paket" className="hover:text-edupink transition-colors">
               Paket Belajar
             </a>
-            <a href="#admin" className="hover:text-eduaccent transition-colors">
+            <a href="#admin" className="hover:text-edupink transition-colors">
               Kontak Admin
             </a>
           </nav>
@@ -211,7 +211,7 @@ export default function HomePage() {
           {/* Mobile Hamburger Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden w-10 h-10 rounded-xl raised-sm flex items-center justify-center text-edutext hover:text-eduaccent"
+            className="md:hidden w-10 h-10 rounded-xl raised-sm flex items-center justify-center text-edutext hover:text-edupink"
             aria-label="Toggle Menu"
           >
             {mobileMenuOpen ? <X size={22} weight="bold" /> : <List size={22} weight="bold" />}
@@ -224,28 +224,28 @@ export default function HomePage() {
             <a
               href="#mapel"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-bold hover:text-eduaccent"
+              className="block py-2 text-sm font-bold hover:text-edupink"
             >
               Mata Pelajaran
             </a>
             <a
               href="#progress"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-bold hover:text-eduaccent"
+              className="block py-2 text-sm font-bold hover:text-edupink"
             >
               Progress & Evaluasi
             </a>
             <a
               href="#paket"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-bold hover:text-eduaccent"
+              className="block py-2 text-sm font-bold hover:text-edupink"
             >
               Paket Belajar
             </a>
             <a
               href="#admin"
               onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-sm font-bold hover:text-eduaccent"
+              className="block py-2 text-sm font-bold hover:text-edupink"
             >
               Kontak Admin
             </a>
@@ -269,14 +269,14 @@ export default function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Headline & CTA */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full raised-sm text-xs font-black tracking-wider uppercase text-eduaccent">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full raised-sm text-xs font-black tracking-wider uppercase text-edupink">
               <Sparkle size={14} weight="fill" className="text-edupink" />
               <span>PLATFORM BELAJAR MATEMATIKA</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black font-display text-edutext tracking-tight">
               Taklukkan Matematika,{' '}
-              <em className="italic text-eduaccent font-serif">langkah demi langkah.</em>
+              <em className="italic text-edupink font-serif">langkah demi langkah.</em>
             </h1>
 
             <p className="text-base sm:text-lg text-edutext-muted max-w-xl font-medium leading-relaxed">
@@ -296,15 +296,15 @@ export default function HomePage() {
             {/* Quick stats pill */}
             <div className="pt-4 flex flex-wrap items-center gap-6 text-xs font-bold text-edutext-muted">
               <div className="flex items-center gap-1.5">
-                <CheckCircle size={16} weight="bold" className="text-eduaccent" />
+                <CheckCircle size={16} weight="bold" className="text-edupink" />
                 <span>3 Bidang Matematika</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Brain size={16} weight="bold" className="text-eduaccent" />
+                <Brain size={16} weight="bold" className="text-edupink" />
                 <span>Modul Microlearning</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <ChartLineUp size={16} weight="bold" className="text-eduaccent" />
+                <ChartLineUp size={16} weight="bold" className="text-edupink" />
                 <span>Evaluasi Real-time</span>
               </div>
             </div>
@@ -315,7 +315,7 @@ export default function HomePage() {
             <div className="raised p-6 sm:p-7 space-y-5 relative">
               <div className="flex items-center justify-between pb-3 border-b border-white/60">
                 <span className="text-xs font-bold uppercase tracking-wider text-edutext-muted flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-eduaccent" /> Pantauan Belajar Siswa
+                  <span className="w-2 h-2 rounded-full bg-edupink" /> Pantauan Belajar Siswa
                 </span>
                 <span className="badge-chip text-[11px]">
                   Aktif
@@ -327,7 +327,7 @@ export default function HomePage() {
                 <div>
                   <div className="flex justify-between text-xs font-bold mb-1.5">
                     <span>Pengetahuan Kuantitatif (PK)</span>
-                    <span className="text-eduaccent">78%</span>
+                    <span className="text-edupink">78%</span>
                   </div>
                   <div className="progress-track">
                     <div className="progress-fill" style={{ width: '78%' }} />
@@ -337,7 +337,7 @@ export default function HomePage() {
                 <div>
                   <div className="flex justify-between text-xs font-bold mb-1.5">
                     <span>Penalaran Matematika (PM)</span>
-                    <span className="text-eduaccent">64%</span>
+                    <span className="text-edupink">64%</span>
                   </div>
                   <div className="progress-track">
                     <div className="progress-fill" style={{ width: '64%' }} />
@@ -347,7 +347,7 @@ export default function HomePage() {
                 <div>
                   <div className="flex justify-between text-xs font-bold mb-1.5">
                     <span>Penalaran Kuantitatif (PKu)</span>
-                    <span className="text-eduaccent">71%</span>
+                    <span className="text-edupink">71%</span>
                   </div>
                   <div className="progress-track">
                     <div className="progress-fill" style={{ width: '71%' }} />
@@ -359,12 +359,12 @@ export default function HomePage() {
               <div className="inset p-4 text-xs space-y-1">
                 <p className="font-bold text-edutext">Evaluasi Otomatis:</p>
                 <p className="text-edutext-muted leading-relaxed">
-                  Terkuat: <strong className="text-eduaccent">PK (78%)</strong>. Perlu ditingkatkan: <strong className="text-edudanger">PM (64%)</strong>. Ulangi latihan topik terendah untuk memperkuat logika matematikamu.
+                  Terkuat: <strong className="text-edupink">PK (78%)</strong>. Perlu ditingkatkan: <strong className="text-edudanger">PM (64%)</strong>. Ulangi latihan topik terendah untuk memperkuat logika matematikamu.
                 </p>
               </div>
 
               <div className="flex justify-end pt-1">
-                <Link to="/login" className="text-xs font-black text-eduaccent hover:underline flex items-center gap-1">
+                <Link to="/login" className="text-xs font-black text-edupink hover:underline flex items-center gap-1">
                   Mulai belajar sekarang <ArrowRight size={14} weight="bold" />
                 </Link>
               </div>
@@ -391,7 +391,7 @@ export default function HomePage() {
             <div key={mapel.code} className="raised p-6 flex flex-col justify-between space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl inset flex items-center justify-center font-black font-display text-xl text-eduaccent">
+                  <div className="w-12 h-12 rounded-2xl inset flex items-center justify-center font-black font-display text-xl text-edupink">
                     {idx + 1}
                   </div>
                   <span className="badge-chip uppercase tracking-wider">{mapel.code}</span>
@@ -417,7 +417,7 @@ export default function HomePage() {
                 onClick={() => setSelectedMateriModal(mapel)}
                 className="btn-secondary w-full text-xs py-2.5 flex items-center justify-center gap-1.5"
               >
-                <BookOpen size={16} weight="bold" className="text-eduaccent" />
+                <BookOpen size={16} weight="bold" className="text-edupink" />
                 <span>Coba Materi Gratis</span>
               </button>
             </div>
@@ -441,7 +441,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center max-w-4xl mx-auto">
           <div className="raised p-6 space-y-5">
             <h4 className="text-base font-black font-display text-edutext flex items-center gap-2">
-              <ChartLineUp size={20} weight="bold" className="text-eduaccent" />
+              <ChartLineUp size={20} weight="bold" className="text-edupink" />
               <span>Pantauan Real-time Lintas Perangkat</span>
             </h4>
             <p className="text-xs text-edutext-muted leading-relaxed">
@@ -451,29 +451,29 @@ export default function HomePage() {
             <div className="space-y-3 pt-2">
               <div className="inset p-3.5 flex items-center justify-between">
                 <span className="text-xs font-bold">Evaluasi Kemampuan Awal</span>
-                <span className="text-xs font-black text-eduaccent">Level Menengah (80/100)</span>
+                <span className="text-xs font-black text-edupink">Level Menengah (80/100)</span>
               </div>
               <div className="inset p-3.5 flex items-center justify-between">
                 <span className="text-xs font-bold">Pengetahuan Kuantitatif</span>
-                <span className="text-xs font-black text-eduaccent">Skor 3/3 (100%)</span>
+                <span className="text-xs font-black text-edupink">Skor 3/3 (100%)</span>
               </div>
               <div className="inset p-3.5 flex items-center justify-between">
                 <span className="text-xs font-bold">Penalaran Matematika</span>
-                <span className="text-xs font-black text-eduaccent">Skor 2/3 (67%)</span>
+                <span className="text-xs font-black text-edupink">Skor 2/3 (67%)</span>
               </div>
             </div>
           </div>
 
           <div className="raised p-6 space-y-5">
             <h4 className="text-base font-black font-display text-edutext flex items-center gap-2">
-              <Brain size={20} weight="bold" className="text-eduaccent" />
+              <Brain size={20} weight="bold" className="text-edupink" />
               <span>Rekomendasi Cerdas Sesuai Hasil</span>
             </h4>
             <p className="text-xs text-edutext-muted leading-relaxed">
               Sistem menganalisis bidang kelemahanmu dan menyarankan topik spesifik yang perlu dipelajari terlebih dahulu.
             </p>
             <div className="inset p-4 text-xs space-y-2">
-              <div className="flex items-center gap-2 text-eduaccent font-bold">
+              <div className="flex items-center gap-2 text-edupink font-bold">
                 <ShieldCheck size={18} weight="bold" />
                 <span>Analisa Otomatis EduSpark</span>
               </div>
@@ -506,7 +506,7 @@ export default function HomePage() {
             <div
               key={paket.name}
               className={`raised p-6 flex flex-col justify-between relative transition-all duration-200 ${
-                paket.isPrimary ? 'ring-2 ring-eduaccent' : ''
+                paket.isPrimary ? 'ring-2 ring-edupink' : ''
               }`}
             >
               {paket.badge && (
@@ -528,7 +528,7 @@ export default function HomePage() {
                   {paket.features.map((feat, fidx) => (
                     <div key={fidx} className="flex items-start gap-2 text-xs">
                       {feat.included ? (
-                        <Check size={15} weight="bold" className="text-eduaccent shrink-0 mt-0.5" />
+                        <Check size={15} weight="bold" className="text-edupink shrink-0 mt-0.5" />
                       ) : (
                         <Lock size={15} weight="bold" className="text-edutext-muted shrink-0 mt-0.5" />
                       )}
@@ -574,7 +574,7 @@ export default function HomePage() {
 
         {/* Real Dynamic Admin Card based on Admin Page Settings */}
         <div className="max-w-xl mx-auto raised p-8 text-center space-y-6">
-          <div className="w-20 h-20 rounded-full inset flex items-center justify-center text-3xl font-black font-display text-eduaccent mx-auto">
+          <div className="w-20 h-20 rounded-full inset flex items-center justify-center text-3xl font-black font-display text-edupink mx-auto">
             {teamInfo?.name ? teamInfo.name.charAt(0).toUpperCase() : 'A'}
           </div>
 
@@ -585,7 +585,7 @@ export default function HomePage() {
             <h3 className="text-2xl font-black font-display text-edutext mt-1">
               {teamInfo?.name || 'Admin EduSpark'}
             </h3>
-            <p className="text-xs font-bold text-eduaccent">
+            <p className="text-xs font-bold text-edupink">
               {teamInfo?.role || 'Layanan Siswa & Bantuan Belajar'}
             </p>
             <p className="text-xs text-edutext-muted font-mono pt-1">
@@ -595,7 +595,7 @@ export default function HomePage() {
 
           <div className="inset p-4 rounded-2xl text-xs space-y-1 text-left">
             <p className="font-bold text-edutext flex items-center gap-1.5">
-              <ChatCircleText size={16} weight="bold" className="text-eduaccent" />
+              <ChatCircleText size={16} weight="bold" className="text-edupink" />
               <span>Pesan Siap Terhubung:</span>
             </p>
             <p className="text-edutext-muted italic">
@@ -618,7 +618,7 @@ export default function HomePage() {
       {/* ============================================================== */}
       <footer className="border-t border-white/60 py-10 px-4 text-center space-y-2">
         <div className="flex items-center justify-center gap-2">
-          <Brain size={20} weight="bold" className="text-eduaccent" />
+          <Brain size={20} weight="bold" className="text-edupink" />
           <span className="font-display font-black text-base">
             Edu<span className="text-edupink">Spark</span>
           </span>
@@ -647,7 +647,7 @@ export default function HomePage() {
             </div>
 
             <div>
-              <span className="text-xs font-bold text-eduaccent uppercase tracking-wider">
+              <span className="text-xs font-bold text-edupink uppercase tracking-wider">
                 Mata Pelajaran {selectedMateriModal.code}
               </span>
               <h3 className="text-2xl font-black font-display text-edutext mt-1">
@@ -660,7 +660,7 @@ export default function HomePage() {
 
             {/* Free Sample */}
             <div className="inset p-4 space-y-2">
-              <p className="text-xs font-bold text-eduaccent uppercase tracking-wider">
+              <p className="text-xs font-bold text-edupink uppercase tracking-wider">
                 Contoh Materi Gratis:
               </p>
               <p className="text-sm font-bold text-edutext">

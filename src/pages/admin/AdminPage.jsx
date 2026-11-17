@@ -45,7 +45,7 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen bg-edubg text-edutext flex items-center justify-center p-4 selection:bg-edupink selection:text-white">
         <div className="raised w-full max-w-sm text-center p-8 space-y-6">
-          <div className="w-16 h-16 rounded-3xl inset text-eduaccent flex items-center justify-center mx-auto">
+          <div className="w-16 h-16 rounded-3xl inset text-edupink flex items-center justify-center mx-auto">
             <LockKey size={34} weight="bold" />
           </div>
 
@@ -88,7 +88,7 @@ export default function AdminPage() {
           </form>
 
           <div className="pt-4 border-t border-white/60 text-center">
-            <Link to="/" className="text-xs text-edutext-muted hover:text-eduaccent flex items-center justify-center gap-1 font-bold">
+            <Link to="/" className="text-xs text-edutext-muted hover:text-edupink flex items-center justify-center gap-1 font-bold">
               <ArrowLeft size={14} weight="bold" />
               <span>Kembali ke Beranda Siswa</span>
             </Link>
@@ -146,7 +146,7 @@ export default function AdminPage() {
       <nav className="bg-edubg/95 backdrop-blur-md border-b border-white/60 shadow-raised-sm sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-2xl inset text-eduaccent flex items-center justify-center font-bold">
+            <div className="w-9 h-9 rounded-2xl inset text-edupink flex items-center justify-center font-bold">
               <LockKey size={20} weight="bold" />
             </div>
             <div>
@@ -198,7 +198,7 @@ export default function AdminPage() {
             const Icon = stat.icon
             return (
               <div key={i} className="raised p-5 space-y-2">
-                <div className="w-10 h-10 rounded-2xl inset text-eduaccent flex items-center justify-center">
+                <div className="w-10 h-10 rounded-2xl inset text-edupink flex items-center justify-center">
                   <Icon size={20} weight="bold" />
                 </div>
                 <div className="text-2xl sm:text-3xl font-black font-display text-edutext tabular-nums">
@@ -218,11 +218,11 @@ export default function AdminPage() {
               <Link
                 key={menu.path}
                 to={menu.path}
-                className="raised p-6 flex flex-col justify-between hover:border-eduaccent transition-all duration-200 group space-y-5"
+                className="raised p-6 flex flex-col justify-between hover:border-edupink transition-all duration-200 group space-y-5"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <div className="w-12 h-12 rounded-2xl inset text-eduaccent flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+                    <div className="w-12 h-12 rounded-2xl inset text-edupink flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
                       <Icon size={24} weight="bold" />
                     </div>
                     <span className="badge-chip text-[11px] font-bold">{menu.badge}</span>
@@ -234,7 +234,7 @@ export default function AdminPage() {
                   <p className="text-edutext-muted text-xs leading-relaxed font-normal">{menu.desc}</p>
                 </div>
 
-                <div className="pt-3 border-t border-white/60 flex items-center justify-between text-xs font-bold text-eduaccent group-hover:translate-x-1 transition-transform">
+                <div className="pt-3 border-t border-white/60 flex items-center justify-between text-xs font-bold text-edupink group-hover:translate-x-1 transition-transform">
                   <span>Buka Pengaturan</span>
                   <ArrowRight size={16} weight="bold" />
                 </div>

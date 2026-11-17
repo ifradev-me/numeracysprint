@@ -7,7 +7,7 @@ export default function NotFoundPage() {
     <div className="min-h-screen bg-edubg text-edutext flex items-center justify-center p-4 selection:bg-edupink selection:text-white">
       <div className="w-full max-w-md">
         <div className="raised text-center p-8 space-y-6">
-          <div className="w-20 h-20 rounded-3xl inset flex items-center justify-center mx-auto text-eduaccent">
+          <div className="w-20 h-20 rounded-3xl inset flex items-center justify-center mx-auto text-edupink">
             <SmileySad size={48} weight="bold" />
           </div>
 

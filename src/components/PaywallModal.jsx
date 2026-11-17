@@ -9,7 +9,7 @@ export default function PaywallModal({ isOpen, onClose, materialTitle }) {
 
   const cleanPhone = (teamInfo?.phone || '6281234567890').replace(/\D/g, '')
   const customMessage = encodeURIComponent(
-    `Halo ${teamInfo?.name || 'Admin EduSpark'}, saya ${user?.name || 'Siswa'} ingin mengaktifkan akun Pro untuk membuka modul materi "${materialTitle || 'Matematika UTBK'}" dan fitur lengkap lainnya!`
+    `Halo ${teamInfo?.name || 'Admin EduSpark'}, saya ${user?.name || 'Siswa'} ingin mengaktifkan akun Pro untuk membuka modul materi "${materialTitle || 'Matematika'}" dan fitur lengkap lainnya!`
   )
   const waUrl = `https://wa.me/${cleanPhone}?text=${customMessage}`
 
@@ -26,7 +26,7 @@ export default function PaywallModal({ isOpen, onClose, materialTitle }) {
               Buka Seluruh Materi
             </h3>
             <p className="text-xs text-edutext-muted font-medium">
-              Modul &ldquo;{materialTitle || 'Materi UTBK'}&rdquo; termasuk materi berbayar EduSpark.
+              Modul &ldquo;{materialTitle || 'Materi Pembelajaran'}&rdquo; termasuk materi berbayar EduSpark.
             </p>
           </div>
 
@@ -40,20 +40,20 @@ export default function PaywallModal({ isOpen, onClose, materialTitle }) {
 
         {/* Benefits list */}
         <div className="inset p-4 rounded-2xl text-xs space-y-2.5">
-          <div className="flex items-center gap-2 font-black text-eduaccent">
+          <div className="flex items-center gap-2 font-black text-edupink">
             <ShieldCheck size={18} weight="bold" />
             <span>Keuntungan Paket Pro EduSpark:</span>
           </div>
           <div className="flex items-center gap-2 font-medium text-edutext">
-            <CheckCircle size={16} weight="fill" className="text-eduaccent shrink-0" />
+            <CheckCircle size={16} weight="fill" className="text-edupink shrink-0" />
             <span>Materi lengkap 3 mapel: PK, PM, dan Penalaran Kuantitatif</span>
           </div>
           <div className="flex items-center gap-2 font-medium text-edutext">
-            <CheckCircle size={16} weight="fill" className="text-eduaccent shrink-0" />
-            <span>Try Out UTBK ber-timer penuh tanpa batasan</span>
+            <CheckCircle size={16} weight="fill" className="text-edupink shrink-0" />
+            <span>Try Out ber-timer penuh tanpa batasan</span>
           </div>
           <div className="flex items-center gap-2 font-medium text-edutext">
-            <CheckCircle size={16} weight="fill" className="text-eduaccent shrink-0" />
+            <CheckCircle size={16} weight="fill" className="text-edupink shrink-0" />
             <span>Status Pro tersimpan di cloud database (sinkron di semua gadget)</span>
           </div>
         </div>

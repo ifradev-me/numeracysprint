@@ -207,7 +207,7 @@ export default function AdminMaterials() {
               onClick={() => fileInputRef.current?.click()}
               className="btn-secondary text-xs py-2.5 px-3.5 font-bold flex items-center gap-1.5"
             >
-              <FileCsv size={16} weight="bold" className="text-eduaccent" />
+              <FileCsv size={16} weight="bold" className="text-edupink" />
               <span>Import CSV</span>
             </button>
 
@@ -230,7 +230,7 @@ export default function AdminMaterials() {
         {/* CSV Guide Box */}
         <div className="raised p-4 sm:p-5 space-y-2">
           <div className="flex items-center gap-2 font-black text-edutext text-xs">
-            <FileCsv size={20} weight="bold" className="text-eduaccent" />
+            <FileCsv size={20} weight="bold" className="text-edupink" />
             <span>Format Header File CSV Materi:</span>
           </div>
           <code className="block inset p-3 font-mono text-[11px] text-edutext overflow-x-auto">
@@ -289,7 +289,7 @@ export default function AdminMaterials() {
                   id="premiumCheck"
                   checked={form.isPremium}
                   onChange={(e) => setForm({ ...form, isPremium: e.target.checked })}
-                  className="w-4 h-4 rounded text-eduaccent accent-eduaccent cursor-pointer"
+                  className="w-4 h-4 rounded text-edupink accent-edupink cursor-pointer"
                 />
                 <label htmlFor="premiumCheck" className="text-xs font-bold text-edutext cursor-pointer">
                   Materi Berbayar (Pro) &bull; Memerlukan akses akun berbayar
@@ -384,7 +384,7 @@ export default function AdminMaterials() {
 
           {materials.length === 0 ? (
             <div className="raised p-8 text-center text-xs text-edutext-muted space-y-2">
-              <BookOpenText size={36} weight="bold" className="mx-auto text-eduaccent opacity-40" />
+              <BookOpenText size={36} weight="bold" className="mx-auto text-edupink opacity-40" />
               <p className="font-bold text-edutext">Belum ada materi kustom</p>
               <p>Materi bawaan sistem default sudah aktif. Tambahkan materi baru secara manual atau import berkas CSV.</p>
             </div>
@@ -397,7 +397,7 @@ export default function AdminMaterials() {
                     {m.isPremium ? (
                       <span className="badge-chip text-[10px] text-edupink">Pro</span>
                     ) : (
-                      <span className="badge-chip text-[10px] text-eduaccent">Gratis</span>
+                      <span className="badge-chip text-[10px] text-edupink">Gratis</span>
                     )}
                   </div>
                   <p className="text-xs text-edutext-muted line-clamp-1">{m.summary}</p>
@@ -406,7 +406,7 @@ export default function AdminMaterials() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => startEdit(m)}
-                    className="w-8 h-8 rounded-xl raised-sm flex items-center justify-center text-edutext hover:text-eduaccent"
+                    className="w-8 h-8 rounded-xl raised-sm flex items-center justify-center text-edutext hover:text-edupink"
                     title="Edit Materi"
                   >
                     <PencilSimple size={16} weight="bold" />

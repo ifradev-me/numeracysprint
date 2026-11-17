@@ -48,7 +48,7 @@ const numeracyBites = [
     tag: 'Trik PK',
   },
   {
-    topic: 'Trik Rata-rata Cepat (Statistika UTBK)',
+    topic: 'Trik Rata-rata Cepat (Statistika Dasar)',
     formulaPrefix: 'Metode Patokan',
     formulaAccent: 'Jumlah Selisih',
     tip: 'Nilai 78, 82, 85, 75? Ambil patokan 80. Selisih: -2, +2, +5, -5 (total selisih = 0). Maka rata-rata persis 80!',
@@ -78,7 +78,7 @@ const menuCards = [
   {
     path: '/tryout',
     title: 'Try Out Ber-Timer',
-    desc: 'Simulasi ujian matematika UTBK dengan countdown 2 menit per soal dan umpan balik pembahasan instan.',
+    desc: 'Simulasi ujian matematika ber-timer dengan countdown 2 menit per soal dan pembahasan lengkap.',
     icon: Timer,
     badge: 'Timer 2 Menit/Soal',
     highlight: 'Skor & Pembahasan',
@@ -157,12 +157,12 @@ export default function DashboardPage() {
                   </div>
                   <span className="text-edutext-muted/40">•</span>
                   <div className="flex items-center gap-1.5 font-black text-edutext">
-                    <Target size={16} weight="bold" className="text-eduaccent" />
-                    <span>Skor: <strong className="text-eduaccent">{diagnosticResult.score}</strong>/100</span>
+                    <Target size={16} weight="bold" className="text-edupink" />
+                    <span>Skor: <strong className="text-edupink">{diagnosticResult.score}</strong>/100</span>
                   </div>
                   <span className="text-edutext-muted/40 hidden sm:inline">•</span>
                   <div className="hidden sm:flex items-center gap-1.5 font-bold text-edutext">
-                    <CheckCircle size={15} weight="fill" className="text-eduaccent" />
+                    <CheckCircle size={15} weight="fill" className="text-edupink" />
                     <span>{diagnosticResult.correct}/{diagnosticResult.total} Tepat</span>
                   </div>
                 </div>
@@ -185,7 +185,7 @@ export default function DashboardPage() {
         <div className="raised p-5 sm:p-6 relative">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl inset flex items-center justify-center shrink-0 text-eduaccent">
+              <div className="w-12 h-12 rounded-2xl inset flex items-center justify-center shrink-0 text-edupink">
                 <Lightbulb size={24} weight="fill" />
               </div>
               <div className="space-y-1">
@@ -236,7 +236,7 @@ export default function DashboardPage() {
 
           <div className="flex items-center gap-2">
             <div className="badge-chip text-xs px-3 py-1 flex items-center gap-1.5">
-              <BookOpenText size={15} weight="bold" className="text-eduaccent" />
+              <BookOpenText size={15} weight="bold" className="text-edupink" />
               <span className="tabular-nums font-bold">
                 {completedMaterials.length} Modul Terbaca
               </span>
@@ -254,11 +254,11 @@ export default function DashboardPage() {
               <div
                 key={card.path}
                 onClick={() => navigate(card.path)}
-                className="raised p-6 flex flex-col justify-between cursor-pointer hover:border-eduaccent transition-all duration-200 group space-y-6"
+                className="raised p-6 flex flex-col justify-between cursor-pointer hover:border-edupink transition-all duration-200 group space-y-6"
               >
                 <div className="space-y-4">
                   <div className="flex items-start justify-between">
-                    <div className="w-13 h-13 rounded-2xl inset flex items-center justify-center text-eduaccent group-hover:scale-105 transition-transform">
+                    <div className="w-13 h-13 rounded-2xl inset flex items-center justify-center text-edupink group-hover:scale-105 transition-transform">
                       <Icon size={26} weight="bold" />
                     </div>
                     <span className="badge-chip text-[11px] font-bold">
@@ -280,7 +280,7 @@ export default function DashboardPage() {
                   <span className="text-[11px] text-edutext-muted font-bold uppercase tracking-wider">
                     {card.highlight}
                   </span>
-                  <div className="flex items-center gap-2 text-xs font-black text-eduaccent group-hover:translate-x-1 transition-transform">
+                  <div className="flex items-center gap-2 text-xs font-black text-edupink group-hover:translate-x-1 transition-transform">
                     <span>{card.actionText}</span>
                     <div className="w-7 h-7 rounded-full inset flex items-center justify-center">
                       <ArrowRight size={14} weight="bold" />
@@ -297,11 +297,11 @@ export default function DashboardPage() {
         {/* ============================================================== */}
         <div className="raised p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl inset flex items-center justify-center text-eduaccent shrink-0">
+            <div className="w-12 h-12 rounded-2xl inset flex items-center justify-center text-edupink shrink-0">
               <Brain size={24} weight="bold" />
             </div>
             <div>
-              <p className="text-xs text-edutext-muted font-bold uppercase tracking-wider">EduSpark UTBK-SNBT</p>
+              <p className="text-xs text-edutext-muted font-bold uppercase tracking-wider">EduSpark Microlearning</p>
               <p className="text-sm font-black font-display text-edutext">Konsistensi latihan adalah kunci taklukkan tes matematika.</p>
             </div>
           </div>

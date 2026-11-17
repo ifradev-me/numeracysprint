@@ -187,7 +187,7 @@ export default function AdminExercises() {
               onClick={() => fileRef.current?.click()}
               className="btn-secondary text-xs py-2.5 px-3.5 font-bold flex items-center gap-1.5"
             >
-              <FileCsv size={16} weight="bold" className="text-eduaccent" />
+              <FileCsv size={16} weight="bold" className="text-edupink" />
               <span>Import CSV</span>
             </button>
 
@@ -208,7 +208,7 @@ export default function AdminExercises() {
         {/* CSV Format Guide */}
         <div className="raised p-4 sm:p-5 space-y-2">
           <div className="flex items-center gap-2 font-black text-edutext text-xs">
-            <FileCsv size={20} weight="bold" className="text-eduaccent" />
+            <FileCsv size={20} weight="bold" className="text-edupink" />
             <span>Format Header File CSV yang Didukung:</span>
           </div>
           <code className="block inset p-3 font-mono text-[11px] text-edutext overflow-x-auto">
@@ -353,7 +353,7 @@ export default function AdminExercises() {
                       <span className="badge-chip text-[10px]">
                         Soal #{idx + 1}
                       </span>
-                      <span className="badge-chip text-[10px] text-eduaccent">
+                      <span className="badge-chip text-[10px] text-edupink">
                         {ex.topic}
                       </span>
                       {isDefault && (
@@ -364,7 +364,7 @@ export default function AdminExercises() {
                     </div>
                     <p className="font-bold text-sm text-edutext mt-1 whitespace-pre-line">{ex.question}</p>
                     <p className="text-xs text-edutext-muted">
-                      Kunci: <strong className="text-eduaccent">{ex.answerDisplay || ex.answer}</strong>
+                      Kunci: <strong className="text-edupink">{ex.answerDisplay || ex.answer}</strong>
                     </p>
                   </div>
 
@@ -372,7 +372,7 @@ export default function AdminExercises() {
                     <div className="flex items-center gap-2 shrink-0">
                       <button
                         onClick={() => startEdit(ex)}
-                        className="w-8 h-8 rounded-xl raised-sm flex items-center justify-center text-edutext hover:text-eduaccent"
+                        className="w-8 h-8 rounded-xl raised-sm flex items-center justify-center text-edutext hover:text-edupink"
                       >
                         <PencilSimple size={16} weight="bold" />
                       </button>

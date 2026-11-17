@@ -92,7 +92,7 @@ export default function AdminUsers() {
 
         {users.length === 0 ? (
           <div className="raised text-center py-16 space-y-3">
-            <UsersThree size={48} weight="bold" className="mx-auto text-eduaccent opacity-40" />
+            <UsersThree size={48} weight="bold" className="mx-auto text-edupink opacity-40" />
             <p className="font-bold text-edutext">Belum ada siswa terdaftar</p>
             <p className="text-xs text-edutext-muted">Siswa akan otomatis muncul saat login pertama kali.</p>
           </div>
@@ -126,7 +126,7 @@ export default function AdminUsers() {
                         {/* Student Name */}
                         <td className="py-4 px-5">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full inset flex items-center justify-center font-bold text-eduaccent shrink-0">
+                            <div className="w-8 h-8 rounded-full inset flex items-center justify-center font-bold text-edupink shrink-0">
                               {u.name.charAt(0).toUpperCase()}
                             </div>
                             <div>
@@ -154,13 +154,13 @@ export default function AdminUsers() {
                           <button
                             onClick={() => handleTogglePaid(u.name, u.isPaid)}
                             className={`btn-secondary text-[11px] py-1.5 px-3 flex items-center gap-1.5 cursor-pointer ${
-                              u.isPaid ? 'text-eduaccent font-black' : 'text-edutext-muted'
+                              u.isPaid ? 'text-edupink font-black' : 'text-edutext-muted'
                             }`}
                             title="Klik untuk mengubah status paket siswa"
                           >
                             {u.isPaid ? (
                               <>
-                                <ToggleRight size={18} weight="fill" className="text-eduaccent" />
+                                <ToggleRight size={18} weight="fill" className="text-edupink" />
                                 <span>Aktif Pro</span>
                               </>
                             ) : (
@@ -176,7 +176,7 @@ export default function AdminUsers() {
                         <td className="py-4 px-4">
                           {score !== undefined ? (
                             <div className="flex items-center gap-2">
-                              <span className="font-display font-black text-eduaccent tabular-nums">
+                              <span className="font-display font-black text-edupink tabular-nums">
                                 {score}/100
                               </span>
                               <span className="badge-chip text-[10px]">

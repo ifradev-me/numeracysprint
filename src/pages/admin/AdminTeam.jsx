@@ -22,7 +22,7 @@ export default function AdminTeam() {
     phone: teamInfo?.phone || '6281234567890',
     whatsappMessage:
       teamInfo?.whatsappMessage ||
-      'Halo Admin EduSpark, saya ingin konfirmasi pembayaran untuk aktivasi akun Pro Matematika UTBK!',
+      'Halo Admin EduSpark, saya ingin konfirmasi pembayaran untuk aktivasi akun Pro!',
   }))
   const [savedSuccess, setSavedSuccess] = useState(false)
 
@@ -71,7 +71,7 @@ export default function AdminTeam() {
         </div>
 
         {savedSuccess && (
-          <div className="inset p-4 rounded-2xl flex items-center gap-2.5 text-xs font-bold text-eduaccent border border-eduaccent animate-pop-in">
+          <div className="inset p-4 rounded-2xl flex items-center gap-2.5 text-xs font-bold text-edupink border border-edupink animate-pop-in">
             <CheckCircle size={20} weight="fill" />
             <span>Informasi kontak admin berhasil disimpan ke database cloud!</span>
           </div>
@@ -80,7 +80,7 @@ export default function AdminTeam() {
         <form onSubmit={handleSave} className="raised p-6 sm:p-8 space-y-5">
           <div>
             <label className="block text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <User size={15} weight="bold" className="text-eduaccent" />
+              <User size={15} weight="bold" className="text-edupink" />
               <span>Nama Admin / Narahubung</span>
             </label>
             <input
@@ -94,7 +94,7 @@ export default function AdminTeam() {
 
           <div>
             <label className="block text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <IdentificationBadge size={15} weight="bold" className="text-eduaccent" />
+              <IdentificationBadge size={15} weight="bold" className="text-edupink" />
               <span>Peran / Jabatan</span>
             </label>
             <input
@@ -108,7 +108,7 @@ export default function AdminTeam() {
 
           <div>
             <label className="block text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <Phone size={15} weight="bold" className="text-eduaccent" />
+              <Phone size={15} weight="bold" className="text-edupink" />
               <span>Nomor WhatsApp (Gunakan Kode Negara 62)</span>
             </label>
             <input
@@ -125,7 +125,7 @@ export default function AdminTeam() {
 
           <div>
             <label className="block text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <ChatCircleText size={15} weight="bold" className="text-eduaccent" />
+              <ChatCircleText size={15} weight="bold" className="text-edupink" />
               <span>Template Pesan WhatsApp Otomatis</span>
             </label>
             <textarea
