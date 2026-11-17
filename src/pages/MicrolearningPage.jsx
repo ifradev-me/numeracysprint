@@ -114,7 +114,7 @@ function FormattedContent({ text }) {
 const CATEGORIES = [
   { id: 'all', label: 'Semua Modul', icon: BookOpenText },
   { id: 'persen', label: 'Persentase & Diskon', icon: Percent },
-  { id: 'statistika', label: 'Statistika Mean', icon: ChartBar },
+  { id: 'statistika', label: 'Statistika', icon: ChartBar },
   { id: 'rasio', label: 'Rasio & Proporsi', icon: Scales },
 ]
 
@@ -313,11 +313,10 @@ export default function MicrolearningPage() {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-black transition-all shrink-0 active:scale-95 cursor-pointer ${
-                  isActive
+                className={`flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-black transition-all shrink-0 active:scale-95 cursor-pointer ${isActive
                     ? 'bg-gradient-to-r from-turquoise to-turquoise-dark text-white shadow-soft shadow-turquoise/30 scale-105'
                     : 'bg-white border-2 border-turquoise/20 text-gray-600 hover:text-turquoise-deep hover:bg-turquoise-light/50 shadow-sm'
-                }`}
+                  }`}
               >
                 <Icon size={16} weight={isActive ? 'bold' : 'regular'} />
                 <span>{cat.label}</span>
@@ -428,11 +427,10 @@ export default function MicrolearningPage() {
                         </span>
                         <button
                           onClick={() => markComplete(mat.id)}
-                          className={`text-xs py-2.5 px-5 rounded-2xl font-extrabold transition-all duration-150 active:scale-[0.97] flex items-center gap-2 cursor-pointer ${
-                            isDone
+                          className={`text-xs py-2.5 px-5 rounded-2xl font-extrabold transition-all duration-150 active:scale-[0.97] flex items-center gap-2 cursor-pointer ${isDone
                               ? 'bg-white hover:bg-gray-100 text-turquoise-deep shadow-soft border border-white/60'
                               : 'btn-accent shadow-pink'
-                          }`}
+                            }`}
                         >
                           <CheckCircle size={18} weight="fill" className={isDone ? 'text-turquoise' : 'text-white'} />
                           <span>{isDone ? 'Telah Dipahami (Klik Batal)' : 'Tandai Selesai Dipahami'}</span>
