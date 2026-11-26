@@ -149,7 +149,7 @@ export default function AdminExercises() {
               Kelola Soal & Import CSV
             </h1>
             <p className="text-gray-400 text-xs sm:text-sm mt-1">
-              Total {allExercises.length} soal ({defaultExercises.length} bawaan + {exercises.length} kustom) siap dikerjakan siswa.
+              Total {allExercises.length} soal{defaultExercises.length > 0 ? ` (${defaultExercises.length} bawaan + ${exercises.length} kustom)` : ''} siap dikerjakan siswa.
             </p>
           </div>
 
@@ -340,6 +340,16 @@ export default function AdminExercises() {
 
         {/* Exercises List */}
         <div className="space-y-3">
+          {allExercises.length === 0 && (
+            <div className="text-center py-12 px-4 rounded-3xl border-2 border-dashed border-gray-200 bg-white">
+              <Question size={36} className="text-gray-300 mx-auto mb-2" />
+              <p className="text-sm font-bold text-gray-600">Belum ada soal latihan.</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Klik <strong>Tambah Soal Baru</strong> atau <strong>Import CSV</strong> untuk menambahkan soal.
+              </p>
+            </div>
+          )}
+
           {allExercises.map((ex, i) => {
             const isDefault = i < defaultExercises.length
             return (

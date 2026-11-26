@@ -160,7 +160,7 @@ export default function AdminMaterials() {
               Kelola Materi Microlearning
             </h1>
             <p className="text-gray-400 text-xs sm:text-sm mt-1">
-              Total {allMaterials.length} materi ({defaultMaterials.length} bawaan + {materials.length} kustom).
+              Total {allMaterials.length} materi{defaultMaterials.length > 0 ? ` (${defaultMaterials.length} bawaan + ${materials.length} kustom)` : ''} siap dipelajari siswa.
             </p>
           </div>
 
@@ -386,6 +386,16 @@ export default function AdminMaterials() {
 
         {/* Material Items List */}
         <div className="space-y-3">
+          {allMaterials.length === 0 && (
+            <div className="text-center py-12 px-4 rounded-3xl border-2 border-dashed border-gray-200 bg-white">
+              <BookOpenText size={36} className="text-gray-300 mx-auto mb-2" />
+              <p className="text-sm font-bold text-gray-600">Belum ada modul materi.</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Klik <strong>Tambah Materi Baru</strong> atau <strong>Import CSV</strong> untuk menambahkan modul microlearning.
+              </p>
+            </div>
+          )}
+
           {allMaterials.map((mat, i) => {
             const isDefault = i < defaultMaterials.length
             return (

@@ -445,13 +445,23 @@ export default function MicrolearningPage() {
             {filteredMaterials.length === 0 && (
               <div className="text-center py-12 px-4 rounded-3xl border-2 border-dashed border-gray-200">
                 <BookOpenText size={36} className="text-gray-300 mx-auto mb-2" />
-                <p className="text-sm font-bold text-gray-500">Tidak ada materi pada kategori ini.</p>
-                <button
-                  onClick={() => setActiveCategory('all')}
-                  className="mt-3 text-xs text-turquoise font-black underline"
-                >
-                  Lihat Semua Modul
-                </button>
+                <p className="text-sm font-bold text-gray-500">
+                  {materials.length === 0
+                    ? 'Belum ada modul materi tersedia.'
+                    : 'Tidak ada materi pada kategori ini.'}
+                </p>
+                {materials.length > 0 ? (
+                  <button
+                    onClick={() => setActiveCategory('all')}
+                    className="mt-3 text-xs text-turquoise font-black underline"
+                  >
+                    Lihat Semua Modul
+                  </button>
+                ) : (
+                  <p className="text-xs text-gray-400 mt-1">
+                    Silakan tambahkan modul melalui panel admin atau import file CSV materi.
+                  </p>
+                )}
               </div>
             )}
           </div>

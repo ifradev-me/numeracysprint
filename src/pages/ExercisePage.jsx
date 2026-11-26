@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import { defaultExercises } from '../data/exercises'
 import { loadCustomExercises } from '../services/api'
@@ -48,6 +49,7 @@ export default function ExercisePage() {
   const total = exercises.length
 
   const checkAnswer = () => {
+    if (!question) return
     let isCorrect = false
     if (question.type === 'input') {
       const cleanInput = userAnswer.replace(/\./g, '').replace(/,/g, '.').trim().toLowerCase()
@@ -133,8 +135,30 @@ export default function ExercisePage() {
           </div>
         </div>
 
-        {/* Question Outline Bar ("tampil apa aja soalnya dan berapa banyak") */}
-        <div className="card-inner-white mb-6 border-2 border-turquoise/30 shadow-card">
+        {total === 0 ? (
+          <div className="card-inner-white text-center py-16 px-6 rounded-3xl border-2 border-dashed border-turquoise/40 shadow-card">
+            <div className="w-16 h-16 rounded-3xl bg-turquoise-light/60 text-turquoise-deep flex items-center justify-center mx-auto mb-4">
+              <PencilSimpleLine size={32} weight="bold" />
+            </div>
+            <h2 className="text-xl font-black font-roboto text-gray-900 mb-2">
+              Belum Ada Soal Latihan
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-500 max-w-md mx-auto mb-6">
+              Saat ini belum ada soal latihan numerasi yang tersedia. Silakan cek kembali nanti atau hubungi pengajar.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link to="/microlearning" className="btn-secondary text-xs py-2.5 px-5 font-bold">
+                Buka Materi
+              </Link>
+              <Link to="/dashboard" className="btn-primary text-xs py-2.5 px-5 font-bold">
+                Kembali ke Dashboard
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Question Outline Bar ("tampil apa aja soalnya dan berapa banyak") */}
+            <div className="card-inner-white mb-6 border-2 border-turquoise/30 shadow-card">
           <div className="flex items-center justify-between mb-3 text-xs">
             <div className="flex items-center gap-2 font-black text-gray-800">
               <ListNumbers size={18} weight="bold" className="text-turquoise" />
@@ -315,6 +339,8 @@ export default function ExercisePage() {
             )}
           </div>
         </div>
+        </>
+        )}
       </main>
     </div>
   )
