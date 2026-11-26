@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import Navbar from '../components/Navbar'
 import { diagnosticQuestions, calculateLevel } from '../data/diagnosticQuestions'
+import { loadCustomDiagnostic } from '../services/api'
 import {
   ClipboardText,
   ArrowRight,
@@ -20,6 +21,10 @@ import {
 } from '@phosphor-icons/react'
 
 export default function DiagnosticPage() {
+  const [questions, setQuestions] = useState(() => {
+    const custom = localStorage.getItem('numeracy_custom_diagnostic')
+    return custom ? [...diagnosticQuestions, ...JSON.parse(custom)] : [...diagnosticQuestions]
+  })
   const [currentIndex, setCurrentIndex] = useState(0)
   const [answers, setAnswers] = useState({})
   const [submitted, setSubmitted] = useState(false)
@@ -27,19 +32,29 @@ export default function DiagnosticPage() {
   const { user, saveDiagnosticResult } = useUser()
   const navigate = useNavigate()
 
-  const question = diagnosticQuestions[currentIndex]
-  const total = diagnosticQuestions.length
+  useEffect(() => {
+    loadCustomDiagnostic().then((serverQuestions) => {
+      if (serverQuestions && serverQuestions.length > 0) {
+        setQuestions([...diagnosticQuestions, ...serverQuestions])
+      }
+    })
+  }, [])
+
+  const total = questions.length
+  const question = questions[currentIndex] || questions[0]
 
   const handleSelect = (label) => {
+    if (!question) return
     setAnswers((prev) => ({ ...prev, [question.id]: label }))
   }
 
   const handleSubmit = async () => {
+    if (total === 0) return
     let correct = 0
-    diagnosticQuestions.forEach((q) => {
+    questions.forEach((q) => {
       const chosen = answers[q.id]
-      const correctOption = q.options.find((o) => o.correct)
-      if (chosen === correctOption.label) correct++
+      const correctOption = q.options?.find((o) => o.correct)
+      if (chosen === correctOption?.label) correct++
     })
     const score = Math.round((correct / total) * 100)
     const levelInfo = calculateLevel(score)
@@ -56,7 +71,7 @@ export default function DiagnosticPage() {
     setResult(null)
   }
 
-  const allAnswered = diagnosticQuestions.every((q) => answers[q.id])
+  const allAnswered = total > 0 && questions.every((q) => answers[q.id])
 
   // ==============================================================
   // RESULT SCREEN
@@ -158,7 +173,7 @@ export default function DiagnosticPage() {
             </h3>
 
             <div className="space-y-4">
-              {diagnosticQuestions.map((q, idx) => {
+              {questions.map((q, idx) => {
                 const userChoice = answers[q.id]
                 const correctOpt = q.options.find((o) => o.correct)
                 const isCorrect = userChoice === correctOpt?.label
@@ -203,6 +218,51 @@ export default function DiagnosticPage() {
   // ==============================================================
   // QUESTION TEST SCREEN
   // ==============================================================
+  if (total === 0) {
+    return (
+      <div className="min-h-screen bg-edubg text-edutext pb-28 selection:bg-edupink selection:text-white">
+        <Navbar />
+
+        <main className="max-w-3xl mx-auto px-4 pt-10 sm:pt-16 space-y-6">
+          <div className="raised p-8 sm:p-12 text-center space-y-5">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl inset text-edupink mx-auto">
+              <ClipboardText size={44} weight="bold" />
+            </div>
+
+            <div className="space-y-2">
+              <span className="badge-chip">
+                <Sparkle size={12} weight="fill" className="text-edupink" /> Evaluasi Diagnostik
+              </span>
+              <h1 className="text-2xl sm:text-3xl font-black font-display text-edutext">
+                Belum Ada Soal Tes Diagnostik
+              </h1>
+              <p className="text-edutext-muted text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
+                Bank soal tes diagnostik belum diisi oleh admin atau pengajar. Silakan kembali ke Dashboard atau langsung mulai mempelajari modul materi microlearning.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+              <button
+                onClick={() => navigate('/materi')}
+                className="btn-accent text-xs sm:text-sm py-3 px-6 font-bold"
+              >
+                <BookOpenText size={18} weight="bold" />
+                <span>Pelajari Materi Belajar</span>
+              </button>
+
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="btn-secondary text-xs sm:text-sm py-3 px-6 font-bold"
+              >
+                <span>Ke Dashboard</span>
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-edubg text-edutext pb-28 selection:bg-edupink selection:text-white">
       <Navbar />
@@ -218,12 +278,12 @@ export default function DiagnosticPage() {
               Soal {currentIndex + 1} dari {total}
             </h1>
             <p className="text-xs text-edutext-muted font-medium mt-0.5">
-              Topik: {question.topic} ({question.subtest})
+              Topik: {question?.topic} ({question?.subtest})
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            {diagnosticQuestions.map((q, idx) => (
+            {questions.map((q, idx) => (
               <button
                 key={q.id}
                 onClick={() => setCurrentIndex(idx)}

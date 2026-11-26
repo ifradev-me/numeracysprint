@@ -12,6 +12,7 @@ import AdminPage from './pages/admin/AdminPage'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminMaterials from './pages/admin/AdminMaterials'
 import AdminExercises from './pages/admin/AdminExercises'
+import AdminDiagnostic from './pages/admin/AdminDiagnostic'
 import AdminTeam from './pages/admin/AdminTeam'
 import ProtectedRoute from './components/ProtectedRoute'
 import BottomNav from './components/BottomNav'
@@ -112,6 +113,7 @@ function AppShell() {
         <Route path="/admin/users" element={<AdminUsers />} />
         <Route path="/admin/materials" element={<AdminMaterials />} />
         <Route path="/admin/exercises" element={<AdminExercises />} />
+        <Route path="/admin/diagnostic" element={<AdminDiagnostic />} />
         <Route path="/admin/team" element={<AdminTeam />} />
 
         {/* 404 Route */}

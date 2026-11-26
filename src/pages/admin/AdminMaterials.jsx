@@ -385,8 +385,8 @@ export default function AdminMaterials() {
           {materials.length === 0 ? (
             <div className="raised p-8 text-center text-xs text-edutext-muted space-y-2">
               <BookOpenText size={36} weight="bold" className="mx-auto text-edupink opacity-40" />
-              <p className="font-bold text-edutext">Belum ada materi kustom</p>
-              <p>Materi bawaan sistem default sudah aktif. Tambahkan materi baru secara manual atau import berkas CSV.</p>
+              <p className="font-bold text-edutext">Belum ada modul materi</p>
+              <p>Tambahkan modul baru secara manual atau unduh template lalu import berkas CSV.</p>
             </div>
           ) : (
             materials.map((m) => (

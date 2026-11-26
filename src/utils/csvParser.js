@@ -216,3 +216,71 @@ export function parseMaterialsCSV(text) {
 
   return results
 }
+
+export function parseDiagnosticCSV(text) {
+  const rows = parseCSVToRows(text)
+  if (rows.length < 2) return []
+
+  const headers = rows[0].map((h) => h.toLowerCase().replace(/[^a-z0-9]/g, ''))
+
+  const findIndex = (aliases) => {
+    return headers.findIndex((h) => aliases.includes(h))
+  }
+
+  const topicIdx = findIndex(['topic', 'topik', 'materi'])
+  const subtestIdx = findIndex(['subtest', 'subtes', 'kategori', 'bidang'])
+  const questionIdx = findIndex(['question', 'pertanyaan', 'soal', 'soalujian'])
+  const optAIdx = findIndex(['optiona', 'opsia', 'pilihana', 'a'])
+  const optBIdx = findIndex(['optionb', 'opsib', 'pilihanb', 'b'])
+  const optCIdx = findIndex(['optionc', 'opsic', 'pilihanc', 'c'])
+  const optDIdx = findIndex(['optiond', 'opsid', 'pilihand', 'd'])
+  const correctIdx = findIndex(['correctoption', 'correct', 'kunci', 'jawaban', 'kuncijawaban', 'jawabanbenar'])
+  const explanationIdx = findIndex(['explanation', 'pembahasan', 'penjelasan', 'alasan'])
+
+  const results = []
+
+  for (let r = 1; r < rows.length; r++) {
+    // Stop if reached 10 questions max
+    if (results.length >= 10) break
+
+    const row = rows[r]
+    if (!row || row.length === 0 || row.every((c) => !c.trim())) continue
+
+    const getVal = (idx, fallbackIdx = -1) => {
+      if (idx !== -1 && row[idx] !== undefined) return row[idx].trim()
+      if (fallbackIdx !== -1 && row[fallbackIdx] !== undefined) return row[fallbackIdx].trim()
+      return ''
+    }
+
+    const questionText = getVal(questionIdx, 2)
+    if (!questionText) continue
+
+    const optAText = getVal(optAIdx, 3) || 'Pilihan A'
+    const optBText = getVal(optBIdx, 4) || 'Pilihan B'
+    const optCText = getVal(optCIdx, 5) || 'Pilihan C'
+    const optDText = getVal(optDIdx, 6) || 'Pilihan D'
+
+    const rawCorrect = getVal(correctIdx, 7).toUpperCase()
+    let correctLabel = 'A'
+    if (rawCorrect.startsWith('B') || rawCorrect === optBText.toUpperCase()) correctLabel = 'B'
+    else if (rawCorrect.startsWith('C') || rawCorrect === optCText.toUpperCase()) correctLabel = 'C'
+    else if (rawCorrect.startsWith('D') || rawCorrect === optDText.toUpperCase()) correctLabel = 'D'
+    else if (rawCorrect.startsWith('A') || rawCorrect === optAText.toUpperCase()) correctLabel = 'A'
+
+    results.push({
+      id: Date.now() + r,
+      topic: getVal(topicIdx, 0) || 'Penalaran Matematika',
+      subtest: getVal(subtestIdx, 1) || 'Pengetahuan Kuantitatif',
+      question: questionText.replace(/\\n/g, '\n'),
+      options: [
+        { label: 'A', text: optAText, correct: correctLabel === 'A' },
+        { label: 'B', text: optBText, correct: correctLabel === 'B' },
+        { label: 'C', text: optCText, correct: correctLabel === 'C' },
+        { label: 'D', text: optDText, correct: correctLabel === 'D' },
+      ],
+      explanation: getVal(explanationIdx, 8).replace(/\\n/g, '\n') || 'Pembahasan telah disediakan pengajar.',
+    })
+  }
+
+  return results
+}

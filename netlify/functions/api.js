@@ -24,6 +24,7 @@ const MEMORY_CACHE = {
   users: { all: [] },
   materials: { custom: [] },
   exercises: { custom: [] },
+  diagnostic: { custom: [] },
 }
 
 // Helper: Safely get a blob store instance
@@ -85,18 +86,19 @@ async function handleApiLogic(method, pathname, rawBody) {
 
   // 1. GET /bootstrap or /data or /
   if (method === 'GET' && (path === '/bootstrap' || path === '/data' || path === '')) {
-    const [team, users, customMaterials, customExercises] = await Promise.all([
+    const [team, users, customMaterials, customExercises, customDiagnostic] = await Promise.all([
       readBlob('config', 'team', DEFAULT_TEAM),
       readBlob('users', 'all', []),
       readBlob('materials', 'custom', []),
       readBlob('exercises', 'custom', []),
+      readBlob('diagnostic', 'custom', []),
     ])
 
     return {
       status: 200,
       data: {
         success: true,
-        data: { team, users, customMaterials, customExercises },
+        data: { team, users, customMaterials, customExercises, customDiagnostic },
       },
     }
   }
@@ -226,6 +228,20 @@ async function handleApiLogic(method, pathname, rawBody) {
     const exercises = body.exercises || []
     await writeBlob('exercises', 'custom', exercises)
     return { status: 200, data: { success: true, count: exercises.length } }
+  }
+
+  // 12. GET /admin/diagnostic — get custom diagnostic questions
+  if (method === 'GET' && path === '/admin/diagnostic') {
+    const questions = await readBlob('diagnostic', 'custom', [])
+    return { status: 200, data: { success: true, questions } }
+  }
+
+  // 13. POST /admin/diagnostic — save custom diagnostic questions (max 10)
+  if (method === 'POST' && path === '/admin/diagnostic') {
+    const body = typeof rawBody === 'string' ? JSON.parse(rawBody || '{}') : (rawBody || {})
+    const questions = (body.questions || []).slice(0, 10)
+    await writeBlob('diagnostic', 'custom', questions)
+    return { status: 200, data: { success: true, count: questions.length } }
   }
 
   return { status: 404, data: { error: `Route ${method} ${pathname} not found` } }

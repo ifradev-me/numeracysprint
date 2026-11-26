@@ -1,0 +1,4 @@
+topic,subtest,question,optionA,optionB,optionC,optionD,correctOption,explanation
+"Persentase & Diskon","Pengetahuan Kuantitatif","Sebuah baju seharga Rp200.000 mendapat diskon 25%. Berapa harga akhir yang harus dibayar?","Rp150.000","Rp175.000","Rp160.000","Rp125.000","A","Diskon 25% dari Rp200.000 = Rp50.000. Harga akhir = 200.000 - 50.000 = Rp150.000."
+"Rata-rata Data","Pengetahuan Kuantitatif","Nilai ulangan 5 siswa adalah 70, 80, 90, 60, dan 100. Berapa nilai rata-ratanya?","78","80","75","82","B","Rata-rata = (70 + 80 + 90 + 60 + 100) ÷ 5 = 400 ÷ 5 = 80."
+"Perbandingan & Rasio","Penalaran Kuantitatif","Resep kue membutuhkan tepung dan gula dengan perbandingan 3:1. Jika tepung yang digunakan 300 gram, berapa gram gula yang dibutuhkan?","150 gram","50 gram","100 gram","75 gram","C","Perbandingan 3:1 artinya jika tepung = 300 gram, gula = 300 ÷ 3 = 100 gram."

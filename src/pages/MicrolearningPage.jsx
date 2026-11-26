@@ -251,6 +251,30 @@ export default function MicrolearningPage() {
         {/* ACCORDION MODULES LIST                                       */}
         {/* ============================================================ */}
         <div className="space-y-4">
+          {filteredMaterials.length === 0 && (
+            <div className="raised p-10 text-center space-y-3">
+              <div className="w-14 h-14 rounded-3xl inset text-edutext-muted flex items-center justify-center mx-auto">
+                <BookOpenText size={32} weight="bold" />
+              </div>
+              <h3 className="text-base font-black font-display text-edutext">
+                {materials.length === 0 ? 'Belum Ada Modul Materi' : 'Tidak Ada Materi pada Kategori Ini'}
+              </h3>
+              <p className="text-xs text-edutext-muted max-w-md mx-auto leading-relaxed">
+                {materials.length === 0
+                  ? 'Modul microlearning belum ditambahkan oleh admin. Silakan import file CSV materi atau tambah modul baru melalui panel admin.'
+                  : 'Coba pilih kategori materi yang lain atau klik Lihat Semua.'}
+              </p>
+              {materials.length > 0 && (
+                <button
+                  onClick={() => setActiveCategory('all')}
+                  className="btn-accent text-xs py-2 px-4 font-bold"
+                >
+                  Lihat Semua Modul
+                </button>
+              )}
+            </div>
+          )}
+
           {filteredMaterials.map((mat) => {
             const isOpen = openId === mat.id
             const isCompleted = completed.includes(mat.id)

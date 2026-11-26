@@ -445,6 +445,16 @@ export default function ExercisePage() {
             </p>
           </div>
 
+          {allBankExercises.length === 0 && (
+            <div className="raised p-6 text-center space-y-2 border border-edupink/40">
+              <Question size={32} className="text-edupink mx-auto" weight="bold" />
+              <h3 className="text-sm font-black text-edutext">Belum Ada Soal Latihan Try Out</h3>
+              <p className="text-xs text-edutext-muted max-w-md mx-auto">
+                Bank soal try out saat ini masih kosong. Silakan import CSV soal atau tambahkan soal baru di panel admin.
+              </p>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Card 1: Pratinjau Gratis */}
             <div className="raised p-6 flex flex-col justify-between space-y-6">
@@ -483,7 +493,8 @@ export default function ExercisePage() {
 
               <button
                 onClick={() => handleStartExam('preview')}
-                className="btn-accent w-full text-xs py-3.5 font-bold flex items-center justify-center gap-2"
+                disabled={allBankExercises.length === 0}
+                className="btn-accent w-full text-xs py-3.5 font-bold flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <Play size={16} weight="fill" />
                 <span>Mulai Pratinjau Gratis</span>
@@ -537,7 +548,8 @@ export default function ExercisePage() {
 
               <button
                 onClick={() => handleStartExam('full')}
-                className={`w-full text-xs py-3.5 font-bold flex items-center justify-center gap-2 ${
+                disabled={allBankExercises.length === 0}
+                className={`w-full text-xs py-3.5 font-bold flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed ${
                   user?.isPaid ? 'btn-accent' : 'btn-secondary text-edupink'
                 }`}
               >

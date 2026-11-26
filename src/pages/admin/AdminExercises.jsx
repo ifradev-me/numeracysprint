@@ -150,7 +150,7 @@ export default function AdminExercises() {
               Kelola Soal Try Out & Import CSV
             </h1>
             <p className="text-edutext-muted text-xs sm:text-sm mt-1">
-              Total {allExercises.length} soal ({defaultExercises.length} bawaan + {exercises.length} kustom) siap dikerjakan dalam Try Out.
+              Total {allExercises.length} soal{defaultExercises.length > 0 ? ` (${defaultExercises.length} bawaan + ${exercises.length} kustom)` : ''} siap dikerjakan dalam Try Out.
             </p>
           </div>
 
@@ -344,6 +344,20 @@ export default function AdminExercises() {
           </h2>
 
           <div className="space-y-3">
+            {allExercises.length === 0 && (
+              <div className="raised p-10 text-center space-y-3">
+                <div className="w-14 h-14 rounded-3xl inset text-edutext-muted flex items-center justify-center mx-auto">
+                  <Question size={32} weight="bold" />
+                </div>
+                <h3 className="text-base font-black font-display text-edutext">
+                  Belum Ada Soal Try Out
+                </h3>
+                <p className="text-xs text-edutext-muted max-w-md mx-auto leading-relaxed">
+                  Bank soal try out saat ini masih kosong. Klik tombol <strong>Tambah Soal</strong> atau <strong>Import CSV</strong> untuk menambahkan soal baru.
+                </p>
+              </div>
+            )}
+
             {allExercises.map((ex, idx) => {
               const isDefault = defaultExercises.some((d) => d.id === ex.id)
               return (

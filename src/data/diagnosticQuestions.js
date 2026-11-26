@@ -1,63 +1,23 @@
-export const diagnosticQuestions = [
-  {
-    id: 1,
-    topic: 'Persentase & Diskon',
-    subtest: 'Pengetahuan Kuantitatif & PM',
-    question: 'Sebuah baju seharga Rp200.000 mendapat diskon 25%. Berapa harga setelah diskon?',
-    options: [
-      { label: 'A', text: 'Rp150.000', correct: true },
-      { label: 'B', text: 'Rp175.000', correct: false },
-      { label: 'C', text: 'Rp160.000', correct: false },
-      { label: 'D', text: 'Rp125.000', correct: false },
-    ],
-    explanation: '25% dari Rp200.000 = Rp50.000. Jadi harga setelah diskon = Rp200.000 - Rp50.000 = Rp150.000.',
-  },
-  {
-    id: 2,
-    topic: 'Rata-rata Data (Mean)',
-    subtest: 'Pengetahuan Kuantitatif',
-    question: 'Nilai ulangan 5 siswa adalah 70, 80, 90, 60, dan 100. Berapa nilai rata-ratanya?',
-    options: [
-      { label: 'A', text: '78', correct: false },
-      { label: 'B', text: '80', correct: true },
-      { label: 'C', text: '75', correct: false },
-      { label: 'D', text: '82', correct: false },
-    ],
-    explanation: 'Rata-rata = (70 + 80 + 90 + 60 + 100) ÷ 5 = 400 ÷ 5 = 80.',
-  },
-  {
-    id: 3,
-    topic: 'Perbandingan & Rasio',
-    subtest: 'Penalaran Kuantitatif',
-    question: 'Resep kue membutuhkan tepung dan gula dengan perbandingan 3:1. Jika tepung yang digunakan 300 gram, berapa gram gula yang dibutuhkan?',
-    options: [
-      { label: 'A', text: '150 gram', correct: false },
-      { label: 'B', text: '50 gram', correct: false },
-      { label: 'C', text: '100 gram', correct: true },
-      { label: 'D', text: '75 gram', correct: false },
-    ],
-    explanation: 'Perbandingan 3:1 artinya jika tepung = 300 gram, gula = 300 ÷ 3 = 100 gram.',
-  },
-]
+export const diagnosticQuestions = []
 
 export function calculateLevel(score) {
-  if (score < 40) {
+  if (score < 50) {
     return {
       level: 'Dasar',
       badgeClass: 'badge-chip text-edudanger',
-      recommendation: 'Mulai dari materi Persentase & Diskon serta penguatan fondasi aljabar dasar UTBK.',
+      recommendation: 'Mulai dari pemahaman konsep dasar aljabar, persentase, serta penguatan fondasi penalaran matematika.',
     }
   }
-  if (score < 100) {
+  if (score < 80) {
     return {
       level: 'Menengah',
       badgeClass: 'badge-accent',
-      recommendation: 'Perkuat pemahaman dengan modul Rata-rata dan Perbandingan, lalu coba Try Out ber-timer.',
+      recommendation: 'Kemampuan dasarmu sudah cukup baik! Perkuat pemahaman modul lanjutan dan latih kecepatanmu dengan try out ber-timer.',
     }
   }
   return {
     level: 'Lanjut',
     badgeClass: 'badge-accent',
-    recommendation: 'Hebat! Kemampuan dasarmu sangat solid. Langsung asah kecepatanmu di Try Out SNBT ber-timer.',
+    recommendation: 'Luar biasa! Kemampuan numerasimu sangat solid. Langsung asah konsistensi dan kecepatan pengerjaanmu di simulasi try out.',
   }
 }

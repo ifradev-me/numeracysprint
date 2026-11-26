@@ -79,11 +79,12 @@ export async function saveTeamInfo(teamData) {
 export async function bootstrap() {
   const result = await request('/bootstrap')
   if (result?.data) {
-    const { team, users, customMaterials, customExercises } = result.data
+    const { team, users, customMaterials, customExercises, customDiagnostic } = result.data
     if (team) localStorage.setItem('numeracy_team_info', JSON.stringify(team))
     if (users) localStorage.setItem('numeracy_all_users', JSON.stringify(users))
     if (customMaterials) localStorage.setItem('numeracy_custom_materials', JSON.stringify(customMaterials))
     if (customExercises) localStorage.setItem('numeracy_custom_exercises', JSON.stringify(customExercises))
+    if (customDiagnostic) localStorage.setItem('numeracy_custom_diagnostic', JSON.stringify(customDiagnostic))
     return result.data
   }
   return null
@@ -213,6 +214,30 @@ export async function loadCustomExercises() {
     return result.exercises
   }
   const saved = localStorage.getItem('numeracy_custom_exercises')
+  return saved ? JSON.parse(saved) : []
+}
+
+// ─── Admin: Diagnostic ────────────────────────────────────────────────────────
+
+/** Save custom diagnostic questions array (max 10) to server and localStorage */
+export async function saveCustomDiagnostic(questions) {
+  const capped = (questions || []).slice(0, 10)
+  localStorage.setItem('numeracy_custom_diagnostic', JSON.stringify(capped))
+  await request('/admin/diagnostic', {
+    method: 'POST',
+    body: JSON.stringify({ questions: capped }),
+  })
+  return capped
+}
+
+/** Load custom diagnostic questions (server first, then localStorage) */
+export async function loadCustomDiagnostic() {
+  const result = await request('/admin/diagnostic')
+  if (result?.questions) {
+    localStorage.setItem('numeracy_custom_diagnostic', JSON.stringify(result.questions))
+    return result.questions
+  }
+  const saved = localStorage.getItem('numeracy_custom_diagnostic')
   return saved ? JSON.parse(saved) : []
 }
 

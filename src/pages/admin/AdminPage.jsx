@@ -14,6 +14,7 @@ import {
   Target,
   ArrowRight,
   Brain,
+  ClipboardText,
 } from '@phosphor-icons/react'
 
 const ADMIN_PASSWORD = 'admin123'
@@ -130,6 +131,13 @@ export default function AdminPage() {
       title: 'Kelola Soal & Import CSV',
       desc: 'Input soal try out ber-timer secara manual atau unggah massal melalui file CSV.',
       badge: 'CSV Import Ready',
+    },
+    {
+      path: '/admin/diagnostic',
+      icon: ClipboardText,
+      title: 'Kelola Tes Diagnostik',
+      desc: 'Atur hingga 10 soal evaluasi diagnostik untuk memetakan level awal pemahaman siswa.',
+      badge: 'Maksimal 10 Soal',
     },
     {
       path: '/admin/team',
